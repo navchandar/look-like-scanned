@@ -5,15 +5,23 @@ from PIL import Image
 import pypdfium2 as pdfium
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-i", "--input_folder", help="The input folder to read files.")
-parser.add_argument("-f", "--file_type_or_name", help="The file types to process or file name to process.")
-parser.add_argument("-q", "--file_quality", help="The quality of the converted output files.")
+parser.add_argument(
+    "-i", "--input_folder", help="The input folder to read files from and convert"
+)
+parser.add_argument(
+    "-f",
+    "--file_type_or_name",
+    help="The file types to process or file name to process.",
+)
+parser.add_argument(
+    "-q", "--file_quality", help="The quality of the converted output files."
+)
 
 SUPPORTED_IMAGES = [".jpg", ".png", ".jpeg", ".webp"]
 SUPPORTED_DOCS = [".pdf", ".PDF"]
 
 
-def get_args(argument_name):
+def _get_args(argument_name):
     """
     Gets the input folder from the command-line argument.
     If no input folder provided, returns the current working directory.
@@ -30,9 +38,13 @@ def get_args(argument_name):
             file_type = args.file_type_or_name.lower()
             if file_type == "image":
                 return ("image", SUPPORTED_IMAGES)
-            elif any(ext.endswith(file_type) for ext in SUPPORTED_IMAGES) or any(file_type.endswith(ext) for ext in SUPPORTED_IMAGES):
+            elif any(ext.endswith(file_type) for ext in SUPPORTED_IMAGES) or any(
+                file_type.endswith(ext) for ext in SUPPORTED_IMAGES
+            ):
                 return ("image", [args.file_type_or_name])
-            elif any(ext.endswith(file_type) for ext in SUPPORTED_DOCS) or any(file_type.endswith(ext) for ext in SUPPORTED_DOCS):
+            elif any(ext.endswith(file_type) for ext in SUPPORTED_DOCS) or any(
+                file_type.endswith(ext) for ext in SUPPORTED_DOCS
+            ):
                 return ("pdf", [args.file_type_or_name])
             else:
                 return (None, None)
@@ -40,7 +52,7 @@ def get_args(argument_name):
             return ("pdf", SUPPORTED_DOCS)
 
 
-def reduce_image_quality(image, quality=100, format='JPEG'):
+def reduce_image_quality(image, quality=100, format="JPEG"):
     """Reduce quality of a given image object"""
     img_byte_array = io.BytesIO()
     # Save the image to the in-memory file object
@@ -53,8 +65,10 @@ def reduce_image_quality(image, quality=100, format='JPEG'):
     return reduced_image
 
 
-def change_image_to_byte_buffer(image, format='JPEG'):
-    # Save the image data to an in-memory file-like object
+def _change_image_to_byte_buffer(image, format="JPEG"):
+    """
+    Save the image data to an in-memory file-like object
+    """
     img_byte_array = io.BytesIO()
     image.save(img_byte_array, format=format)
     # Reset the file position to the beginning
@@ -72,20 +86,25 @@ def convert_images_to_pdf(input_image_list, image_quality):
         # reduce image quality a little bit
         image = reduce_image_quality(image, image_quality)
         image = image.convert("RGB")
-        image = change_image_to_byte_buffer(image)
+        image = _change_image_to_byte_buffer(image)
         images_list.append(image)
-    
-    save_image_obj_to_pdf(images_list, output_pdf_path, pdf_version=17)
+
+    _save_image_obj_to_pdf(images_list, output_pdf_path, pdf_version=17)
     return output_pdf_path
 
 
 def rotate_image(image, angle):
     """Rotate PIL Image object with given angle value"""
-    rotated_image = image.rotate(angle, resample=Image.BICUBIC, expand=True, fillcolor=(255, 255, 255))
+    rotated_image = image.rotate(
+        angle, resample=Image.BICUBIC, expand=True, fillcolor=(255, 255, 255)
+    )
     return rotated_image
 
 
-def convert_pdf_pages_to_jpg_list(pdf_path, image_quality=100, askew=True):
+def _convert_pdf_pages_to_jpg_list(pdf_path, image_quality=100, askew=True):
+    """
+    Reads given pdf file and reads all pages and converts them to image objects
+    """
     images_list = []
     doc = pdfium.PdfDocument(pdf_path)
     for i in range(len(doc)):
@@ -101,14 +120,17 @@ def convert_pdf_pages_to_jpg_list(pdf_path, image_quality=100, askew=True):
         if askew:
             angle = random.uniform(-0.75, 0.75)
             image = rotate_image(image, angle)
-        image = change_image_to_byte_buffer(image)
+        image = _change_image_to_byte_buffer(image)
         images_list.append(image)
         page.close()
     doc.close()
     return images_list
 
 
-def save_image_obj_to_pdf(images_list, output_pdf_path, pdf_version=17):
+def _save_image_obj_to_pdf(images_list, output_pdf_path, pdf_version=17):
+    """
+    Save image objects into output pdf
+    """
     output_pdf = pdfium.PdfDocument.new()
     for image_file in images_list:
         pdf_image = pdfium.PdfImage.new(output_pdf)
@@ -123,17 +145,20 @@ def save_image_obj_to_pdf(images_list, output_pdf_path, pdf_version=17):
         page.gen_content()
         page.close()
         pdf_image.close()
-    
+
     output_pdf.save(output_pdf_path, version=pdf_version)
     output_pdf.close()
-    
-    
+
+
 def convert_pdf_to_scanned(pdf_list, image_quality):
+    """
+    Converts PDF files into scanned PDF files
+    """
     output_file_list = []
     for pdf_path in pdf_list:
         output_path = pdf_path.replace(".pdf", "_output.pdf")
-        images = convert_pdf_pages_to_jpg_list(pdf_path, image_quality, askew=True)
-        save_image_obj_to_pdf(images, output_path)
+        images = _convert_pdf_pages_to_jpg_list(pdf_path, image_quality, askew=True)
+        _save_image_obj_to_pdf(images, output_path)
         output_file_list.append(output_path)
     return output_file_list
 
@@ -141,9 +166,9 @@ def convert_pdf_to_scanned(pdf_list, image_quality):
 def main():
     """Get input arguments and run the script"""
 
-    input_folder = get_args("folder")
-    quality = get_args("quality")
-    doc_type, file_type_list = get_args("file_type")
+    input_folder = _get_args("folder")
+    quality = _get_args("quality")
+    doc_type, file_type_list = _get_args("file_type")
     print(f"{input_folder=} {quality=} {doc_type=} {file_type_list=}")
     pdf_path = os.path.join(input_folder, "Output.pdf")
     files_list = []
