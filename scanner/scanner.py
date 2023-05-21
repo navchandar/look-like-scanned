@@ -30,9 +30,9 @@ def get_args(argument_name):
             file_type = args.file_type_or_name.lower()
             if file_type == "image":
                 return ("image", SUPPORTED_IMAGES)
-            elif any(ext.endswith(file_type) for ext in SUPPORTED_IMAGES):
+            elif any(ext.endswith(file_type) for ext in SUPPORTED_IMAGES) or any(file_type.endswith(ext) for ext in SUPPORTED_IMAGES):
                 return ("image", [args.file_type_or_name])
-            elif any(ext.endswith(file_type) for ext in SUPPORTED_DOCS):
+            elif any(ext.endswith(file_type) for ext in SUPPORTED_DOCS) or any(file_type.endswith(ext) for ext in SUPPORTED_DOCS):
                 return ("pdf", [args.file_type_or_name])
             else:
                 return (None, None)
