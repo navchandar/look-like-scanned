@@ -1,4 +1,8 @@
-import os, io
+#!/usr/bin/env python
+"""Module to convert PDF/Images to look like they were scanned"""
+
+import os
+import io
 import random
 import argparse
 from PIL import Image
@@ -28,35 +32,32 @@ def _get_args(argument_name):
     """
 
     args = parser.parse_args()
-
+    if not argument_name:
+        return ""
     if argument_name == "folder":
         return args.input_folder if args.input_folder else os.getcwd()
     if argument_name == "quality":
         return int(args.file_quality) if args.file_quality else 98
     if argument_name == "file_type":
+        match = (None, None)
         if args.file_type_or_name:
-            file_type = args.file_type_or_name.lower()
-            if file_type == "image":
-                return ("image", SUPPORTED_IMAGES)
-            elif any(ext.endswith(file_type) for ext in SUPPORTED_IMAGES) or any(
-                file_type.endswith(ext) for ext in SUPPORTED_IMAGES
-            ):
-                return ("image", [args.file_type_or_name])
-            elif any(ext.endswith(file_type) for ext in SUPPORTED_DOCS) or any(
-                file_type.endswith(ext) for ext in SUPPORTED_DOCS
-            ):
-                return ("pdf", [args.file_type_or_name])
-            else:
-                return (None, None)
+            file = args.file_type_or_name.lower()
+            if file == "image":
+                match = ("image", SUPPORTED_IMAGES)
+            elif any(f.endswith(file) or file.endswith(f) for f in SUPPORTED_IMAGES):
+                match = ("image", [args.file_type_or_name])
+            elif any(f.endswith(file) or file.endswith(f) for f in SUPPORTED_DOCS):
+                match = ("pdf", [args.file_type_or_name])
         else:
-            return ("pdf", SUPPORTED_DOCS)
+            match = ("pdf", SUPPORTED_DOCS)
+        return match
 
 
-def reduce_image_quality(image, quality=100, format="JPEG"):
+def reduce_image_quality(image, quality=100, compression="JPEG"):
     """Reduce quality of a given image object"""
     img_byte_array = io.BytesIO()
     # Save the image to the in-memory file object
-    image.save(img_byte_array, quality=quality, format=format, subsampling=0)
+    image.save(img_byte_array, quality=quality, format=compression, subsampling=0)
 
     # Rewind the file object to the beginning
     img_byte_array.seek(0)
@@ -65,12 +66,12 @@ def reduce_image_quality(image, quality=100, format="JPEG"):
     return reduced_image
 
 
-def _change_image_to_byte_buffer(image, format="JPEG"):
+def _change_image_to_byte_buffer(image, compression="JPEG"):
     """
     Save the image data to an in-memory file-like object
     """
     img_byte_array = io.BytesIO()
-    image.save(img_byte_array, format=format)
+    image.save(img_byte_array, format=compression)
     # Reset the file position to the beginning
     img_byte_array.seek(0)
     return img_byte_array
@@ -107,8 +108,7 @@ def _convert_pdf_pages_to_jpg_list(pdf_path, image_quality=100, askew=True):
     """
     images_list = []
     doc = pdfium.PdfDocument(pdf_path)
-    for i in range(len(doc)):
-        page = doc[i]
+    for page in doc:
         bitmap = page.render(scale=1)  # 72dpi resolution
         image = bitmap.to_pil()
 
@@ -166,23 +166,30 @@ def convert_pdf_to_scanned(pdf_list, image_quality):
 def main():
     """Get input arguments and run the script"""
 
+    # Gather input arguments from command-line
     input_folder = _get_args("folder")
     quality = _get_args("quality")
     doc_type, file_type_list = _get_args("file_type")
     print(f"{input_folder=} {quality=} {doc_type=} {file_type_list=}")
-    pdf_path = os.path.join(input_folder, "Output.pdf")
+
+    # Gathe input files based on the arguments
+    pdf_path = None
     files_list = []
     for file_name in os.listdir(input_folder):
         if any(file_name.endswith(ext) for ext in file_type_list):
             files_list.append(os.path.join(input_folder, file_name))
 
+    # Convert files into output
     print(f"Processing files: {files_list}")
     if doc_type == "image":
         pdf_path = convert_images_to_pdf(files_list, quality)
-    if doc_type == "pdf":
+    elif doc_type == "pdf":
         pdf_path = convert_pdf_to_scanned(files_list, quality)
 
-    print(f"The Output PDF file is saved at {pdf_path}")
+    if pdf_path:
+        print(f"The Output PDF file is saved at {pdf_path}")
+    else:
+        print("No valid file type found. No output documents generated")
 
 
 if __name__ == "__main__":

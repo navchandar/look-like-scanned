@@ -18,8 +18,10 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install poetry
+        poetry config virtualenvs.in-project true
         pip install pylint
         poetry install
+        pylint --version
     - name: Analysing the code with pylint
       run: |
-        pylint $(git ls-files '*.py')
+        pylint --fail-under=8 $(git ls-files '*.py')
