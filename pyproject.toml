@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "look-like-scanned"
-version = "0.1.7"
+version = "0.1.8"
 description = "Python script to make documents look like they were scanned."
 authors = ["navchandar <12165092+navchandar@users.noreply.github.com>"]
 repository    = "https://github.com/navchandar/look-like-scanned"
@@ -11,16 +11,20 @@ packages = [
     { include = "scanner" },
 ]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     'Intended Audience :: Developers',
     'License :: OSI Approved :: MIT License',
+    'Operating System :: Microsoft :: Windows',
     'Operating System :: Microsoft :: Windows :: Windows 10',
+    'Operating System :: POSIX :: Linux',
+    'Environment :: Console',
     'Programming Language :: Python',
     'Programming Language :: Python :: 3.8',
     'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
     'Topic :: Software Development :: Libraries :: Python Modules',
+    'Topic :: Utilities',
 ]
 
 
