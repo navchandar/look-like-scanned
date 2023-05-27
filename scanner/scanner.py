@@ -238,8 +238,8 @@ def _calc_energy_savings(pages_scanned):
     Energy per capita usage: https://ourworldindata.org/grapher/per-capita-energy-use?tab=table
     """
 
-    energy_req_for_one_A4_sheet = 50
-    energy_saved = pages_scanned * energy_req_for_one_A4_sheet
+    energy_req_for_one_page = 50
+    energy_saved = pages_scanned * energy_req_for_one_page
 
     if energy_saved < 1000:
         energy_saved = f"{energy_saved} Watt hours"
@@ -250,7 +250,7 @@ def _calc_energy_savings(pages_scanned):
         energy_saved = energy_saved / 1000000
         energy_saved = f"{energy_saved:.2f} Mega Watt hours"
 
-    savings = f"You just saved {energy_saved} energy by avoiding printing {pages_scanned} pages!"
+    savings = f"You just saved {energy_saved} energy by avoiding printing {pages_scanned} pages of paper!"
     print(savings)
 
 
@@ -261,17 +261,20 @@ def convert_images_to_pdf(input_image_list, image_quality, askew):
     # Output pdf name will be the fetched from first Image's name
     output_pdf_path = os.path.splitext(input_image_list[0])[0] + "_output.pdf"
     for image_path in input_image_list:
-        image = Image.open(image_path)
-        # reduce image quality a little bit
-        image = reduce_image_quality(image, image_quality)
-        image = image.convert("RGB")
+        try:
+            image = Image.open(image_path)
+            # reduce image quality a little bit
+            image = reduce_image_quality(image, image_quality)
+            image = image.convert("RGB")
 
-        # Rotate every image by a small random angle
-        if askew:
-            image = rotate_image(image, random.uniform(-0.75, 0.75))
+            # Rotate every image by a small random angle
+            if askew:
+                image = rotate_image(image, random.uniform(-0.75, 0.75))
 
-        image = _change_image_to_byte_buffer(image)
-        images_list.append(image)
+            image = _change_image_to_byte_buffer(image)
+            images_list.append(image)
+        except Exception as e:
+            print(f"Error converting file {image_path} :-", e)
 
     pages_scanned = _save_image_obj_to_pdf(images_list, output_pdf_path, pdf_version=17)
     _calc_energy_savings(pages_scanned)
@@ -303,12 +306,17 @@ def find_matching_files(input_folder, file_type_list, recurse=False):
     If recurse is True, this method will identify all matching files in all sub directories.
     """
     files_list = []
-    for file in os.listdir(input_folder):
-        path = os.path.join(input_folder, file)
-        if os.path.isfile(path) and any(file.endswith(ext) for ext in file_type_list):
-            files_list.append(path)
-        if recurse and os.path.isdir(path):
-            files_list.extend(find_matching_files(path, file_type_list, recurse))
+    try:
+        for file in os.listdir(input_folder):
+            path = os.path.join(input_folder, file)
+            if os.path.isfile(path) and any(
+                file.endswith(ext) for ext in file_type_list
+            ):
+                files_list.append(path)
+            if recurse and os.path.isdir(path):
+                files_list.extend(find_matching_files(path, file_type_list, recurse))
+    except Exception as e:
+        print("Error when searching for files :-", e)
     return files_list
 
 
