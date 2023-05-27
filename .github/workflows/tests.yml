@@ -23,8 +23,8 @@ jobs:
         poetry config virtualenvs.in-project true
         poetry install
         pip install pytest
-        pylint --version
-    - name: Analysing the code with pylint
+        pytest --version
+    - name: Testing with PyTest
       env:
           PYTHONPATH: "${{ env.PYTHONPATH }}:${{ github.workspace }}"
       run: |

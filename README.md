@@ -1,4 +1,10 @@
 # look-like-scanned
+
+![Pylint](https://github.com/navchandar/look-like-scanned/actions/workflows/pylint.yml/badge.svg)  ![PyTest](https://github.com/navchandar/look-like-scanned/actions/workflows/tests.yml/badge.svg)
+![license](https://img.shields.io/badge/license-MIT-blue.svg)
+[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/navchandar/look-like-scanned/issues)
+[![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/) 
+
  - Python script to make documents look like they were scanned. 
 
  - It converts every page of a given PDF file into an image-based page and applies random askew and brightness (very mild) effects to simulate the appearance of scanned documents.
@@ -7,14 +13,7 @@
 
  - There are options to combine / convert image files into PDF as well.
 
- - Output PDF files are saved in the same input folder with a suffix "_output.pdf"
-
-
-
-![Pylint](https://github.com/navchandar/look-like-scanned/actions/workflows/pylint.yml/badge.svg)
-![license](https://img.shields.io/badge/license-MIT-blue.svg)
-[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/navchandar/look-like-scanned/issues)
-[![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/) 
+ - Output PDF files are saved in the same input folder with a suffix _"filename_output.pdf"_
 
 
 ## Installation
@@ -40,7 +39,7 @@ scanner -i .\tests
 scanner -i .\tests -f "pdf"
 
 # Convert all pdf files in folder to scanned without askew
-scanner -i .\tests -a "no"
+scanner -i .\tests -a no
 
 # Convert specific pdf file in folder to scanned pdf
 scanner -i .\tests -f "test.pdf"
@@ -53,6 +52,13 @@ scanner -i .\tests -f "png" -q 100
 
 # Convert specific jpg file in folder to pdf with 75% quality to one pdf file
 scanner -i .\tests -f "JPG_Test.jpg" -q 75
+
+# Convert all PDF files including sub folders
+scanner -i .\tests -f "pdf" -r yes
+
+# Convert all Images including sub folders into one PDF
+scanner -i .\tests -f "image" -r yes
+
 ```
 
 ## Arguments
@@ -70,6 +76,9 @@ These are the command-line arguments accepted:
 
 - `-a, --askew` : Controls whether to make the output documents slightly askew or slightly tilted. Accepted values are "yes" or "no". The default value is "yes". 
     - Example: `-a yes` or `--askew no`
+
+- `-r, --recurse` : Allows scripts to find all matching files including subdirectories. Accepted values are "yes" or "no". The default value is "yes". 
+    - Example: `-r yes` or `--recurse no`
 
 
 **Note:**
