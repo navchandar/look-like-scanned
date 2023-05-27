@@ -5,9 +5,9 @@ import os
 import io
 import random
 from pprint import pprint
-from PIL import Image, ImageEnhance
 import pypdfium2 as pdfium
-import args_parser
+from PIL import Image, ImageEnhance
+from .args_parser import get_argument
 
 
 def human_size(num, suffix="B"):
@@ -228,11 +228,11 @@ def main():
     """Get input arguments and run the script"""
 
     # Gather input arguments from command-line
-    input_folder = args_parser.get_argument("folder")
-    quality = args_parser.get_argument("quality")
-    askew = args_parser.get_argument("askew")
-    recurse = args_parser.get_argument("recurse")
-    doc_type, file_type_list = args_parser.get_argument("file_type")
+    input_folder = get_argument("folder")
+    quality = get_argument("quality")
+    askew = get_argument("askew")
+    recurse = get_argument("recurse")
+    doc_type, file_type_list = get_argument("file_type")
     print(f"{quality=} {recurse=} {askew=} {doc_type=} {file_type_list=}")
 
     # Gather the input files based on the arguments
