@@ -1,6 +1,6 @@
 # look-like-scanned
 
-![Pylint](https://github.com/navchandar/look-like-scanned/actions/workflows/pylint.yml/badge.svg)  ![PyTest](https://github.com/navchandar/look-like-scanned/actions/workflows/tests.yml/badge.svg)
+[![Pylint](https://github.com/navchandar/look-like-scanned/actions/workflows/pylint.yml/badge.svg)](https://github.com/navchandar/look-like-scanned/actions/workflows/pylint.yml)  [![PyTest](https://github.com/navchandar/look-like-scanned/actions/workflows/tests.yml/badge.svg)](https://github.com/navchandar/look-like-scanned/actions/workflows/tests.yml)
 ![license](https://img.shields.io/badge/license-MIT-blue.svg)
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/navchandar/look-like-scanned/issues)
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/) 
@@ -81,7 +81,7 @@ These are the command-line arguments accepted:
     - Example: `-r yes` or `--recurse no`
 
 
-**Note:**
+❗❗ **Note:** ❗❗
 
 - The supported file types are: ".jpg", ".png", ".jpeg", ".webp", ".pdf".
 
