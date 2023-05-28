@@ -11,7 +11,7 @@ from PIL import Image, ImageEnhance
 
 SUPPORTED_IMAGES = [".jpg", ".png", ".jpeg", ".webp"]
 SUPPORTED_DOCS = [".pdf", ".PDF"]
-CHOICES = ["y", "yes", "n", "no", "true", "false"]
+CHOICES = ["y", "yes", "n", "no"]
 
 
 def parse_args():
