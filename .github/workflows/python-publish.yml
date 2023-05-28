@@ -11,20 +11,30 @@ jobs:
   deploy:
 
     runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      id-token: write
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
+
     - name: Set up Python
       uses: actions/setup-python@v3
       with:
         python-version: '3.x'
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install build
-        pip install poetry setuptools wheel twine
+        pip install poetry
+
     - name: Build package
       run: poetry build
+
     - name: Publish to PyPI
-      run: |
-        python -m twine upload --repository pypi dist/*
+      uses: pypa/gh-action-pypi-publish@v1
+      with:
+-        username: __token__
+-        password: ${{ secrets.PYPI_TOKEN }}
+

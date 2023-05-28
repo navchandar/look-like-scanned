@@ -31,6 +31,12 @@ poetry install
 pip install .
 ```
 
+### Verify Installation:
+```shell
+# Print help message and usage options available
+scanner -h
+```
+
 
 ## Usage
 
@@ -91,7 +97,7 @@ These are the command-line arguments accepted:
 
 - The supported file types are: ".jpg", ".png", ".jpeg", ".webp", ".pdf".
 
-- The output PDF file size will be bigger compared to the input because the files are stored in image format.
+- The output PDF file size **will be bigger** than the input file because the pages are stored in image format.
 
 - Bookmarks / Links / Metadata will be removed when saving the output file.
 
