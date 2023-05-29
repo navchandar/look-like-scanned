@@ -5,13 +5,38 @@ import os
 import io
 import random
 import argparse
+import colorama
+from colorama import Fore, Style
 from pprint import pprint
 import pypdfium2 as pdfium
 from PIL import Image, ImageEnhance
 
 SUPPORTED_IMAGES = [".jpg", ".png", ".jpeg", ".webp"]
 SUPPORTED_DOCS = [".pdf", ".PDF"]
-CHOICES = ["y", "yes", "n", "no"]
+CHOICES = ["y", "yes", "n", "no", "true", "false"]
+
+
+def print_color_text(text, color):
+    """
+    Print the specified text in the given color.
+    Available colors: 'black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white'.
+    """
+    color_map = {
+        "black": Fore.BLACK,
+        "red": Fore.RED,
+        "green": Fore.GREEN,
+        "yellow": Fore.YELLOW,
+        "blue": Fore.BLUE,
+        "magenta": Fore.MAGENTA,
+        "cyan": Fore.CYAN,
+        "white": Fore.WHITE,
+    }
+    color_code = color_map.get(color.lower(), Fore.RESET)
+    print(color_code + text + Style.RESET_ALL)
+
+
+# Initialize colorama
+colorama.init()
 
 
 def parse_args():
@@ -57,51 +82,45 @@ def parse_args():
     return parser.parse_args()
 
 
-def get_argument(argument_name):
+def get_input_folder(args):
     """
     Gets the input folder from the command-line argument.
-    If no input folder provided, returns the current working directory.
+    If argument not provided, returns current working directory as input folder
     """
-    args = parse_args()
-    if argument_name == "folder":
-        input_folder = os.getcwd()
-        if args.input_folder:
-            input_folder = args.input_folder
-        else:
-            print("Defaulting to current directory")
-        input_folder = os.path.abspath(input_folder)
+    input_folder = (
+        os.path.abspath(args.input_folder) if args.input_folder else os.getcwd()
+    )
+    if os.path.exists(input_folder):
+        print(f"Processing files from {input_folder=}")
+    else:
+        print(f"Error: Input folder path not found: {input_folder}")
+    return input_folder
 
-        # check if folder path exists
-        if os.path.exists(input_folder):
-            print(f"Processing files from {input_folder=}")
-        else:
-            print(f"Error: Input folder path not found: {input_folder}")
-        return input_folder
 
-    if argument_name == "quality":
-        return int(args.file_quality) if args.file_quality else 95
+def get_quality(args):
+    return args.file_quality
 
-    if argument_name == "askew":
-        return args.askew.lower().startswith("y") if args.askew else True
 
-    if argument_name == "recurse":
-        return args.recurse.lower().startswith("y") if args.recurse else True
+def get_askew(args):
+    return args.askew.lower().startswith(("y", "t"))
 
-    if argument_name == "file_type":
-        match = (None, None)
-        if args.file_type_or_name:
-            file = args.file_type_or_name.lower()
-            if file == "image":
-                match = ("image", SUPPORTED_IMAGES)
-            elif any(f.endswith(file) or file.endswith(f) for f in SUPPORTED_IMAGES):
-                match = ("image", [args.file_type_or_name])
-            elif any(f.endswith(file) or file.endswith(f) for f in SUPPORTED_DOCS):
-                match = ("pdf", [args.file_type_or_name])
-            else:
-                print("Defaulting to find pdf files")
-        else:
-            match = ("pdf", SUPPORTED_DOCS)
-        return match
+
+def get_recurse(args):
+    return args.recurse.lower().startswith(("y", "t"))
+
+
+def get_file_type(args):
+    """Get file type and supported documents based on input arguments"""
+    file_type = args.file_type_or_name.lower() if args.file_type_or_name else "pdf"
+    if file_type == "image":
+        return "image", SUPPORTED_IMAGES
+    elif any(f.endswith(file_type) or file_type.endswith(f) for f in SUPPORTED_IMAGES):
+        return "image", [args.file_type_or_name]
+    elif any(f.endswith(file_type) or file_type.endswith(f) for f in SUPPORTED_DOCS):
+        return "pdf", [args.file_type_or_name]
+    else:
+        print("Defaulting to find pdf files")
+        return "pdf", SUPPORTED_DOCS
 
 
 def human_size(num, suffix="B"):
@@ -250,8 +269,9 @@ def _calc_energy_savings(pages_scanned):
         energy_saved = energy_saved / 1000000
         energy_saved = f"{energy_saved:.2f} Mega Watt hours"
 
-    savings = f"You just saved {energy_saved} energy by avoiding printing {pages_scanned} pages of paper!"
-    print(savings)
+    if pages_scanned > 0:
+        savings = f"\nYou just saved {energy_saved} energy by avoiding printing {pages_scanned} pages of paper!\n"
+        print_color_text(savings, "Green")
 
 
 def convert_images_to_pdf(input_image_list, image_quality, askew):
@@ -274,7 +294,7 @@ def convert_images_to_pdf(input_image_list, image_quality, askew):
             image = _change_image_to_byte_buffer(image)
             images_list.append(image)
         except Exception as e:
-            print(f"Error converting file {image_path} :-", e)
+            print_color_text(f"Error converting file {image_path} :- {e}", "Red")
 
     pages_scanned = _save_image_obj_to_pdf(images_list, output_pdf_path, pdf_version=17)
     _calc_energy_savings(pages_scanned)
@@ -294,7 +314,7 @@ def convert_pdf_to_scanned(pdf_list, image_quality, askew):
             pages_scanned += _save_image_obj_to_pdf(images, output_path)
             output_file_list.append(output_path)
         except Exception as e:
-            print(f"Error converting file {pdf_path} :-", e)
+            print_color_text(f"Error converting file {pdf_path} :- {e}", "Red")
 
     _calc_energy_savings(pages_scanned)
     return output_file_list
@@ -316,7 +336,7 @@ def find_matching_files(input_folder, file_type_list, recurse=False):
             if recurse and os.path.isdir(path):
                 files_list.extend(find_matching_files(path, file_type_list, recurse))
     except Exception as e:
-        print("Error when searching for files :-", e)
+        print_color_text(f"Error when searching for files :- {e}", "Red")
     return files_list
 
 
@@ -328,21 +348,25 @@ def sort_by_top_level_directory(path):
 
 def main():
     """Get input arguments and run the script"""
+    args = parse_args()
 
     # Gather input arguments from command-line
-    input_folder = get_argument("folder")
-    quality = get_argument("quality")
-    askew = get_argument("askew")
-    recurse = get_argument("recurse")
-    doc_type, file_type_list = get_argument("file_type")
-    print(f"{quality=} {recurse=} {askew=} {doc_type=} {file_type_list=}")
+    input_folder = get_input_folder(args)
+    quality = get_quality(args)
+    askew = get_askew(args)
+    recurse = get_recurse(args)
+    doc_type, file_type_list = get_file_type(args)
+
+    print_color_text(
+        f"{quality=} {recurse=} {askew=} {doc_type=} {file_type_list=}", "Cyan"
+    )
 
     # Gather the input files based on the arguments
     files_list = find_matching_files(input_folder, file_type_list, recurse)
     # Sort file paths so output gets saved in top level directory
     files_list = sorted(files_list, key=sort_by_top_level_directory)
 
-    print(f"Matching Files Found: {len(files_list)}")
+    print_color_text(f"\nMatching Files Found: {len(files_list)}", "Blue")
     pprint(files_list)
 
     # Convert the files found into output files
@@ -355,9 +379,12 @@ def main():
         print("Error: Unsupported file format!")
 
     if pdf_path:
-        pprint(f"The Output PDF files saved at {pdf_path}")
+        print(f"The Output PDF files saved at:")
+        pprint(pdf_path)
     else:
-        print("No valid file type found. No output documents generated")
+        print_color_text(
+            "No matching files found. No output documents generated!", "Red"
+        )
 
 
 if __name__ == "__main__":
