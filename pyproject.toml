@@ -32,6 +32,7 @@ classifiers = [
 python = "^3.7"
 pillow = "^9.5.0"
 pypdfium2 = "^4.11.0"
+colorama = "^0.4.6"
 
 
 [tool.poetry.scripts]
