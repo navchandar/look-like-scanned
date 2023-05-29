@@ -111,13 +111,18 @@ def get_recurse(args):
 
 def get_file_type(args):
     """Get file type and supported documents based on input arguments"""
-    file_type = args.file_type_or_name.lower() if args.file_type_or_name else "pdf"
-    if file_type == "image":
-        return "image", SUPPORTED_IMAGES
-    elif any(f.endswith(file_type) or file_type.endswith(f) for f in SUPPORTED_IMAGES):
-        return "image", [args.file_type_or_name]
-    elif any(f.endswith(file_type) or file_type.endswith(f) for f in SUPPORTED_DOCS):
-        return "pdf", [args.file_type_or_name]
+    if args.file_type_or_name:
+        file_type = args.file_type_or_name.lower()
+        if file_type == "image":
+            return "image", SUPPORTED_IMAGES
+        elif any(
+            f.endswith(file_type) or file_type.endswith(f) for f in SUPPORTED_IMAGES
+        ):
+            return "image", [args.file_type_or_name]
+        elif any(
+            f.endswith(file_type) or file_type.endswith(f) for f in SUPPORTED_DOCS
+        ):
+            return "pdf", [args.file_type_or_name]
     else:
         print("Defaulting to find pdf files")
         return "pdf", SUPPORTED_DOCS
@@ -135,6 +140,15 @@ def human_size(num, suffix="B"):
 def get_file_size(file_path):
     """Get file size for a given file path"""
     return human_size(os.stat(file_path).st_size)
+
+
+def files_exists(file_path):
+    """Check if given file path exists in the file system"""
+    if os.path.exists(file_path):
+        return True
+    else:
+        print_color_text(f"File doesn't exist or incorrect path: {file_path}", "Red")
+        return False
 
 
 def reduce_image_quality(image, quality=100, compression="JPEG"):
@@ -204,29 +218,30 @@ def _save_image_obj_to_pdf(images_list, output_pdf_path, pdf_version=17):
     Save image objects into output pdf
     """
     pages_scanned = 0
-    output_pdf = pdfium.PdfDocument.new()
-    for image_file in images_list:
-        pdf_image = pdfium.PdfImage.new(output_pdf)
-        pdf_image.load_jpeg(image_file)
-        width, height = pdf_image.get_size()
-        # since render size increased by 2, decrease by same amount
-        width = width / 2
-        height = height / 2
+    if images_list:
+        output_pdf = pdfium.PdfDocument.new()
+        for image_file in images_list:
+            pdf_image = pdfium.PdfImage.new(output_pdf)
+            pdf_image.load_jpeg(image_file)
+            width, height = pdf_image.get_size()
+            # since render size increased by 2, decrease by same amount
+            width = width / 2
+            height = height / 2
 
-        matrix = pdfium.PdfMatrix().scale(width, height)
-        pdf_image.set_matrix(matrix)
+            matrix = pdfium.PdfMatrix().scale(width, height)
+            pdf_image.set_matrix(matrix)
 
-        page = output_pdf.new_page(width, height)
-        page.insert_obj(pdf_image)
-        page.gen_content()
-        page.close()
-        pdf_image.close()
-        pages_scanned += 1
+            page = output_pdf.new_page(width, height)
+            page.insert_obj(pdf_image)
+            page.gen_content()
+            page.close()
+            pdf_image.close()
+            pages_scanned += 1
 
-    output_pdf.save(output_pdf_path, version=pdf_version)
-    output_pdf.close()
-    file_size = get_file_size(output_pdf_path)
-    print(f"{output_pdf_path=} {file_size=}")
+        output_pdf.save(output_pdf_path, version=pdf_version)
+        output_pdf.close()
+        file_size = get_file_size(output_pdf_path)
+        print(f"{output_pdf_path=} {file_size=}")
     return pages_scanned
 
 
@@ -281,20 +296,21 @@ def convert_images_to_pdf(input_image_list, image_quality, askew):
     # Output pdf name will be the fetched from first Image's name
     output_pdf_path = os.path.splitext(input_image_list[0])[0] + "_output.pdf"
     for image_path in input_image_list:
-        try:
-            image = Image.open(image_path)
-            # reduce image quality a little bit
-            image = reduce_image_quality(image, image_quality)
-            image = image.convert("RGB")
+        if files_exists(image_path):
+            try:
+                image = Image.open(image_path)
+                # reduce image quality a little bit
+                image = reduce_image_quality(image, image_quality)
+                image = image.convert("RGB")
 
-            # Rotate every image by a small random angle
-            if askew:
-                image = rotate_image(image, random.uniform(-0.75, 0.75))
+                # Rotate every image by a small random angle
+                if askew:
+                    image = rotate_image(image, random.uniform(-0.75, 0.75))
 
-            image = _change_image_to_byte_buffer(image)
-            images_list.append(image)
-        except Exception as e:
-            print_color_text(f"Error converting file {image_path} :- {e}", "Red")
+                image = _change_image_to_byte_buffer(image)
+                images_list.append(image)
+            except Exception as e:
+                print_color_text(f"Error converting file {image_path} :- {e}", "Red")
 
     pages_scanned = _save_image_obj_to_pdf(images_list, output_pdf_path, pdf_version=17)
     _calc_energy_savings(pages_scanned)
@@ -308,13 +324,14 @@ def convert_pdf_to_scanned(pdf_list, image_quality, askew):
     output_file_list = []
     pages_scanned = 0
     for pdf_path in pdf_list:
-        try:
-            output_path = _add_suffix(pdf_path)
-            images = _convert_pdf_pages_to_jpg_list(pdf_path, image_quality, askew)
-            pages_scanned += _save_image_obj_to_pdf(images, output_path)
-            output_file_list.append(output_path)
-        except Exception as e:
-            print_color_text(f"Error converting file {pdf_path} :- {e}", "Red")
+        if files_exists(pdf_path):
+            try:
+                output_path = _add_suffix(pdf_path)
+                images = _convert_pdf_pages_to_jpg_list(pdf_path, image_quality, askew)
+                pages_scanned += _save_image_obj_to_pdf(images, output_path)
+                output_file_list.append(output_path)
+            except Exception as e:
+                print_color_text(f"Error converting file {pdf_path} :- {e}", "Red")
 
     _calc_energy_savings(pages_scanned)
     return output_file_list
