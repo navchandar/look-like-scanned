@@ -7,16 +7,17 @@ import random
 import argparse
 import colorama
 from colorama import Fore, Style
-from pprint import pprint
 import pypdfium2 as pdfium
 from PIL import Image, ImageEnhance
+from pathlib import Path
+from pprint import pprint as pretty_print
 
-SUPPORTED_IMAGES = [".jpg", ".png", ".jpeg", ".webp"]
-SUPPORTED_DOCS = [".pdf", ".PDF"]
+SUPPORTED_IMAGES = ["jpg", "png", "jpeg", "webp"]
+SUPPORTED_DOCS = ["pdf", "PDF"]
 CHOICES = ["y", "yes", "n", "no", "true", "false"]
 
 
-def print_color_text(text, color):
+def print_color(text, color):
     """
     Print the specified text in the given color.
     Available colors: 'black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white'.
@@ -52,7 +53,8 @@ def parse_args():
         "-f",
         "--file_type_or_name",
         type=str,
-        help="The file types to process or file name to process. Valid value - image, pdf, file names (default: pdf)",
+        help="The file types to process or file name to process.\
+    Valid value - image, pdf, file names (default: pdf)",
     )
     parser.add_argument(
         "-q",
@@ -60,7 +62,8 @@ def parse_args():
         type=int,
         choices=range(50, 101, 5),
         default=95,
-        help="The quality of the converted output files. Valid range - 50 to 100 increment in steps of 5 (default: 95)",
+        help="The quality of the converted output files.\
+    Valid range - 50 to 100 increment in steps of 5 (default: 95)",
     )
     parser.add_argument(
         "-a",
@@ -98,14 +101,17 @@ def get_input_folder(args):
 
 
 def get_quality(args):
+    """Return the output file quality from command-line argument"""
     return args.file_quality
 
 
 def get_askew(args):
+    """Return if output file should have skewed pages"""
     return args.askew.lower().startswith(("y", "t"))
 
 
 def get_recurse(args):
+    """Return if input files should be searched within sub folders"""
     return args.recurse.lower().startswith(("y", "t"))
 
 
@@ -146,9 +152,8 @@ def files_exists(file_path):
     """Check if given file path exists in the file system"""
     if os.path.exists(file_path):
         return True
-    else:
-        print_color_text(f"File doesn't exist or incorrect path: {file_path}", "Red")
-        return False
+    print_color(f"File doesn't exist or incorrect path: {file_path}", "Red")
+    return False
 
 
 def reduce_image_quality(image, quality=100, compression="JPEG"):
@@ -193,10 +198,10 @@ def _convert_pdf_pages_to_jpg_list(pdf_path, image_quality=100, askew=True):
         # increase render resolution for better scanned image quality
         bitmap = page.render(scale=2)
         image = bitmap.to_pil()
+        image = image.convert("RGB")
 
         # Reduce image quality a little bit
         image = reduce_image_quality(image, image_quality)
-        image = image.convert("RGB")
 
         # increase brightness a little bit
         enhancer = ImageEnhance.Brightness(image)
@@ -286,35 +291,37 @@ def _calc_energy_savings(pages_scanned):
 
     if pages_scanned > 0:
         savings = f"\nYou just saved {energy_saved} energy by avoiding printing {pages_scanned} pages of paper!\n"
-        print_color_text(savings, "Green")
+        print_color(savings, "Green")
 
 
 def convert_images_to_pdf(input_image_list, image_quality, askew):
     """Converts all image files in a folder to PDF"""
     images_list = []
 
-    # Output pdf name will be the fetched from first Image's name
-    output_pdf_path = os.path.splitext(input_image_list[0])[0] + "_output.pdf"
-    for image_path in input_image_list:
-        if files_exists(image_path):
-            try:
-                image = Image.open(image_path)
-                # reduce image quality a little bit
-                image = reduce_image_quality(image, image_quality)
-                image = image.convert("RGB")
+    if input_image_list:
+        # Output pdf name will be the fetched from first Image's name
+        output_pdf_path = os.path.splitext(input_image_list[0])[0] + "_output.pdf"
+        for image_path in input_image_list:
+            if files_exists(image_path):
+                try:
+                    image = Image.open(image_path)
+                    image = image.convert("RGB")
 
-                # Rotate every image by a small random angle
-                if askew:
-                    image = rotate_image(image, random.uniform(-0.75, 0.75))
+                    # reduce image quality a little bit
+                    image = reduce_image_quality(image, image_quality)
 
-                image = _change_image_to_byte_buffer(image)
-                images_list.append(image)
-            except Exception as e:
-                print_color_text(f"Error converting file {image_path} :- {e}", "Red")
+                    # Rotate every image by a small random angle
+                    if askew:
+                        image = rotate_image(image, random.uniform(-0.75, 0.75))
 
-    pages_scanned = _save_image_obj_to_pdf(images_list, output_pdf_path, pdf_version=17)
-    _calc_energy_savings(pages_scanned)
-    return output_pdf_path
+                    image = _change_image_to_byte_buffer(image)
+                    images_list.append(image)
+                except Exception as err:
+                    print_color(f"Error converting file {image_path} :- {err}", "Red")
+
+        pages_scanned = _save_image_obj_to_pdf(images_list, output_pdf_path)
+        _calc_energy_savings(pages_scanned)
+        return output_pdf_path
 
 
 def convert_pdf_to_scanned(pdf_list, image_quality, askew):
@@ -330,8 +337,8 @@ def convert_pdf_to_scanned(pdf_list, image_quality, askew):
                 images = _convert_pdf_pages_to_jpg_list(pdf_path, image_quality, askew)
                 pages_scanned += _save_image_obj_to_pdf(images, output_path)
                 output_file_list.append(output_path)
-            except Exception as e:
-                print_color_text(f"Error converting file {pdf_path} :- {e}", "Red")
+            except Exception as err:
+                print_color(f"Error converting file {pdf_path} :- {err}", "Red")
 
     _calc_energy_savings(pages_scanned)
     return output_file_list
@@ -339,21 +346,24 @@ def convert_pdf_to_scanned(pdf_list, image_quality, askew):
 
 def find_matching_files(input_folder, file_type_list, recurse=False):
     """
-    Find files in given input folder and filter only matching file types.
-    If recurse is True, this method will identify all matching files in all sub directories.
+    Find files in the given input folder and filter only matching file types.
+    If recurse is True, this method will identify all matching files in all subdirectories.
     """
     files_list = []
+    print(f"{input_folder=}")
     try:
-        for file in os.listdir(input_folder):
-            path = os.path.join(input_folder, file)
-            if os.path.isfile(path) and any(
-                file.endswith(ext) for ext in file_type_list
-            ):
-                files_list.append(path)
-            if recurse and os.path.isdir(path):
-                files_list.extend(find_matching_files(path, file_type_list, recurse))
-    except Exception as e:
-        print_color_text(f"Error when searching for files :- {e}", "Red")
+        path = Path(input_folder)
+        for file in path.iterdir():
+            if file.is_file() and file.suffix.lower().lstrip(".") in file_type_list:
+                files_list.append(str(file.absolute()))
+            elif recurse and file.is_dir():
+                files_list.extend(find_matching_files(file, file_type_list, recurse))
+    except FileNotFoundError as err:
+        print_color(f"Input folder not found: {input_folder}", "red")
+    except PermissionError as err:
+        print_color(f"Permission denied: {input_folder}", "red")
+    except Exception as err:
+        print_color(f"Error when searching for files: {err}", "red")
     return files_list
 
 
@@ -374,17 +384,15 @@ def main():
     recurse = get_recurse(args)
     doc_type, file_type_list = get_file_type(args)
 
-    print_color_text(
-        f"{quality=} {recurse=} {askew=} {doc_type=} {file_type_list=}", "Cyan"
-    )
+    print_color(f"{quality=} {recurse=} {askew=} {doc_type=} {file_type_list=}", "Cyan")
 
     # Gather the input files based on the arguments
     files_list = find_matching_files(input_folder, file_type_list, recurse)
     # Sort file paths so output gets saved in top level directory
     files_list = sorted(files_list, key=sort_by_top_level_directory)
 
-    print_color_text(f"\nMatching Files Found: {len(files_list)}", "Blue")
-    pprint(files_list)
+    print_color(f"\nMatching Files Found: {len(files_list)}", "Blue")
+    pretty_print(files_list)
 
     # Convert the files found into output files
     pdf_path = None
@@ -397,11 +405,9 @@ def main():
 
     if pdf_path:
         print(f"The Output PDF files saved at:")
-        pprint(pdf_path)
+        pretty_print(pdf_path)
     else:
-        print_color_text(
-            "No matching files found. No output documents generated!", "Red"
-        )
+        print_color("No matching files found. No output documents generated!", "Red")
 
 
 if __name__ == "__main__":
