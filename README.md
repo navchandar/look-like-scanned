@@ -5,15 +5,17 @@
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/navchandar/look-like-scanned/issues)
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/) 
 
- - Python script to make documents look like they were scanned. 
+ - Python script to make documents look like they were scanned.
 
- - It converts every page of a given PDF file into an image-based page and applies random askew and brightness (very mild) effects to simulate the appearance of scanned documents.
+ - Local, Private, Secure, Open-Source and Transparent!
+
+ - Converts every page of a given PDF file into an image-based page and applies random askew and brightness (very mild) effects to simulate the appearance of scanned documents.
  
  - The resulting pages are then combined back into an Output PDF file.
 
  - There are options to combine / convert image files into PDF as well.
 
- - Output PDF files are saved in the same input folder with a suffix _"filename_output.pdf"_
+ - Output PDF files are saved in the same folder with a suffix _"File_Name_output.pdf"_
 
 
 ## Installation
@@ -100,6 +102,8 @@ These are the command-line arguments accepted:
 - The output PDF file size **will be bigger** than the input file because the pages are stored in image format.
 
 - Bookmarks / Links / Metadata will be removed when saving the output file.
+
+- Transparency will be removed from png files when converting to pdf.
 
 - Password protected PDF files are not yet supported.
 

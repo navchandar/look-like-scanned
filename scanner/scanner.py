@@ -350,7 +350,6 @@ def find_matching_files(input_folder, file_type_list, recurse=False):
     If recurse is True, this method will identify all matching files in all subdirectories.
     """
     files_list = []
-    print(f"{input_folder=}")
     try:
         path = Path(input_folder)
         for file in path.iterdir():
@@ -404,7 +403,7 @@ def main():
         print("Error: Unsupported file format!")
 
     if pdf_path:
-        print(f"The Output PDF files saved at:")
+        print("The Output PDF files saved at:")
         pretty_print(pdf_path)
     else:
         print_color("No matching files found. No output documents generated!", "Red")
