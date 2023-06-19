@@ -297,7 +297,7 @@ def _calc_energy_savings(pages_scanned):
 def convert_images_to_pdf(input_image_list, image_quality, askew):
     """Converts all image files in a folder to PDF"""
     images_list = []
-
+    output_pdf_path = None
     if input_image_list:
         # Output pdf name will be the fetched from first Image's name
         output_pdf_path = os.path.splitext(input_image_list[0])[0] + "_output.pdf"
@@ -321,7 +321,7 @@ def convert_images_to_pdf(input_image_list, image_quality, askew):
 
         pages_scanned = _save_image_obj_to_pdf(images_list, output_pdf_path)
         _calc_energy_savings(pages_scanned)
-        return output_pdf_path
+    return output_pdf_path
 
 
 def convert_pdf_to_scanned(pdf_list, image_quality, askew):
@@ -400,13 +400,13 @@ def main():
     elif doc_type == "pdf":
         pdf_path = convert_pdf_to_scanned(files_list, quality, askew)
     else:
-        print("Error: Unsupported file format!")
+        print_color("Error: Unsupported file format!", "Red")
 
     if pdf_path:
         print("The Output PDF files saved at:")
         pretty_print(pdf_path)
     else:
-        print_color("No matching files found. No output documents generated!", "Red")
+        print_color("No matching files found. No output documents generated!\n", "Red")
 
 
 if __name__ == "__main__":
