@@ -107,6 +107,8 @@ These are the command-line arguments accepted:
 
 - Password protected PDF files are not yet supported.
 
+- [Youtube: How to Insert a Signature on a PDF File](http://www.youtube.com/watch?v=FKlAwFcMutY)
+
 
 ## License
  
