@@ -271,23 +271,23 @@ testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
 name = "pypdfium2"
-version = "4.14.0"
+version = "4.15.0"
 description = "Python bindings to PDFium"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "pypdfium2-4.14.0-py3-none-macosx_10_13_x86_64.whl", hash = "sha256:ec05ed57932e0297d8df63a4f12350524542316a64356a715aab5dd0d1dbc6d8"},
-    {file = "pypdfium2-4.14.0-py3-none-macosx_11_0_arm64.whl", hash = "sha256:b8acb646197b56104fd62ed2b3613cbc8df50b6ed1e745ceb38406e8bcb30277"},
-    {file = "pypdfium2-4.14.0-py3-none-manylinux_2_26_aarch64.whl", hash = "sha256:7fda8196d47d65f96b83ec93cef1d505eda62eed66aa6c15d701f76f90c1e366"},
-    {file = "pypdfium2-4.14.0-py3-none-manylinux_2_26_armv7l.whl", hash = "sha256:02fce239bf64ee59a61e09e26534bcc0326ac7112c26664bb40fdf0ba4026e9a"},
-    {file = "pypdfium2-4.14.0-py3-none-manylinux_2_26_i686.whl", hash = "sha256:dc718491523ea0d1441ccffd834b9d3d461a82b2d09191bd4cdb9d46630fad4c"},
-    {file = "pypdfium2-4.14.0-py3-none-manylinux_2_26_x86_64.whl", hash = "sha256:f1d5866ff0ea8389ffd29d8d240cdd2a530dcc20ece02d387f97a687ebe6f4f7"},
-    {file = "pypdfium2-4.14.0-py3-none-musllinux_1_2_i686.whl", hash = "sha256:e2d4157e93e0b5e020c41c9ce99b55185d04bc84909e45bafca84f5e994acde4"},
-    {file = "pypdfium2-4.14.0-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:b5e818977211dcaafee4e5e4d5f47293ae81d138caed1b773f87c90e99cbac62"},
-    {file = "pypdfium2-4.14.0-py3-none-win32.whl", hash = "sha256:cba71cf4cce4feecc08a346f05fcf047920d217aae378fde4bdb174df4228b23"},
-    {file = "pypdfium2-4.14.0-py3-none-win_amd64.whl", hash = "sha256:f2d9e5c5e1b5deb3a0ef941195dfdd13007c8256a9c794b5d8a145597665d6e5"},
-    {file = "pypdfium2-4.14.0-py3-none-win_arm64.whl", hash = "sha256:1831a4699460182d9567519564db2bf0707fca0f27a1d176175fd5fc9c3fd76e"},
-    {file = "pypdfium2-4.14.0.tar.gz", hash = "sha256:814956273a83c0da056dc77077f91b2c4669ada7c9abd7012238fa78428c743e"},
+    {file = "pypdfium2-4.15.0-py3-none-macosx_10_13_x86_64.whl", hash = "sha256:9cc6b28a1cbbefde86782d1d32316634f9f6a111d37515800954b729835d3531"},
+    {file = "pypdfium2-4.15.0-py3-none-macosx_11_0_arm64.whl", hash = "sha256:024d51840dc21bdd4660133231353504b0eeca520fcf0d5732cb774fd830c8ad"},
+    {file = "pypdfium2-4.15.0-py3-none-manylinux_2_26_aarch64.whl", hash = "sha256:13896844b73a22d6890e717f4976578ec1aebaf8086860af63f20d44c553d323"},
+    {file = "pypdfium2-4.15.0-py3-none-manylinux_2_26_armv7l.whl", hash = "sha256:792255c4a17394d9a95f4f88d07b13ff18f960832aaf87f7d1f181949e671915"},
+    {file = "pypdfium2-4.15.0-py3-none-manylinux_2_26_i686.whl", hash = "sha256:8757c200b50e4ea61f73d4586b1a21df3ec5cf8fe851eb6ccf0efc9e96e42540"},
+    {file = "pypdfium2-4.15.0-py3-none-manylinux_2_26_x86_64.whl", hash = "sha256:310ee240cb62baa5f7448efc3345121c9b002f76acfa689fea2f4554d7a1ad06"},
+    {file = "pypdfium2-4.15.0-py3-none-musllinux_1_2_i686.whl", hash = "sha256:54ca35658f14d9aa0a6e9dab3543909540e02b9fb691507ac86cfcca8f864d5e"},
+    {file = "pypdfium2-4.15.0-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:033270711de410b8cfd8ff1d3778afaade538c157726a09622a950b7e9aed782"},
+    {file = "pypdfium2-4.15.0-py3-none-win32.whl", hash = "sha256:99b47d3eadc9c01af3c19760962ea6635c2222260ae3d1f8b0844b4cacdccdcb"},
+    {file = "pypdfium2-4.15.0-py3-none-win_amd64.whl", hash = "sha256:1279225608650687cc2de7dd6d2c90ed313fcc948e749f434a798ea26e688d3f"},
+    {file = "pypdfium2-4.15.0-py3-none-win_arm64.whl", hash = "sha256:ff9650d4a6638e43e7237d538b621a5004b87f665c4c9e3dc773a484d12ba9bb"},
+    {file = "pypdfium2-4.15.0.tar.gz", hash = "sha256:1d7ea82690c5b195c065e714380f9bce11b3fdaac5acfac0508c841ef862ab60"},
 ]
 
 [[package]]
