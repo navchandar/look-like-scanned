@@ -5,13 +5,13 @@ import os
 import io
 import random
 import argparse
-import colorama
-from colorama import Fore, Style
+from pathlib import Path
+from importlib import metadata
 import pypdfium2 as pdfium
 from PIL import Image, ImageEnhance
-from pathlib import Path
 from pprint import pprint as pretty_print
-import importlib.metadata as metadata
+import colorama
+from colorama import Fore, Style
 
 SUPPORTED_IMAGES = ["jpg", "png", "jpeg", "webp"]
 SUPPORTED_DOCS = ["pdf", "PDF"]
@@ -141,17 +141,15 @@ def get_file_type(args):
         file_type = args.file_type_or_name.lower()
         if file_type == "image":
             return "image", SUPPORTED_IMAGES
-        elif any(
+        if any(
             f.endswith(file_type) or file_type.endswith(f) for f in SUPPORTED_IMAGES
         ):
             return "image", [args.file_type_or_name]
-        elif any(
-            f.endswith(file_type) or file_type.endswith(f) for f in SUPPORTED_DOCS
-        ):
+        if any(f.endswith(file_type) or file_type.endswith(f) for f in SUPPORTED_DOCS):
             return "pdf", [args.file_type_or_name]
-    else:
-        print("Defaulting to find pdf files")
-        return "pdf", SUPPORTED_DOCS
+    # if none of the above scenarios match, default to PDFs
+    print("Defaulting to find pdf files")
+    return "pdf", SUPPORTED_DOCS
 
 
 def human_size(num, suffix="B"):
@@ -425,9 +423,8 @@ def sort_by_top_level_directory(path):
 
 
 def main():
-    print_version()
-
     """Get input arguments and run the script"""
+    print_version()
     args = parse_args()
 
     # Gather input arguments from command-line
