@@ -28,6 +28,7 @@ pip install look-like-scanned
 Or to install latest version from GitHub
 ```shell
 git clone https://github.com/navchandar/look-like-scanned.git
+cd look-like-scanned
 pip install poetry
 poetry install
 pip install .
@@ -73,6 +74,9 @@ scanner -i .\tests -f "pdf" -r yes
 # Convert all Images including sub folders into one PDF
 scanner -i .\tests -f "image" -r yes
 
+# Convert all PDF files including sub folders and save in black & white format
+scanner -i .\tests -f "pdf" -r yes -b yes
+
 ```
 
 ## Arguments
@@ -90,6 +94,9 @@ These are the command-line arguments accepted:
 
 - `-a, --askew` : Controls whether to make the output documents slightly askew or slightly tilted. Accepted values are "yes" or "no". The default value is "yes". 
     - Example: `-a yes` or `--askew no`
+
+- `-b, --black_and_white` : Controls whether to save output documents in black and white format (to make it look like a photocopy) . Accepted values are "yes" or "no". The default value is "no". 
+    - Example: `-b yes` or `--black_and_white no`
 
 - `-r, --recurse` : Allows scripts to find all matching files including subdirectories. Accepted values are "yes" or "no". The default value is "yes". 
     - Example: `-r yes` or `--recurse no`
