@@ -11,6 +11,7 @@ import pypdfium2 as pdfium
 from PIL import Image, ImageEnhance
 from pathlib import Path
 from pprint import pprint as pretty_print
+import importlib.metadata as metadata
 
 SUPPORTED_IMAGES = ["jpg", "png", "jpeg", "webp"]
 SUPPORTED_DOCS = ["pdf", "PDF"]
@@ -82,6 +83,15 @@ def parse_args():
         help="Recurse in all sub folders to find matching files and convert them (default: no)",
     )
 
+    parser.add_argument(
+        "-b",
+        "--black_and_white",
+        type=str.lower,
+        choices=CHOICES,
+        default="no",
+        help="Make output documents black and white. Make it look like a photocopy (default: no)",
+    )
+
     return parser.parse_args()
 
 
@@ -105,14 +115,24 @@ def get_quality(args):
     return args.file_quality
 
 
+def _is_true(arg):
+    """Return True in boolean type if given argument string is true or yes"""
+    return arg.lower().startswith(("y", "t"))
+
+
 def get_askew(args):
     """Return if output file should have skewed pages"""
-    return args.askew.lower().startswith(("y", "t"))
+    return _is_true(args.askew)
 
 
 def get_recurse(args):
     """Return if input files should be searched within sub folders"""
-    return args.recurse.lower().startswith(("y", "t"))
+    return _is_true(args.recurse)
+
+
+def get_blackandwhite(args):
+    """Return if output files should look like a photocopy"""
+    return _is_true(args.black_and_white)
 
 
 def get_file_type(args):
@@ -188,7 +208,21 @@ def rotate_image(image, angle):
     return rotated_image
 
 
-def _convert_pdf_pages_to_jpg_list(pdf_path, image_quality=100, askew=True):
+def black_and_white_image(image):
+    """Make image black and white like a photocopy"""
+    bw_image = image.convert("L")
+    # Adjust the contrast level
+    enhancer = ImageEnhance.Contrast(bw_image)
+    bw_image = enhancer.enhance(random.uniform(1.2, 1.5))
+    return bw_image
+
+
+def _convert_pdf_pages_to_jpg_list(
+    pdf_path,
+    image_quality=100,
+    askew=True,
+    blackandwhite=False,
+):
     """
     Reads given pdf file and reads all pages and converts them to image objects
     """
@@ -210,6 +244,10 @@ def _convert_pdf_pages_to_jpg_list(pdf_path, image_quality=100, askew=True):
         # Rotate every image by a small random angle
         if askew:
             image = rotate_image(image, random.uniform(-0.55, 0.55))
+
+        # Make image black and white like a photocopy
+        if blackandwhite:
+            image = black_and_white_image(image)
 
         image = _change_image_to_byte_buffer(image)
         images_list.append(image)
@@ -294,7 +332,7 @@ def _calc_energy_savings(pages_scanned):
         print_color(savings, "Green")
 
 
-def convert_images_to_pdf(input_image_list, image_quality, askew):
+def convert_images_to_pdf(input_image_list, image_quality, askew, blackandwhite):
     """Converts all image files in a folder to PDF"""
     images_list = []
     output_pdf_path = None
@@ -314,6 +352,10 @@ def convert_images_to_pdf(input_image_list, image_quality, askew):
                     if askew:
                         image = rotate_image(image, random.uniform(-0.75, 0.75))
 
+                    # Make image black and white like a photocopy
+                    if blackandwhite:
+                        image = black_and_white_image(image)
+
                     image = _change_image_to_byte_buffer(image)
                     images_list.append(image)
                 except Exception as err:
@@ -324,7 +366,7 @@ def convert_images_to_pdf(input_image_list, image_quality, askew):
     return output_pdf_path
 
 
-def convert_pdf_to_scanned(pdf_list, image_quality, askew):
+def convert_pdf_to_scanned(pdf_list, image_quality, askew, blackandwhite):
     """
     Converts PDF files into scanned PDF files
     """
@@ -334,7 +376,9 @@ def convert_pdf_to_scanned(pdf_list, image_quality, askew):
         if files_exists(pdf_path):
             try:
                 output_path = _add_suffix(pdf_path)
-                images = _convert_pdf_pages_to_jpg_list(pdf_path, image_quality, askew)
+                images = _convert_pdf_pages_to_jpg_list(
+                    pdf_path, image_quality, askew, blackandwhite
+                )
                 pages_scanned += _save_image_obj_to_pdf(images, output_path)
                 output_file_list.append(output_path)
             except Exception as err:
@@ -342,6 +386,12 @@ def convert_pdf_to_scanned(pdf_list, image_quality, askew):
 
     _calc_energy_savings(pages_scanned)
     return output_file_list
+
+
+def print_version():
+    """prints the version number of the module"""
+    version = metadata.version("look-like-scanned")
+    print_color(f"Scanner version: {version}", "Green")
 
 
 def find_matching_files(input_folder, file_type_list, recurse=False):
@@ -354,6 +404,8 @@ def find_matching_files(input_folder, file_type_list, recurse=False):
         path = Path(input_folder)
         for file in path.iterdir():
             if file.is_file() and file.suffix.lower().lstrip(".") in file_type_list:
+                files_list.append(str(file.absolute()))
+            elif file.is_file() and file.name in file_type_list:
                 files_list.append(str(file.absolute()))
             elif recurse and file.is_dir():
                 files_list.extend(find_matching_files(file, file_type_list, recurse))
@@ -373,6 +425,8 @@ def sort_by_top_level_directory(path):
 
 
 def main():
+    print_version()
+
     """Get input arguments and run the script"""
     args = parse_args()
 
@@ -381,9 +435,13 @@ def main():
     quality = get_quality(args)
     askew = get_askew(args)
     recurse = get_recurse(args)
+    blackandwhite = get_blackandwhite(args)
     doc_type, file_type_list = get_file_type(args)
 
-    print_color(f"{quality=} {recurse=} {askew=} {doc_type=} {file_type_list=}", "Cyan")
+    print_color(
+        f"{quality=} {recurse=} {askew=} {blackandwhite=} {doc_type=} {file_type_list=}",
+        "Cyan",
+    )
 
     # Gather the input files based on the arguments
     files_list = find_matching_files(input_folder, file_type_list, recurse)
@@ -396,9 +454,9 @@ def main():
     # Convert the files found into output files
     pdf_path = None
     if doc_type == "image":
-        pdf_path = convert_images_to_pdf(files_list, quality, askew)
+        pdf_path = convert_images_to_pdf(files_list, quality, askew, blackandwhite)
     elif doc_type == "pdf":
-        pdf_path = convert_pdf_to_scanned(files_list, quality, askew)
+        pdf_path = convert_pdf_to_scanned(files_list, quality, askew, blackandwhite)
     else:
         print_color("Error: Unsupported file format!", "Red")
 
