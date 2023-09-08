@@ -106,7 +106,7 @@ def get_input_folder(args):
     if os.path.exists(input_folder):
         print(f"Processing files from {input_folder=}")
     else:
-        print(f"Error: Input folder path not found: {input_folder}")
+        print_color(f"Error: Input folder path not found: {input_folder}", "Red")
     return input_folder
 
 
@@ -219,7 +219,7 @@ def _convert_pdf_pages_to_jpg_list(
     pdf_path,
     image_quality=100,
     askew=True,
-    blackandwhite=False,
+    black_and_white=False,
 ):
     """
     Reads given pdf file and reads all pages and converts them to image objects
@@ -244,7 +244,7 @@ def _convert_pdf_pages_to_jpg_list(
             image = rotate_image(image, random.uniform(-0.55, 0.55))
 
         # Make image black and white like a photocopy
-        if blackandwhite:
+        if black_and_white:
             image = black_and_white_image(image)
 
         image = _change_image_to_byte_buffer(image)
@@ -330,7 +330,7 @@ def _calc_energy_savings(pages_scanned):
         print_color(savings, "Green")
 
 
-def convert_images_to_pdf(input_image_list, image_quality, askew, blackandwhite):
+def convert_images_to_pdf(input_image_list, image_quality, askew, black_and_white):
     """Converts all image files in a folder to PDF"""
     images_list = []
     output_pdf_path = None
@@ -351,7 +351,7 @@ def convert_images_to_pdf(input_image_list, image_quality, askew, blackandwhite)
                         image = rotate_image(image, random.uniform(-0.75, 0.75))
 
                     # Make image black and white like a photocopy
-                    if blackandwhite:
+                    if black_and_white:
                         image = black_and_white_image(image)
 
                     image = _change_image_to_byte_buffer(image)
@@ -364,7 +364,7 @@ def convert_images_to_pdf(input_image_list, image_quality, askew, blackandwhite)
     return output_pdf_path
 
 
-def convert_pdf_to_scanned(pdf_list, image_quality, askew, blackandwhite):
+def convert_pdf_to_scanned(pdf_list, image_quality, askew, black_and_white):
     """
     Converts PDF files into scanned PDF files
     """
@@ -375,7 +375,7 @@ def convert_pdf_to_scanned(pdf_list, image_quality, askew, blackandwhite):
             try:
                 output_path = _add_suffix(pdf_path)
                 images = _convert_pdf_pages_to_jpg_list(
-                    pdf_path, image_quality, askew, blackandwhite
+                    pdf_path, image_quality, askew, black_and_white
                 )
                 pages_scanned += _save_image_obj_to_pdf(images, output_path)
                 output_file_list.append(output_path)
@@ -388,6 +388,7 @@ def convert_pdf_to_scanned(pdf_list, image_quality, askew, blackandwhite):
 
 def print_version():
     """prints the version number of the module"""
+    print(metadata)
     version = metadata.version("look-like-scanned")
     print_color(f"Scanner version: {version}", "Green")
 
@@ -401,10 +402,12 @@ def find_matching_files(input_folder, file_type_list, recurse=False):
     try:
         path = Path(input_folder)
         for file in path.iterdir():
-            if file.is_file() and file.suffix.lower().lstrip(".") in file_type_list:
-                files_list.append(str(file.absolute()))
-            elif file.is_file() and file.name in file_type_list:
-                files_list.append(str(file.absolute()))
+            if file.is_file():
+                # checks if file in given folder contains expected file types
+                sfx = file.suffix.lower().lstrip(".")
+                file_in_list = (file.name in file_type_list) or (sfx in file_type_list)
+                if file_in_list:
+                    files_list.append(str(file.absolute()))
             elif recurse and file.is_dir():
                 files_list.extend(find_matching_files(file, file_type_list, recurse))
     except FileNotFoundError as err:
@@ -422,6 +425,28 @@ def sort_by_top_level_directory(path):
     return len(directories)
 
 
+def convert_and_save(files_list, doc_type, quality, askew, black_and_white):
+    """Convert input files into necessary output document format"""
+    pdf_path = None
+
+    print_color(f"\nMatching Files Found: {len(files_list)}", "Blue")
+    pretty_print(files_list)
+
+    # Convert the files found into output files
+    if doc_type == "image":
+        pdf_path = convert_images_to_pdf(files_list, quality, askew, black_and_white)
+    elif doc_type == "pdf":
+        pdf_path = convert_pdf_to_scanned(files_list, quality, askew, black_and_white)
+    else:
+        print_color("Error: Unsupported file format!", "Red")
+
+    if pdf_path:
+        print("The Output PDF files saved at:")
+        pretty_print(pdf_path)
+    else:
+        print_color("No matching files found. No output documents generated!\n", "Red")
+
+
 def main():
     """Get input arguments and run the script"""
     print_version()
@@ -432,11 +457,12 @@ def main():
     quality = get_quality(args)
     askew = get_askew(args)
     recurse = get_recurse(args)
-    blackandwhite = get_blackandwhite(args)
+    black_and_white = get_blackandwhite(args)
     doc_type, file_type_list = get_file_type(args)
 
     print_color(
-        f"{quality=} {recurse=} {askew=} {blackandwhite=} {doc_type=} {file_type_list=}",
+        f"{quality=} {recurse=} {askew=} "
+        f"{black_and_white=} {doc_type=} {file_type_list=}",
         "Cyan",
     )
 
@@ -445,23 +471,8 @@ def main():
     # Sort file paths so output gets saved in top level directory
     files_list = sorted(files_list, key=sort_by_top_level_directory)
 
-    print_color(f"\nMatching Files Found: {len(files_list)}", "Blue")
-    pretty_print(files_list)
-
-    # Convert the files found into output files
-    pdf_path = None
-    if doc_type == "image":
-        pdf_path = convert_images_to_pdf(files_list, quality, askew, blackandwhite)
-    elif doc_type == "pdf":
-        pdf_path = convert_pdf_to_scanned(files_list, quality, askew, blackandwhite)
-    else:
-        print_color("Error: Unsupported file format!", "Red")
-
-    if pdf_path:
-        print("The Output PDF files saved at:")
-        pretty_print(pdf_path)
-    else:
-        print_color("No matching files found. No output documents generated!\n", "Red")
+    # Convert input files to look like scanned
+    convert_and_save(files_list, doc_type, quality, askew, black_and_white)
 
 
 if __name__ == "__main__":
