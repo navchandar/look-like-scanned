@@ -10,8 +10,7 @@ from importlib import metadata
 import pypdfium2 as pdfium
 from PIL import Image, ImageEnhance
 from pprint import pprint as pretty_print
-import colorama
-from colorama import Fore, Style
+from colorama import Fore, Style, init
 
 SUPPORTED_IMAGES = ["jpg", "png", "jpeg", "webp"]
 SUPPORTED_DOCS = ["pdf", "PDF"]
@@ -38,7 +37,7 @@ def print_color(text, color):
 
 
 # Initialize colorama
-colorama.init()
+init()
 
 
 def parse_args():
@@ -152,13 +151,16 @@ def get_file_type(args):
     return "pdf", SUPPORTED_DOCS
 
 
-def human_size(num, suffix="B"):
-    """Return file size in a human readable format"""
-    for unit in ["", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi"]:
-        if abs(num) < 1024.0:
-            return f"{num:3.1f}{unit}{suffix}"
-        num /= 1024.0
-    return f"{num:.1f}Yi{suffix}"
+def human_size(size_in_bytes, base=1024.0, suffix="B"):
+    """Return input file size in bytes in a human readable format like KiB, MiB, etc."""
+    if size_in_bytes == 0:
+        return f"0 {suffix}"
+    units = ["", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi"]
+    for unit in units:
+        if abs(size_in_bytes) < base:
+            return f"{size_in_bytes:3.1f}{unit}{suffix}"
+        size_in_bytes /= base
+    return f"{size_in_bytes:.1f}Yi{suffix}"
 
 
 def get_file_size(file_path):
@@ -388,7 +390,6 @@ def convert_pdf_to_scanned(pdf_list, image_quality, askew, black_and_white):
 
 def print_version():
     """prints the version number of the module"""
-    print(metadata)
     version = metadata.version("look-like-scanned")
     print_color(f"Scanner version: {version}", "Green")
 
