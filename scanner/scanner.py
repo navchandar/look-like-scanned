@@ -7,9 +7,9 @@ import random
 import argparse
 from pathlib import Path
 from importlib import metadata
-import pypdfium2 as pdfium
 from PIL import Image, ImageEnhance
 from pprint import pprint as pretty_print
+import pypdfium2 as pdfium
 from colorama import Fore, Style, init
 
 SUPPORTED_IMAGES = ["jpg", "png", "jpeg", "webp"]
@@ -327,8 +327,8 @@ def _calc_energy_savings(pages_scanned):
         energy_saved = energy_saved / 1000000
         energy_saved = f"{energy_saved:.2f} Mega Watt hours"
 
+    savings = f"\nYou just saved {energy_saved} energy by not printing {pages_scanned} pages of paper!\n"
     if pages_scanned > 0:
-        savings = f"\nYou just saved {energy_saved} energy by avoiding printing {pages_scanned} pages of paper!\n"
         print_color(savings, "Green")
 
 
@@ -411,9 +411,9 @@ def find_matching_files(input_folder, file_type_list, recurse=False):
                     files_list.append(str(file.absolute()))
             elif recurse and file.is_dir():
                 files_list.extend(find_matching_files(file, file_type_list, recurse))
-    except FileNotFoundError as err:
+    except FileNotFoundError:
         print_color(f"Input folder not found: {input_folder}", "red")
-    except PermissionError as err:
+    except PermissionError:
         print_color(f"Permission denied: {input_folder}", "red")
     except Exception as err:
         print_color(f"Error when searching for files: {err}", "red")
