@@ -7,8 +7,8 @@ import random
 import argparse
 from pathlib import Path
 from importlib import metadata
-from PIL import Image, ImageEnhance
 from pprint import pprint as pretty_print
+from PIL import Image, ImageEnhance
 import pypdfium2 as pdfium
 from colorama import Fore, Style, init
 
@@ -228,6 +228,11 @@ def _convert_pdf_pages_to_jpg_list(
     """
     images_list = []
     doc = pdfium.PdfDocument(pdf_path)
+
+    # If pdf contains forms, initiate form fields to render on output
+    if doc.get_formtype():
+        doc.init_forms()
+
     for page in doc:
         # increase render resolution for better scanned image quality
         bitmap = page.render(scale=2)
