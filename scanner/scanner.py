@@ -332,7 +332,8 @@ def _calc_energy_savings(pages_scanned):
         energy_saved = energy_saved / 1000000
         energy_saved = f"{energy_saved:.2f} Mega Watt hours"
 
-    savings = f"\nYou just saved {energy_saved} energy by not printing {pages_scanned} pages of paper!\n"
+    savings = f"\nYou just saved {energy_saved} energy by not printing \
+{pages_scanned} pages of paper!\n"
     if pages_scanned > 0:
         print_color(savings, "Green")
 
