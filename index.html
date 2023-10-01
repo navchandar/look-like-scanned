@@ -3,10 +3,14 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>look-like-scanned</title>
+    <title>Make Documents Look Like Scanned</title>
     <meta name="description" content="Python script to make documents look like they were scanned.">
     <meta name="keywords" content="Python, scanned documents, PDF, image conversion">
     <style>
+        html {
+            font-size: 15px;
+        }
+
         /* Reset some default styles for consistency */
         body,
         h1,
@@ -23,20 +27,21 @@
         body {
             background-color: #f4f4f4;
             font-family: Arial, sans-serif;
+            padding: 1em;
+            padding-left: 2em;
         }
 
         /* Style headings */
         h1,
         h2 {
             color: #333;
-            margin-bottom: 10px;
-            margin-top: 10px;
+            margin-bottom: 0.666em;
+            margin-top: 0.666em;
         }
 
         h3 {
             color: #333;
-            margin-bottom: 5;
-            margin-bottom: 5px;
+            margin-bottom: 0.333em;
         }
 
         /* Style paragraphs */
@@ -48,14 +53,15 @@
         /* Style unordered lists */
         ul {
             list-style: disc;
-            margin-left: 20px;
-            margin-bottom: 20px;
+            margin-left: 1.333em;
+            margin-bottom: 1.333em;
         }
 
         /* Style list items */
         li {
             color: #4d4d4d;
-            margin-bottom: 5px;
+            margin-bottom: 0.333em;
+            line-height: 1.5em;
         }
 
         /* Style links */
@@ -70,33 +76,64 @@
             text-decoration: underline;
         }
 
+
         /* Style code blocks */
         pre {
             display: block;
             background: #272822;
             white-space: pre;
             max-width: 60vw;
-            min-width: 100px;
+            min-width: 6.666em;
             padding: 0;
-            border: 5px solid #272822;
+            border: 0.333em solid #272822;
+            border-radius: 0.500em;
         }
 
         code {
             font-family: Consolas, monospace;
+            font-size: 1.1em;
             border: none;
             color: white;
             background-color: #272822;
             line-height: 1.4em;
             word-wrap: break-word;
+            white-space: pre-wrap;
+            word-break: break-word;
             box-decoration-break: clone;
-            padding-left: 10px;
-            border-radius: none
+            padding-left: 0.666em;
         }
 
+        @media all and (min-width:800px) and (max-width: 1024px) {
+            pre {
+                max-width: 70vw;
+                min-width: 6.666em;
+                border-radius: 0.333em;
+            }
+        }
+
+        @media all and (max-width: 800px) {
+            pre {
+                max-width: 100vw;
+                min-width: 6.666em;
+                border-radius: 0.300em;
+            }
+
+            html {
+                font-size: 13px;
+            }
+
+            body {
+                padding: 0.5em;
+                padding-left: 1em;
+            }
+        }
+
+
         li>code {
+            font-size: 1em;
             line-height: 1.5em;
-            border: 5px solid #272822;
-            padding-left: 5px;
+            border: 0.333em solid #272822;
+            padding-left: 0.333em;
         }
 
         .comment {
@@ -110,29 +147,7 @@
         }
 
         a>img:hover {
-            box-shadow: 1px 1px 1px #333;
-        }
-
-        /* Style buttons (you can add buttons to your HTML and apply this class) */
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #0070ba;
-            color: #fff;
-            text-align: center;
-            text-decoration: none;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .button:hover {
-            background-color: #00509d;
-        }
-
-        body {
-            padding: 2em;
+            box-shadow: 0.0666em 0.0666em 0.0666em #333;
         }
     </style>
 </head>
@@ -141,28 +156,31 @@
     <h1>look-like-scanned</h1>
     <ul>
         <li>
-            This Python package offers the capability to make digital documents look like they were scanned. No Limits.
-            No Fee. No Adverts.
+            This Python package offers the capability to make digital documents look like they were scanned.
+            <i>No Limits. No Fee. No Adverts.</i>
         </li>
         <li>
-            The goal of the project is to prioritize <strong>privacy, security, open-source collaboration, and
-                transparency</strong>.
+            The goal of this project is to <strong>save trees</strong> and to prioritize <strong>privacy, security,
+                open-source collaboration, and transparency</strong>.
         </li>
         <li>
-            The script takes each page of a PDF file (or multiple images) and transforms them into a new image,
+            No need to print a document and then scan them again. No need to upload your confidential files to a sketchy
+            looking website.
+        </li>
+        <li>
+            The script reads each page of a PDF file (or multiple images) and transforms them into a new image,
             incorporating subtle random adjustments for skew and brightness.
-            This process effectively replicates the aesthetics of conventionally scanned documents.
+        </li>
+        <li>
+            This process effectively replicates the aesthetics of conventionally scanned documents, locally.
         </li>
         <li>
             The resulting pages are automatically combined into an Output PDF file in the same order and saved in the
             same folder.
         </li>
         <li>
-            The Output PDF files are added with "<i>{filename}</i>_output.pdf" to distinguish them from the originals.
-        </li>
-        <li>
-            No need to print a document and then scan them again. No need to upload your confidential files to a sketchy
-            looking website.
+            The Input PDF/Image files are never altered and Output PDF files are added with
+            <i>"{filename}_output.pdf"</i> to distinguish them.
         </li>
         <li>
             Uses simple command-line options to convert PDFs to scanned/grayscale PDFs, combine multiple images into PDF
@@ -180,6 +198,7 @@
             src="https://img.shields.io/github/issues/navchandar/look-like-scanned" alt="Open Issues"></a>
     <a href="https://github.com/navchandar/look-like-scanned/stargazers"><img
             src="https://img.shields.io/github/stars/navchandar/look-like-scanned" alt="Star Count"></a>
+    <br />
     <p>Install from the <a href="https://pypi.org/project/look-like-scanned/">Python Package Index (PyPI)</a> by running
         this command</p>
     <pre><code>pip install look-like-scanned</code></pre>
@@ -189,7 +208,7 @@ cd look-like-scanned
 pip install poetry
 poetry install
 pip install .</code></pre>
-    <h3>Verify Installation:</h3>
+    <h3>Verify Installation</h3>
     <pre><code>
 <span class="comment"># print help message and usage options available and verify the installation</span>
 scanner -h
