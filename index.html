@@ -4,8 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Make Documents Look Like Scanned</title>
-    <meta name="description" content="Python script to make documents look like they were scanned.">
-    <meta name="keywords" content="Python, scanned documents, PDF, image conversion">
+    <meta name="description"
+        content="Open-source Python package to make documents look like they were scanned/printed or merge multiple images to make pdf">
+    <meta name="keywords"
+        content="Python, scanned documents, PDF, image conversion, look like scanned, Scan pdf online">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         html {
             font-size: 15px;
@@ -203,7 +206,8 @@
         this command</p>
     <pre><code>pip install look-like-scanned</code></pre>
     <p>Or to install the latest version from <a href="https://github.com/navchandar/look-like-scanned">GitHub</a></p>
-    <pre><code>git clone https://github.com/navchandar/look-like-scanned.git
+    <pre><code><span class="comment"># Clone repo from GitHub and install</span>
+git clone https://github.com/navchandar/look-like-scanned.git
 cd look-like-scanned
 pip install poetry
 poetry install
@@ -268,7 +272,7 @@ scanner -i .\tests -f "pdf" -r yes -b yes</code>
         <li><code>-r, --recurse</code> - Allows scripts to find all matching files including subdirectories. Accepted
             values are "yes" or "no". The default value is "yes".</li>
     </ul>
-    <p>❗❗ <strong>Note:</strong> ❗❗</p>
+    <h3>❗❗ <strong>Note:</strong> ❗❗</h3>
     <ul>
         <li>The supported file types are: ".jpg", ".png", ".jpeg", ".webp", ".pdf".</li>
         <li>The output PDF file size <strong>will be bigger</strong> than the input file because the pages are stored in
@@ -281,7 +285,7 @@ scanner -i .\tests -f "pdf" -r yes -b yes</code>
     <a href="https://github.com/navchandar/look-like-scanned/blob/main/LICENSE">OSI Approved - MIT License</a>
     <br>
     <h3 style="display: inline-block;">Contact - </h3>
-    <span><a href="https://github.com/navchandar/look-like-scanned/issues">For any Feedback / Issues /
+    <span><a href="https://github.com/navchandar/look-like-scanned/issues">For Ideas / Feedback / Issues /
             Bugs</a></span>
 
     <br>
