@@ -141,8 +141,10 @@ def get_blackandwhite(args):
     return _is_true(args.black_and_white)
 
 def get_sort_key(args):
+    """Return the key with which files should be sorted and then coverted"""
     sort_by = args.sort_by.lower().strip()
-    return {"name": os.path.abspath, "ctime": os.path.getctime, "mtime": os.path.getmtime}.get(sort_by)
+    key_map = {"name": os.path.abspath, "ctime": os.path.getctime, "mtime": os.path.getmtime}
+    return key_map.get(sort_by)
 
 def get_file_type(args):
     """Get file type and supported documents based on input arguments"""
@@ -433,7 +435,7 @@ def find_matching_files(input_folder, file_type_list, recurse=False, sort_key=No
         print_color(f"Permission denied: {input_folder}", "red")
     except Exception as err:
         print_color(f"Error when searching for files: {err}", "red")
-    
+
     # Sort the list of files if sorting is requested by user
     if sort_key:
         files_list.sort(key=sort_key)

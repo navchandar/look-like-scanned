@@ -62,6 +62,9 @@ scanner -i .\tests -f "test.pdf"
 # Convert all jpg, jpeg, png, webp files in folder to one pdf file
 scanner -i .\tests -f "image"
 
+# Convert all image files in folder in the order of file names
+scanner -i .\tests -f "image" -s "name"
+
 # Convert all png files in folder to pdf with 100% quality to one pdf file
 scanner -i .\tests -f "png" -q 100
 
@@ -100,6 +103,9 @@ These are the command-line arguments accepted:
 
 - `-r, --recurse` : Allows scripts to find all matching files including subdirectories. Accepted values are "yes" or "no". The default value is "yes". 
     - Example: `-r yes` or `--recurse no`
+
+- `-s, --sort_by` : Allows scripts to sort the files based on name, creation time or modified time. Accepted values are "name", "ctime", "mtime", "none". The default value is "name". If "none" is selected, then the default order of files returned by the OS is used for document conversion.
+    - Example: `-s name` or `--sort_by none`
 
 
 ❗❗ **Note:** ❗❗
