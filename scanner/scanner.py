@@ -81,7 +81,14 @@ def parse_args():
         default="no",
         help="Recurse in all sub folders to find matching files and convert them (default: no)",
     )
-
+    parser.add_argument(
+        "-s",
+        "--sort_by",
+        type=str.lower,
+        choices=["name", "ctime", "mtime", "none"],
+        default="name",
+        help="Sort the list of files in order by name or creation time or modified time (default: name)",
+    )
     parser.add_argument(
         "-b",
         "--black_and_white",
@@ -133,6 +140,9 @@ def get_blackandwhite(args):
     """Return if output files should look like a photocopy"""
     return _is_true(args.black_and_white)
 
+def get_sort_key(args):
+    sort_by = args.sort_by.lower().strip()
+    return {"name": os.path.abspath, "ctime": os.path.getctime, "mtime": os.path.getmtime}.get(sort_by)
 
 def get_file_type(args):
     """Get file type and supported documents based on input arguments"""
@@ -400,7 +410,7 @@ def print_version():
     print_color(f"Scanner version: {version}", "Green")
 
 
-def find_matching_files(input_folder, file_type_list, recurse=False):
+def find_matching_files(input_folder, file_type_list, recurse=False, sort_key=None):
     """
     Find files in the given input folder and filter only matching file types.
     If recurse is True, this method will identify all matching files in all subdirectories.
@@ -423,6 +433,11 @@ def find_matching_files(input_folder, file_type_list, recurse=False):
         print_color(f"Permission denied: {input_folder}", "red")
     except Exception as err:
         print_color(f"Error when searching for files: {err}", "red")
+    
+    # Sort the list of files if sorting is requested by user
+    if sort_key:
+        files_list.sort(key=sort_key)
+    # if not, return files based on the order returned by the OS
     return files_list
 
 
@@ -465,16 +480,18 @@ def main():
     askew = get_askew(args)
     recurse = get_recurse(args)
     black_and_white = get_blackandwhite(args)
+    sort_key = get_sort_key(args)
     doc_type, file_type_list = get_file_type(args)
 
     print_color(
         f"{quality=} {recurse=} {askew=} "
-        f"{black_and_white=} {doc_type=} {file_type_list=}",
+        f"{black_and_white=} {doc_type=} {file_type_list=}"
+        f"{sort_key=}",
         "Cyan",
     )
 
     # Gather the input files based on the arguments
-    files_list = find_matching_files(input_folder, file_type_list, recurse)
+    files_list = find_matching_files(input_folder, file_type_list, recurse, sort_key)
     # Sort file paths so output gets saved in top level directory
     files_list = sorted(files_list, key=sort_by_top_level_directory)
 
