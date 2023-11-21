@@ -252,6 +252,9 @@ scanner -i .\tests -f "pdf" -r yes
 <span class="comment"># Convert all Images including sub folders into one PDF</span>
 scanner -i .\tests -f "image" -r yes
 
+<span class="comment"># Convert all image files in folder in the order of file names</span>
+scanner -i .\tests -f "image" -s "name"
+
 <span class="comment"># Convert all PDF files including sub folders and save in black & white format</span>
 scanner -i .\tests -f "pdf" -r yes -b yes</code>
     </pre>
@@ -271,6 +274,9 @@ scanner -i .\tests -f "pdf" -r yes -b yes</code>
             make it look like a photocopy). Accepted values are "yes" or "no". The default value is "no".</li>
         <li><code>-r, --recurse</code> - Allows scripts to find all matching files including subdirectories. Accepted
             values are "yes" or "no". The default value is "yes".</li>
+        <li><code>-s, --sort_by</code> - Alllows scripts to sort the files based on name, creation time or modified time. 
+            Accepted values are "name", "ctime", "mtime", "none". The default value is "name". 
+            If "none" is selected, then the default order of files returned by the OS is used for document conversion.</li>
     </ul>
     <h3>❗❗ <strong>Note:</strong> ❗❗</h3>
     <ul>
