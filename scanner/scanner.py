@@ -215,7 +215,7 @@ def _change_image_to_byte_buffer(image, compression="JPEG"):
 def rotate_image(image, angle):
     """Rotate PIL Image object with given angle value"""
     rotated_image = image.rotate(
-        angle, resample=Image.BICUBIC, expand=True, fillcolor=(255, 255, 255)
+        angle, resample=Image.Resampling.BICUBIC, expand=True, fillcolor=(255, 255, 255)
     )
     return rotated_image
 
