@@ -193,14 +193,14 @@
     <h2>Installation</h2>
     <a href="https://pypi.org/project/look-like-scanned/"><img
             src="https://img.shields.io/pypi/pyversions/look-like-scanned" alt="Supported Python Versions"></a>
-    <a href="https://www.pepy.tech/projects/look-like-scanned"><img
-            src="https://static.pepy.tech/badge/look-like-scanned" alt="Downloads Count"></a>
     <a href="https://github.com/navchandar/look-like-scanned/blob/main/LICENSE"><img
             src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT LICENSE"></a>
-    <a href="https://github.com/navchandar/look-like-scanned/issues"> <img
-            src="https://img.shields.io/github/issues/navchandar/look-like-scanned" alt="Open Issues"></a>
+    <a href="https://www.pepy.tech/projects/look-like-scanned"><img
+            src="https://static.pepy.tech/badge/look-like-scanned" alt="Downloads Count"></a>
     <a href="https://github.com/navchandar/look-like-scanned/stargazers"><img
             src="https://img.shields.io/github/stars/navchandar/look-like-scanned" alt="Star Count"></a>
+    <a href="https://github.com/navchandar/look-like-scanned/issues"> <img
+            src="https://img.shields.io/github/issues/navchandar/look-like-scanned" alt="Open Issues"></a>
     <br />
     <p>Install from the <a href="https://pypi.org/project/look-like-scanned/">Python Package Index (PyPI)</a> by running
         this command</p>
@@ -256,7 +256,10 @@ scanner -i .\tests -f "image" -r yes
 scanner -i .\tests -f "image" -s "name"
 
 <span class="comment"># Convert all PDF files including sub folders and save in black & white format</span>
-scanner -i .\tests -f "pdf" -r yes -b yes</code>
+scanner -i .\tests -f "pdf" -r yes -b yes
+
+<span class="comment"># Convert all png files including sub folders and make it a little blurry</span>
+scanner -i .\tests -f "png" -r yes -b yes -l yes</code>
     </pre>
 
     <h3>Arguments</h3>
@@ -272,6 +275,8 @@ scanner -i .\tests -f "pdf" -r yes -b yes</code>
             Accepted values are "yes" or "no". The default value is "yes".</li>
         <li><code>-b, --black_and_white</code> - Controls whether to save output documents in black and white format (to
             make it look like a photocopy). Accepted values are "yes" or "no". The default value is "no".</li>
+        <li><code>-l, blur</code> - Controls whether to make the output a little bit blurry. Accepted values are 
+            "yes" or "no". The default value is "no".</li>
         <li><code>-r, --recurse</code> - Allows scripts to find all matching files including subdirectories. Accepted
             values are "yes" or "no". The default value is "yes".</li>
         <li><code>-s, --sort_by</code> - Alllows scripts to sort the files based on name, creation time or modified time. 
