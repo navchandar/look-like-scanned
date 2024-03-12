@@ -244,7 +244,7 @@ def black_and_white_image(image):
 
 def blur_image(image):
     """Blur a PIL Image object"""
-    blurred_image = image.filter(ImageFilter.GaussianBlur(2))
+    blurred_image = image.filter(ImageFilter.GaussianBlur(random.uniform(1.2, 1.4)))
     return blurred_image
 
 
