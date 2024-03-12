@@ -8,7 +8,7 @@ import argparse
 from pathlib import Path
 from importlib import metadata
 from pprint import pprint as pretty_print
-from PIL import Image, ImageEnhance
+from PIL import Image, ImageEnhance, ImageFilter
 import pypdfium2 as pdfium
 from colorama import Fore, Style, init
 
@@ -98,6 +98,15 @@ def parse_args():
         help="Make output documents black and white. Make it look like a photocopy (default: no)",
     )
 
+    parser.add_argument(
+        "-l",
+        "--blur",
+        type=str.lower,
+        choices=CHOICES,
+        default="no",
+        help="Make output documents look blurry. (default: no)",
+    )
+
     return parser.parse_args()
 
 
@@ -139,6 +148,10 @@ def get_recurse(args):
 def get_blackandwhite(args):
     """Return if output files should look like a photocopy"""
     return _is_true(args.black_and_white)
+
+def get_blur(args):
+    """Return if output files should be blurry"""
+    return _is_true(args.blur)
 
 def get_sort_key(args):
     """Return the key with which files should be sorted and then coverted"""
@@ -229,11 +242,18 @@ def black_and_white_image(image):
     return bw_image
 
 
+def blur_image(image):
+    """Blur a PIL Image object"""
+    blurred_image = image.filter(ImageFilter.GaussianBlur(2))
+    return blurred_image
+
+
 def _convert_pdf_pages_to_jpg_list(
     pdf_path,
     image_quality=100,
     askew=True,
     black_and_white=False,
+    blur=False,
 ):
     """
     Reads given pdf file and reads all pages and converts them to image objects
@@ -265,6 +285,10 @@ def _convert_pdf_pages_to_jpg_list(
         # Make image black and white like a photocopy
         if black_and_white:
             image = black_and_white_image(image)
+
+        # Make image blurry
+        if blur:
+            image = blur_image(image)
 
         image = _change_image_to_byte_buffer(image)
         images_list.append(image)
@@ -350,7 +374,7 @@ def _calc_energy_savings(pages_scanned):
         print_color(savings, "Green")
 
 
-def convert_images_to_pdf(input_image_list, image_quality, askew, black_and_white):
+def convert_images_to_pdf(input_image_list, image_quality, askew, black_and_white, blur):
     """Converts all image files in a folder to PDF"""
     images_list = []
     output_pdf_path = None
@@ -374,6 +398,10 @@ def convert_images_to_pdf(input_image_list, image_quality, askew, black_and_whit
                     if black_and_white:
                         image = black_and_white_image(image)
 
+                    # Make image blurry
+                    if blur:
+                        image = blur_image(image)
+
                     image = _change_image_to_byte_buffer(image)
                     images_list.append(image)
                 except Exception as err:
@@ -384,7 +412,7 @@ def convert_images_to_pdf(input_image_list, image_quality, askew, black_and_whit
     return output_pdf_path
 
 
-def convert_pdf_to_scanned(pdf_list, image_quality, askew, black_and_white):
+def convert_pdf_to_scanned(pdf_list, image_quality, askew, black_and_white, blur):
     """
     Converts PDF files into scanned PDF files
     """
@@ -395,7 +423,7 @@ def convert_pdf_to_scanned(pdf_list, image_quality, askew, black_and_white):
             try:
                 output_path = _add_suffix(pdf_path)
                 images = _convert_pdf_pages_to_jpg_list(
-                    pdf_path, image_quality, askew, black_and_white
+                    pdf_path, image_quality, askew, black_and_white, blur
                 )
                 pages_scanned += _save_image_obj_to_pdf(images, output_path)
                 output_file_list.append(output_path)
@@ -449,7 +477,7 @@ def sort_by_top_level_directory(path):
     return len(directories)
 
 
-def convert_and_save(files_list, doc_type, quality, askew, black_and_white):
+def convert_and_save(files_list, doc_type, quality, askew, black_and_white, blur):
     """Convert input files into necessary output document format"""
     pdf_path = None
 
@@ -458,9 +486,9 @@ def convert_and_save(files_list, doc_type, quality, askew, black_and_white):
 
     # Convert the files found into output files
     if doc_type == "image":
-        pdf_path = convert_images_to_pdf(files_list, quality, askew, black_and_white)
+        pdf_path = convert_images_to_pdf(files_list, quality, askew, black_and_white, blur)
     elif doc_type == "pdf":
-        pdf_path = convert_pdf_to_scanned(files_list, quality, askew, black_and_white)
+        pdf_path = convert_pdf_to_scanned(files_list, quality, askew, black_and_white, blur)
     else:
         print_color("Error: Unsupported file format!", "Red")
 
@@ -482,13 +510,14 @@ def main():
     askew = get_askew(args)
     recurse = get_recurse(args)
     black_and_white = get_blackandwhite(args)
+    blur = get_blur(args)
     sort_key = get_sort_key(args)
     doc_type, file_type_list = get_file_type(args)
 
     print_color(
         f"{quality=} {recurse=} {askew=} "
-        f"{black_and_white=} {doc_type=} {file_type_list=}"
-        f"{sort_key=}",
+        f"{black_and_white=} {blur=} {doc_type=} "
+        f"{sort_key=} {file_type_list=}",
         "Cyan",
     )
 
@@ -498,7 +527,7 @@ def main():
     files_list = sorted(files_list, key=sort_by_top_level_directory)
 
     # Convert input files to look like scanned
-    convert_and_save(files_list, doc_type, quality, askew, black_and_white)
+    convert_and_save(files_list, doc_type, quality, askew, black_and_white, blur)
 
 
 if __name__ == "__main__":

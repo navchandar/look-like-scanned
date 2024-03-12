@@ -80,6 +80,9 @@ scanner -i .\tests -f "image" -r yes
 # Convert all PDF files including sub folders and save in black & white format
 scanner -i .\tests -f "pdf" -r yes -b yes
 
+# Convert all png files including sub folders and make it a little blurry
+scanner -i .\tests -f "png" -r yes -b yes -l yes
+
 ```
 
 ## Arguments
@@ -100,6 +103,9 @@ These are the command-line arguments accepted:
 
 - `-b, --black_and_white` : Controls whether to save output documents in black and white format (to make it look like a photocopy) . Accepted values are "yes" or "no". The default value is "no". 
     - Example: `-b yes` or `--black_and_white no`
+
+- `-l, --blur` : Controls whether to make the output a little bit blurry. Accepted values are "yes" or "no". The default value is "no". 
+    - Example: `-l yes` or `--blur no`
 
 - `-r, --recurse` : Allows scripts to find all matching files including subdirectories. Accepted values are "yes" or "no". The default value is "yes". 
     - Example: `-r yes` or `--recurse no`
