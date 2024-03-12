@@ -17,7 +17,7 @@ def is_pdf_valid(file_path):
 def test_convert_images_to_pdf():
     """Test converting images to PDF"""
     test_files = ["./tests/Test_image_JPG.jpg", "./tests/Test_image_Webp.webp"]
-    output_pdf = convert_images_to_pdf(test_files, 90, False, False)
+    output_pdf = convert_images_to_pdf(test_files, 90, False, False, False)
     print(output_pdf)
     assert output_pdf.endswith(".pdf")
     assert os.path.exists(output_pdf)
@@ -32,7 +32,7 @@ def test_convert_pdf_to_scanned():
         for file in os.listdir("./tests")
         if file.lower().endswith(".pdf")
     ]
-    output_files = convert_pdf_to_scanned(test_files, 90, False, False)
+    output_files = convert_pdf_to_scanned(test_files, 90, True, True, True)
     assert len(output_files) > 1
     for i, output_pdf in enumerate(output_files):
         assert output_pdf.lower().endswith(".pdf")
