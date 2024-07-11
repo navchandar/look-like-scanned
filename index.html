@@ -1,231 +1,249 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <meta charset="UTF-8">
     <title>Make Documents Look Like Scanned</title>
     <meta name="description"
-        content="Open-source Python package to make documents look like they were scanned/printed or merge multiple images to make pdf">
+      content="Open-source Python package to make documents look like they were scanned/printed or merge multiple images to make pdf">
     <meta name="keywords"
-        content="Python, scanned documents, PDF, image conversion, look like scanned, Scan pdf online">
+      content="Python, scanned documents, PDF, image conversion, look like scanned, Scan pdf online, Convert JPEG to PDF, Convert PNG to PDF">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        html {
-            font-size: 15px;
-        }
-
-        /* Reset some default styles for consistency */
-        body,
-        h1,
-        h2,
-        h3,
-        p,
-        ul,
-        li,
-        a {
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background-color: #f4f4f4;
-            font-family: Arial, sans-serif;
-            padding: 1em;
-            padding-left: 2em;
-        }
-
-        /* Style headings */
-        h1,
-        h2 {
-            color: #333;
-            margin-bottom: 0.666em;
-            margin-top: 0.666em;
-        }
-
-        h3 {
-            color: #333;
-            margin-bottom: 0.333em;
-        }
-
-        /* Style paragraphs */
-        p {
-            color: #4d4d4d;
-            line-height: 1.6;
-        }
-
-        /* Style unordered lists */
-        ul {
-            list-style: disc;
-            margin-left: 1.333em;
-            margin-bottom: 1.333em;
-        }
-
-        /* Style list items */
-        li {
-            color: #4d4d4d;
-            margin-bottom: 0.333em;
-            line-height: 1.5em;
-        }
-
-        /* Style links */
-        a {
-            color: #0070ba;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        a:hover {
-            color: #00509d;
-            text-decoration: underline;
-        }
-
-
-        /* Style code blocks */
-        pre {
-            display: block;
-            background: #272822;
-            white-space: pre;
-            max-width: 60vw;
-            min-width: 6.666em;
-            padding: 0;
-            border: 0.333em solid #272822;
-            border-radius: 0.500em;
-        }
-
-        code {
-            font-family: Consolas, monospace;
-            font-size: 1.1em;
-            border: none;
-            color: white;
-            background-color: #272822;
-            line-height: 1.4em;
-            word-wrap: break-word;
-            white-space: pre-wrap;
-            word-break: break-word;
-            box-decoration-break: clone;
-            padding-left: 0.666em;
-        }
-
-        @media all and (min-width:800px) and (max-width: 1024px) {
-            pre {
-                max-width: 70vw;
-                min-width: 6.666em;
-                border-radius: 0.333em;
-            }
-        }
-
-        @media all and (max-width: 800px) {
-            pre {
-                max-width: 100vw;
-                min-width: 6.666em;
-                border-radius: 0.300em;
-            }
-
-            html {
-                font-size: 13px;
-            }
-
-            body {
-                padding: 0.5em;
-                padding-left: 1em;
-            }
-        }
-
-
-        li>code {
-            font-size: 1em;
-            line-height: 1.5em;
-            border: 0.333em solid #272822;
-            padding-left: 0.333em;
-        }
-
-        .comment {
-            color: lightgoldenrodyellow;
-        }
-
-        /* Style images */
-        img {
-            max-width: 100%;
-            height: auto;
-        }
-
-        a>img:hover {
-            box-shadow: 0.0666em 0.0666em 0.0666em #333;
-        }
+    :root {
+      --main-color: #333;
+      --secondary-color: #4d4d4d;
+      --link-color: #0070ba;
+      --hover-color: #00509d;
+      --code-bg-color: #272822;
+    }
+    
+    html {
+      font-size: 15px;
+    }
+    
+    body {
+      background-color: #f4f4f4;
+      font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+      padding: 1em;
+      padding-left: 2em;
+    }
+    
+    /* Reset some default styles for consistency */
+    h1,
+    h2,
+    h3,
+    p,
+    ul,
+    li,
+    a {
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      background-color: #f4f4f4;
+      font-family: Arial, sans-serif;
+      padding: 1em;
+      padding-left: 2em;
+    }
+    
+    /* Style headings */
+    h1,
+    h2 {
+      color: var(--main-color);
+      margin-bottom: 0.666em;
+      margin-top: 0.666em;
+    }
+    
+    h3 {
+      color: var(--main-color);
+      margin-bottom: 0.333em;
+    }
+    
+    /* Style paragraphs */
+    p {
+      color: var(--secondary-color);
+      line-height: 1.6;
+    }
+    
+    /* Style unordered lists */
+    ul {
+      list-style: disc;
+      margin-left: 1.333em;
+      margin-bottom: 1.333em;
+    }
+    
+    /* Style list items */
+    li {
+      color: var(--secondary-color);
+      margin-bottom: 0.333em;
+      line-height: 1.5em;
+    }
+    
+    /* Style links */
+    a {
+      color: var(--link-color);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    
+    a:hover {
+      color: var(--hover-color);
+      text-decoration: underline;
+    }
+    
+    /* Style code blocks */
+    pre {
+      display: block;
+      background: var(--code-bg-color);
+      white-space: pre;
+      max-width: 60vw;
+      min-width: 6.666em;
+      padding: 0;
+      border: 0.333em solid var(--code-bg-color);
+      border-radius: 0.500em;
+    }
+    
+    code {
+      font-family: Consolas, monospace;
+      font-size: 1.1em;
+      border: none;
+      color: white;
+      background-color: var(--code-bg-color);
+      line-height: 1.4em;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+      word-break: break-word;
+      box-decoration-break: clone;
+      padding-left: 0.666em;
+    }
+    
+    @media all and (min-width:800px) and (max-width: 1024px) {
+      pre {
+        max-width: 70vw;
+        min-width: 6.666em;
+        border-radius: 0.333em;
+      }
+    }
+    
+    @media all and (max-width: 800px) {
+      pre {
+        max-width: 100vw;
+        min-width: 6.666em;
+        border-radius: 0.300em;
+      }
+    
+      html {
+        font-size: 13px;
+      }
+    
+      body {
+        padding: 0.5em;
+        padding-left: 1em;
+      }
+    }
+    
+    li>code {
+      font-size: 1em;
+      line-height: 1.5em;
+      border: 0.333em solid var(--code-bg-color);
+      padding-left: 0.333em;
+    }
+    
+    .comment {
+      color: lightgoldenrodyellow;
+    }
+    
+    /* Style images */
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+    
+    a>img:hover {
+      box-shadow: 0.0666em 0.0666em 0.0666em var(--main-color);
+    }
     </style>
-</head>
-
-<body>
-    <h1>look-like-scanned</h1>
-    <ul>
-        <li>
+  </head>
+  <body>
+    <header>
+      <h1>look-like-scanned</h1>
+    </header>
+    <main>
+      <section>
+        <ul>
+          <li>
             This Python package offers the capability to make digital documents look like they were scanned.
             <i>No Limits. No Fee. No Adverts.</i>
-        </li>
-        <li>
+          </li>
+          <li>
             The goal of this project is to <strong>save trees</strong> and to prioritize <strong>privacy, security,
-                open-source collaboration, and transparency</strong>.
-        </li>
-        <li>
+            open-source collaboration, and transparency</strong>.
+          </li>
+          <li>
             No need to print a document and then scan them again. No need to upload your confidential files to a sketchy
             looking website.
-        </li>
-        <li>
+          </li>
+          <li>
             The script reads each page of a PDF file (or multiple images) and transforms them into a new image,
             incorporating subtle random adjustments for skew and brightness.
-        </li>
-        <li>
+          </li>
+          <li>
             This process effectively replicates the aesthetics of conventionally scanned documents, locally.
-        </li>
-        <li>
+          </li>
+          <li>
             The resulting pages are automatically combined into an Output PDF file in the same order and saved in the
             same folder.
-        </li>
-        <li>
+          </li>
+          <li>
             The Input PDF/Image files are never altered and Output PDF files are added with
             <i>"{filename}_output.pdf"</i> to distinguish them.
-        </li>
-        <li>
+          </li>
+          <li>
             Uses simple command-line options to convert PDFs to scanned/grayscale PDFs, combine multiple images into PDF
             file, etc..
-        </li>
-    </ul>
-    <h2>Installation</h2>
-    <a href="https://pypi.org/project/look-like-scanned/"><img
-            src="https://img.shields.io/pypi/pyversions/look-like-scanned" alt="Supported Python Versions"></a>
-    <a href="https://github.com/navchandar/look-like-scanned/blob/main/LICENSE"><img
-            src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT LICENSE"></a>
-    <a href="https://www.pepy.tech/projects/look-like-scanned"><img
-            src="https://static.pepy.tech/badge/look-like-scanned" alt="Downloads Count"></a>
-    <a href="https://github.com/navchandar/look-like-scanned/stargazers"><img
-            src="https://img.shields.io/github/stars/navchandar/look-like-scanned" alt="Star Count"></a>
-    <a href="https://github.com/navchandar/look-like-scanned/issues"> <img
-            src="https://img.shields.io/github/issues/navchandar/look-like-scanned" alt="Open Issues"></a>
-    <br />
-    <p>Install from the <a href="https://pypi.org/project/look-like-scanned/">Python Package Index (PyPI)</a> by running
-        this command</p>
-    <pre><code>pip install look-like-scanned</code></pre>
-    <p>Or to install the latest version from <a href="https://github.com/navchandar/look-like-scanned">GitHub</a></p>
-    <pre><code><span class="comment"># Clone repo from GitHub and install</span>
+          </li>
+        </ul>
+      </section>
+      <section>
+        <h2>Installation</h2>
+        <a href="https://pypi.org/project/look-like-scanned/"><img
+          src="https://img.shields.io/pypi/pyversions/look-like-scanned" alt="Supported Python Versions"></a>
+        <a href="https://github.com/navchandar/look-like-scanned/blob/main/LICENSE"><img
+          src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT LICENSE"></a>
+        <a href="https://www.pepy.tech/projects/look-like-scanned"><img
+          src="https://static.pepy.tech/badge/look-like-scanned" alt="Downloads Count"></a>
+        <a href="https://github.com/navchandar/look-like-scanned/stargazers"><img
+          src="https://img.shields.io/github/stars/navchandar/look-like-scanned" alt="Star Count"></a>
+        <a href="https://github.com/navchandar/look-like-scanned/issues"> <img
+          src="https://img.shields.io/github/issues/navchandar/look-like-scanned" alt="Open Issues"></a>
+        <br />
+        <p>Install from the <a href="https://pypi.org/project/look-like-scanned/">Python Package Index (PyPI)</a> by running
+          this command
+        </p>
+        <pre><code>pip install look-like-scanned</code></pre>
+        <p>Or to install the latest version from <a href="https://github.com/navchandar/look-like-scanned">GitHub</a></p>
+        <pre><code><span class="comment"># Clone repo from GitHub and install</span>
 git clone https://github.com/navchandar/look-like-scanned.git
 cd look-like-scanned
 pip install poetry
 poetry install
 pip install .</code></pre>
-    <h3>Verify Installation</h3>
-    <pre><code>
+        <h3>Verify Installation</h3>
+        <pre><code>
 <span class="comment"># print help message and usage options available and verify the installation</span>
 scanner -h
 <span style="color:aquamarine"># Scanner version: 1.0.0</span>
 </code>
 </pre>
-    <h2>Usage</h2>
-    <p>This package uses <a href="https://pypi.org/project/Pillow/">PIL</a> and <a
-            href="https://pypi.org/project/pypdfium2/">pypdfium2</a> to convert and manipulate image and PDF objects.
-    </p>
-    <p>This is extended to provide a command-line interface (CLI) for easy usage.</p>
-
-    <pre>
+      </section>
+      <section>
+        <h2>Usage</h2>
+        <p>This package uses <a href="https://pypi.org/project/Pillow/">PIL</a> and <a
+          href="https://pypi.org/project/pypdfium2/">pypdfium2</a> to convert and manipulate image and PDF objects.
+        </p>
+        <p>This is extended to provide a command-line interface (CLI) for easy usage.</p>
+        <pre>
         <code>
 <span class="comment"># Convert all pdf files in folder to scanned pdf</span>
 scanner -i .\tests
@@ -261,60 +279,74 @@ scanner -i .\tests -f "pdf" -r yes -b yes
 <span class="comment"># Convert all png files including sub folders and make it a little blurry</span>
 scanner -i .\tests -f "png" -r yes -b yes -l yes</code>
     </pre>
-
-    <h3>Arguments</h3>
-    <p>These are the command-line arguments accepted:</p>
-    <ul>
-        <li><code>-i, --input_folder</code> - Specifies the input folder to read files from and convert. The default
-            value is the current directory.</li>
-        <li><code>-f, --file_type_or_name</code> - Specifies the file types to process or the file name to convert. The
-            default value is "pdf" to convert all PDF files in the given input folder.</li>
-        <li><code>-q, --file_quality</code> - Specifies the quality of the converted output files. The value must be
-            between 50 and 100. The default value is 95.</li>
-        <li><code>-a, --askew</code> - Controls whether to make the output documents slightly askew or slightly tilted.
-            Accepted values are "yes" or "no". The default value is "yes".</li>
-        <li><code>-b, --black_and_white</code> - Controls whether to save output documents in black and white format (to
-            make it look like a photocopy). Accepted values are "yes" or "no". The default value is "no".</li>
-        <li><code>-l, blur</code> - Controls whether to make the output a little bit blurry. Accepted values are 
-            "yes" or "no". The default value is "no".</li>
-        <li><code>-r, --recurse</code> - Allows scripts to find all matching files including subdirectories. Accepted
-            values are "yes" or "no". The default value is "yes".</li>
-        <li><code>-s, --sort_by</code> - Alllows scripts to sort the files based on name, creation time or modified time. 
+      </section>
+      <section>
+        <h3>Arguments</h3>
+        <p>These are the command-line arguments accepted:</p>
+        <ul>
+          <li><code>-i, --input_folder</code> - Specifies the input folder to read files from and convert. The default
+            value is the current directory.
+          </li>
+          <li><code>-f, --file_type_or_name</code> - Specifies the file types to process or the file name to convert. The
+            default value is "pdf" to convert all PDF files in the given input folder.
+          </li>
+          <li><code>-q, --file_quality</code> - Specifies the quality of the converted output files. The value must be
+            between 50 and 100. The default value is 95.
+          </li>
+          <li><code>-a, --askew</code> - Controls whether to make the output documents slightly askew or slightly tilted.
+            Accepted values are "yes" or "no". The default value is "yes".
+          </li>
+          <li><code>-b, --black_and_white</code> - Controls whether to save output documents in black and white format (to
+            make it look like a photocopy). Accepted values are "yes" or "no". The default value is "no".
+          </li>
+          <li><code>-l, --blur</code> - Controls whether to make the output a little bit blurry. Accepted values are 
+            "yes" or "no". The default value is "no".
+          </li>
+          <li><code>-r, --recurse</code> - Allows scripts to find all matching files including subdirectories. Accepted
+            values are "yes" or "no". The default value is "yes".
+          </li>
+          <li><code>-s, --sort_by</code> - Alllows scripts to sort the files based on name, creation time or modified time. 
             Accepted values are "name", "ctime", "mtime", "none". The default value is "name". 
-            If "none" is selected, then the default order of files returned by the OS is used for document conversion.</li>
-    </ul>
-    <h3>❗❗ <strong>Note:</strong> ❗❗</h3>
-    <ul>
-        <li>The supported file types are: ".jpg", ".png", ".jpeg", ".webp", ".pdf".</li>
-        <li>The output PDF file size <strong>will be bigger</strong> than the input file because the pages are stored in
-            image format.</li>
-        <li>Bookmarks / Links / Metadata will be removed when saving the output file.</li>
-        <li>Transparency will be removed from PNG files when converting to PDF.</li>
-        <li>Password protected PDF files are not yet supported.</li>
-    </ul>
-    <h3 style="display: inline-block;">License - </h3>
-    <a href="https://github.com/navchandar/look-like-scanned/blob/main/LICENSE">OSI Approved - MIT License</a>
-    <br>
-    <h3 style="display: inline-block;">Contact - </h3>
-    <span><a href="https://github.com/navchandar/look-like-scanned/issues">For Ideas / Feedback / Issues /
-            Bugs</a></span>
-
-    <br>
-    <h3>Support This Project</h3>
-
-    <a href="https://paypal.me/navchandar/">
-        <img src="https://img.shields.io/badge/-Paypal-0070ba?style=for-the-badge&logo=data%3Aimage%2Fjpeg%3Bbase64%2C%2F9j%2F4AAQSkZJRgABAQAAAQABAAD%2F2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz%2F2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz%2FwgARCAAwADADAREAAhEBAxEB%2F8QAHQAAAgIBBQAAAAAAAAAAAAAABwgGCQIAAwQFCv%2FEABwBAAEEAwEAAAAAAAAAAAAAAAYCAwcIAAEFBP%2FaAAwDAQACEAMQAAAAdZSiYpqCdXycvSppyvSMUbKuLEBqPeeyxsX4su2oRUX2QQweZr0j8qBdJUyhfS8vqPk%2FEV3tVbWaafq4naOlKlyuxybCnaAD9sq5XBxxSVysGLjOdMLWa4WvNYLKIfSoU5sq7yAEYZOOCWb7LwozP%2F%2FEAD0QAAAFAwMBBAQJDQAAAAAAAAECAwQFBgcIABESCSExUbUKd5bTExQXIiM4cYGyMjM3QUJHV2GCg5Oh0f%2FaAAgBAQABPwDA%2FBOyVX4SWdlpaztqZKVlKHhHTx68pJg4cO11GCBzqqHMkJjnMYRMYwiOpvA%2FHWnYpZ49srZts2aJmUWWNRkcBCFKG5hH6HuAA30NqsOAP2W%2FsH7IR%2FuNQdjsQaheC1aW3sO4WN3FJSEf7jTXp94%2BuEiGJZGzqhD9oGCjY7tAf7Os7MFLJ0dhFeSWibNWqi5SLoabeNHbOk2CLhmsmwXOmomoVIDEOUxQMBiiA66eX1ArGer%2BA8tQ11vLjrUB0%2Fat%2BKujs3z8SNkxIqKahimHifYQ7e42lq4lEC8jzEmUviLs%2FwD3Ta6Mk0U5pT0omYP2ivVCj%2BLXo4eXVUVjcyq6Cm6gfTER8QTeMwevTKmanKYxRKnyEfyuW466gwGHAC%2BX0n7v5%2Fy1xrp5ciYBWOKHYBbfQHlzfXpM9x14K0Nu4NAwcJp0%2BFwX%2BSZUBLqpltkiE8e3RC8zCBS8x8ADfXSKoCoLP3IYVYJVmK8m7aJtC8vzqQn3NyAB%2FwBDrqF%2FUAvoXwt9PeWrjrp8Bw6fdkDeNvYDy5vr0mWuzvr80NT3MTN2EWq7%2FqUMBR%2FBrFzGSlbuW6WlqgZKulwcCinxUMQOIfZq32CNKtDg8h6QcvBKOxVNlVQ3%2B4dtYOYMzU5WEZUEwzJHQ0SsksVuqUyainEdwKBdg27tdQr5mAV9fV9P%2BWuddPMAPgFY3l%2FD%2BB8uQ11P%2Bjlc7N%2FIY9VRFQQDWNSQM3bJuhUE5CchEAHYNU3jdIYsMho2SdM3r9qqZRRRrv8ABmEw7bBv9msE6EYw2MdLqHj2qbtymdZUTIFBQxvhTB2jtv3AGg7zcdvm9gB%2BouuoaQwYB3z9X0%2F5c41g5nRY%2BlMG7NRMteW1cXLRVEQjV4ydVbHoOGixGCJTpqEOqBiHIYBKJTAGidQ%2BwJQMX5cbPe2kb77U3d%2FDmpZo0k%2BuDYV2%2BOO5llawj%2BRjfcvqDz0x0gYdFmxvVZtq1alEqSZKyjgAgf5tE6h1gOH6c7P%2B2cb77Wc2dllKtwfvHExd5LVyspK0PNs2bJnVrBZw7WUYLkTTTTKqJjnMbYoFKA6%2F%2F8QAJREAAQMDAgYDAAAAAAAAAAAAAQACAwQRBQYSISJRBzEQFUET%2F9oACAEDAQE%2FAG%2BrIyCPmUa%2BDtMxCDtMlAFmFWYNym%2Fqx%2BoMVEXD2mTTu9FXqO1lzEJGnROVZhGoot2t0s4TD%2BTG9qhYAdSufZNlmjNx%2B3pqWgfyaTdUz7Qt%2FTYIbut2s3uvI1vSztnWuwiqFPRuspM2ZoxFuhriWnoLxp41r6itbiNe06RvuomiOPirtJ4hYzgdTUPL2ryPSzfdSQyb2svFGERQZchbJGNe97hMY1gs0W%2BOWi9lyMe6rcg4LUzCpliu8%2ByqSmjp4RFELAfP%2F9k%3D&logoColor=white&link=https://paypal.me/navchandar//"
-            alt="Paypal Badge">
-    </a>
-    <a href="https://www.buymeacoffee.com/navchandar/">
-        <img src="https://img.shields.io/badge/-Buy%20a%20Coffee-ff813f?style=for-the-badge&logo=data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAIAAADYYG7QAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAP5SURBVFhH7ZdrTFNnGMfftvSUXmTcBtNCWy6mXBRoAZWL1GAgIRnSiGOZkmF0W3YpJEYXtIm3qPEWP%2BgHRRogQLgmEmPiEpOZGBSX%2BAUZLES3%2Bc0PRiMJX5a5ubPnlCMxT9tznrcDYxae%2FD6c0vP%2Bn185p%2B95ysTjnveKFSE1VoTU%2BF8Ina3NIjL4ST5aqwq30K3PCxzpViLVztVouSrcQk1FaSK59Hr93b0ulKAMn9Bs6wboIXcjVGlJcYt7DQpRhiRUk5UAVGfEGwTw4a7sZPNCQkNOMkoOhSQUo9OWlZXV%2FIdqbm622WwNeakoORSqUFdXl3wZoq3GxsalFBIEvdEYC5gAkxEwA2bTIpa3juGthXOAhVWAwSAsmdD%2B8rRUi%2FChWV%2FsENz5zJXHioBcVpjLCnJYgZOtfwO8LARypXfhHDjZ7WDF6UyjYVszEyAHJYdCEgJ2FaRAonh6o%2Fg74yPAnhxhULd3F6LMsFCFTlQ7rHEG6fhRSEsFppl4kf3wtST09EDZ24GRoApNf1cCoT996RJvWXBXBX6UhL4qZ5vSLSgwElShv45WgVCP1yneiMddFbgmCXmyNLtdH6HASFCFAGeyqb0yXey14a4KjEhCKas0Z2oyUVokOIRgn5W2Wq77OsCen5JuoOufUR%2F7JKHLH6%2B1J1kSLUZTrAEO7FaBSrKwOkGAsiaY7fGxKDYsJKHxPUXwKdva2k5EWy6Xy5OdgmLDQhKaO1QBQqOjo%2FJTgL%2Fchet9G60oNizUe2ibM8nr9crxnDUzMwOfZ%2BIL0mBEFfJX2bIz7HIHzhoaGgKheX8lygwLVWhoR64UOj8vN%2BEpv9%2BfnRqPAiNBFZoJ7tQTExNyE56qr6%2F35i%2FDxijE6Do6OuQmPJVhSzvssaO0SHAIua0f%2BHw%2BuQm55ubmpG9oUx5KiwSHUEtRqmdzpdyHXOPj4yA021qK0iLBIQS%2FyCC6s7MTNqTh4eGBgYG%2Bvr6enh6YbuGPcDUDgUB3d3dvb29%2Ff%2F%2Fg4ODIyMjY2FhdXd0GexKKUoBDCAYaEEKl1Wr0MRqDQWuM1QmCVqfTwHCIao%2BbekcDHELAy4MV%2FdtzwOzPB9q%2FH7N%2Ffgt5mgZ5%2FSt7dZ%2F9cYElGnWwy79oL0c5CvAJAb%2F4SqU9V3VMC45m5bZVaLkq3EKvj1V1NRDGtOBoxnWxFuAWAr6vIIxpwdHsXC11LlskGqF6Z5L6mBZgz06yGzvXobWqRCMEX5xXR6rESS2WWGRS%2Bvdc%2FTSqcPSaAgj9%2FG2JeE%2FAHovckYT2bXmHQudrM6eumKZusvBcYlPtrDLzXQmlxRmk%2FY5QaCGFaNY8%2FKaYCFpIIRqhZWVFSI0VIWWOe%2F4FR6A6eCoawHAAAAAASUVORK5CYII%3D&logoColor=white&link=https://www.buymeacoffee.com/navchandar//"
-            alt="BuymeCoffee Badge">
-    </a>
-    <a href="https://ko-fi.com/navchandar/">
-        <img src="https://img.shields.io/badge/-Buy%20a%20KoFi-ff5f5f?style=for-the-badge&logo=data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAIAAADYYG7QAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAOiSURBVFhH7ZbLTxRBEMb963gkJIRleS4JyyJnDnqFKA%2BREOXAgcAJhAMEL77xoBdEjSQY8II3wchrgQUUdmZnusqvpofZzfDoBdF4mM2XSae3u%2BrXVdU1c4NLSv4rRUAmRUAmRUAmRUAmRUAmRUAmRUAmRUAmGYBo9jVlLfp1REfHfyjOZGjxM93v59JSMa6fp2QC2ssQMTkuuerqyjmQchTr38ICJZrE%2FllMBiB3M02KtEVflp0f2LmLJrUcV2PIwRBsy5bx2ndqTIR8aRmA1JYPpGDXdhxFsJdTFAzYsl1XhSftHNZrGkFc%2BUrLX2g7LSiYPM7K4NMCl5eH3EEmoO0dDQQf8Ef7BzwzQ733qKuLp6Zodw8EqDB%2B8pR6eqi7myYmaGs7h2joOGHLwSE3NIi1eJwnJ1l5GbRzwtTdU%2BhLqzggnNh16fAnd3aqqipqaBBVx%2BjWbZqb47t3KBaj%2BnqZxKC9nTY2XThGbLAXuxL57NDMY0FBkIjow8dgPlBxQFnLgplXs1RdrVpvcipFLS2EZ1OTcCQSMsYM1NaGNfxoAuuxC1R5ICQIVdzcLJcOBQCg9Y1CX1rFAVkWskAjI1RXCxpOJhUE00kPApJx0hcQe3sdrEeEcMUCIH2nYjG1uS0Fjr929wJHgS4RIRobo5oaam3V7uWsAYeewSCVUnV1PDCA0g6n7NojxEtLUiU6JJojJDhD%2FAD95u0ZKfN0TTWEK2PnbAxGR1G2ChVTGJ6ABsHDVerry7cibCm4ZTRxXbfMu%2FbSWrIWP3ioauJ%2BkAImTVNbSx0dlMlIg9BMf6sPedbBhB7IjkNDQ1wTVwFTczODBplCHzo89LrlCY33hHshgJ3jrBwJ49U1bmwM%2BdIyAZ10atiVCHlxkh4zOqpA4DEhg6gb7u%2Fn4ywuF3q3rNTSWLAAkQZjXlzkpqu%2By%2FJAiJD%2FApHTSz2Nj0v9trSAjAcHJX5K5Wm8Lf5gd492dunHOs2%2Fp55en%2BMsGqjYGgp85Jlw1ulpac3DwxI2ZPOEBuh6sezN7EvrQresrMxbPocGMgDRt1W5n8GtKYgTnlK8y8soW0mirvrC2GAXFmxucUWFbxAcZWWB8TNlAGLkBT%2FLCoBCQpyEww7Pi3T9PnsudkwcgUxAFRX0bl7sotPDsf7gKhQcn573ZuQkKytS77Bzfo5CMgFBCPj0NKfTwcdoUcKn5ouXPs1lVATQv1UEZFIEZFIEZFIEZFIEdLFKSn4Dz0s70NgRCBAAAAAASUVORK5CYII%3D&logoColor=1fb3ef&link=https://ko-fi.com/navchandar//"
-            alt="KO-FI Badge">
-    </a>
-
-</body>
-
+            If "none" is selected, then the default order of files returned by the OS is used for document conversion.
+          </li>
+        </ul>
+      </section>
+      <section>
+        <h3>❗❗ <strong>Note:</strong> ❗❗</h3>
+        <ul>
+          <li>The supported file types are: ".jpg", ".png", ".jpeg", ".webp", ".pdf".</li>
+          <li>The output PDF file size <strong>will be bigger</strong> than the input file because the pages are stored in
+            image format.
+          </li>
+          <li>Bookmarks / Links / Metadata will be removed when saving the output file.</li>
+          <li>Transparency will be removed from PNG files when converting to PDF.</li>
+          <li>Password protected PDF files are not yet supported.</li>
+        </ul>
+      </section>
+      <section>
+        <h3 style="display: inline-block;">License - </h3>
+        <a href="https://github.com/navchandar/look-like-scanned/blob/main/LICENSE">OSI Approved - MIT License</a>
+        <br>
+        <h3 style="display: inline-block;">Contact - </h3>
+        <span><a href="https://github.com/navchandar/look-like-scanned/issues">For Ideas / Feedback / Issues /
+        Bugs</a></span>
+        <br>
+      </section>
+    </main>
+    <footer>
+      <h3>Support This Project</h3>
+      <a href="https://paypal.me/navchandar/">
+      <img src="https://img.shields.io/badge/-Paypal-0070ba?style=for-the-badge&logo=data%3Aimage%2Fjpeg%3Bbase64%2C%2F9j%2F4AAQSkZJRgABAQAAAQABAAD%2F2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz%2F2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz%2FwgARCAAwADADAREAAhEBAxEB%2F8QAHQAAAgIBBQAAAAAAAAAAAAAABwgGCQIAAwQFCv%2FEABwBAAEEAwEAAAAAAAAAAAAAAAYCAwcIAAEFBP%2FaAAwDAQACEAMQAAAAdZSiYpqCdXycvSppyvSMUbKuLEBqPeeyxsX4su2oRUX2QQweZr0j8qBdJUyhfS8vqPk%2FEV3tVbWaafq4naOlKlyuxybCnaAD9sq5XBxxSVysGLjOdMLWa4WvNYLKIfSoU5sq7yAEYZOOCWb7LwozP%2F%2FEAD0QAAAFAwMBBAQJDQAAAAAAAAECAwQFBgcIABESCSExUbUKd5bTExQXIiM4cYGyMjM3QUJHV2GCg5Oh0f%2FaAAgBAQABPwDA%2FBOyVX4SWdlpaztqZKVlKHhHTx68pJg4cO11GCBzqqHMkJjnMYRMYwiOpvA%2FHWnYpZ49srZts2aJmUWWNRkcBCFKG5hH6HuAA30NqsOAP2W%2FsH7IR%2FuNQdjsQaheC1aW3sO4WN3FJSEf7jTXp94%2BuEiGJZGzqhD9oGCjY7tAf7Os7MFLJ0dhFeSWibNWqi5SLoabeNHbOk2CLhmsmwXOmomoVIDEOUxQMBiiA66eX1ArGer%2BA8tQ11vLjrUB0%2Fat%2BKujs3z8SNkxIqKahimHifYQ7e42lq4lEC8jzEmUviLs%2FwD3Ta6Mk0U5pT0omYP2ivVCj%2BLXo4eXVUVjcyq6Cm6gfTER8QTeMwevTKmanKYxRKnyEfyuW466gwGHAC%2BX0n7v5%2Fy1xrp5ciYBWOKHYBbfQHlzfXpM9x14K0Nu4NAwcJp0%2BFwX%2BSZUBLqpltkiE8e3RC8zCBS8x8ADfXSKoCoLP3IYVYJVmK8m7aJtC8vzqQn3NyAB%2FwBDrqF%2FUAvoXwt9PeWrjrp8Bw6fdkDeNvYDy5vr0mWuzvr80NT3MTN2EWq7%2FqUMBR%2FBrFzGSlbuW6WlqgZKulwcCinxUMQOIfZq32CNKtDg8h6QcvBKOxVNlVQ3%2B4dtYOYMzU5WEZUEwzJHQ0SsksVuqUyainEdwKBdg27tdQr5mAV9fV9P%2BWuddPMAPgFY3l%2FD%2BB8uQ11P%2Bjlc7N%2FIY9VRFQQDWNSQM3bJuhUE5CchEAHYNU3jdIYsMho2SdM3r9qqZRRRrv8ABmEw7bBv9msE6EYw2MdLqHj2qbtymdZUTIFBQxvhTB2jtv3AGg7zcdvm9gB%2BouuoaQwYB3z9X0%2F5c41g5nRY%2BlMG7NRMteW1cXLRVEQjV4ydVbHoOGixGCJTpqEOqBiHIYBKJTAGidQ%2BwJQMX5cbPe2kb77U3d%2FDmpZo0k%2BuDYV2%2BOO5llawj%2BRjfcvqDz0x0gYdFmxvVZtq1alEqSZKyjgAgf5tE6h1gOH6c7P%2B2cb77Wc2dllKtwfvHExd5LVyspK0PNs2bJnVrBZw7WUYLkTTTTKqJjnMbYoFKA6%2F%2F8QAJREAAQMDAgYDAAAAAAAAAAAAAQACAwQRBQYSISJRBzEQFUET%2F9oACAEDAQE%2FAG%2BrIyCPmUa%2BDtMxCDtMlAFmFWYNym%2Fqx%2BoMVEXD2mTTu9FXqO1lzEJGnROVZhGoot2t0s4TD%2BTG9qhYAdSufZNlmjNx%2B3pqWgfyaTdUz7Qt%2FTYIbut2s3uvI1vSztnWuwiqFPRuspM2ZoxFuhriWnoLxp41r6itbiNe06RvuomiOPirtJ4hYzgdTUPL2ryPSzfdSQyb2svFGERQZchbJGNe97hMY1gs0W%2BOWi9lyMe6rcg4LUzCpliu8%2ByqSmjp4RFELAfP%2F9k%3D&logoColor=white&link=https://paypal.me/navchandar//"
+        alt="Paypal Badge">
+      </a>
+      <a href="https://www.buymeacoffee.com/navchandar/">
+      <img src="https://img.shields.io/badge/-Buy%20a%20Coffee-ff813f?style=for-the-badge&logo=data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAIAAADYYG7QAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAP5SURBVFhH7ZdrTFNnGMfftvSUXmTcBtNCWy6mXBRoAZWL1GAgIRnSiGOZkmF0W3YpJEYXtIm3qPEWP%2BgHRRogQLgmEmPiEpOZGBSX%2BAUZLES3%2Bc0PRiMJX5a5ubPnlCMxT9tznrcDYxae%2FD6c0vP%2Bn185p%2B95ysTjnveKFSE1VoTU%2BF8Ina3NIjL4ST5aqwq30K3PCxzpViLVztVouSrcQk1FaSK59Hr93b0ulKAMn9Bs6wboIXcjVGlJcYt7DQpRhiRUk5UAVGfEGwTw4a7sZPNCQkNOMkoOhSQUo9OWlZXV%2FIdqbm622WwNeakoORSqUFdXl3wZoq3GxsalFBIEvdEYC5gAkxEwA2bTIpa3juGthXOAhVWAwSAsmdD%2B8rRUi%2FChWV%2FsENz5zJXHioBcVpjLCnJYgZOtfwO8LARypXfhHDjZ7WDF6UyjYVszEyAHJYdCEgJ2FaRAonh6o%2Fg74yPAnhxhULd3F6LMsFCFTlQ7rHEG6fhRSEsFppl4kf3wtST09EDZ24GRoApNf1cCoT996RJvWXBXBX6UhL4qZ5vSLSgwElShv45WgVCP1yneiMddFbgmCXmyNLtdH6HASFCFAGeyqb0yXey14a4KjEhCKas0Z2oyUVokOIRgn5W2Wq77OsCen5JuoOufUR%2F7JKHLH6%2B1J1kSLUZTrAEO7FaBSrKwOkGAsiaY7fGxKDYsJKHxPUXwKdva2k5EWy6Xy5OdgmLDQhKaO1QBQqOjo%2FJTgL%2Fchet9G60oNizUe2ibM8nr9crxnDUzMwOfZ%2BIL0mBEFfJX2bIz7HIHzhoaGgKheX8lygwLVWhoR64UOj8vN%2BEpv9%2BfnRqPAiNBFZoJ7tQTExNyE56qr6%2F35i%2FDxijE6Do6OuQmPJVhSzvssaO0SHAIua0f%2BHw%2BuQm55ubmpG9oUx5KiwSHUEtRqmdzpdyHXOPj4yA021qK0iLBIQS%2FyCC6s7MTNqTh4eGBgYG%2Bvr6enh6YbuGPcDUDgUB3d3dvb29%2Ff%2F%2Fg4ODIyMjY2FhdXd0GexKKUoBDCAYaEEKl1Wr0MRqDQWuM1QmCVqfTwHCIao%2BbekcDHELAy4MV%2FdtzwOzPB9q%2FH7N%2Ffgt5mgZ5%2FSt7dZ%2F9cYElGnWwy79oL0c5CvAJAb%2F4SqU9V3VMC45m5bZVaLkq3EKvj1V1NRDGtOBoxnWxFuAWAr6vIIxpwdHsXC11LlskGqF6Z5L6mBZgz06yGzvXobWqRCMEX5xXR6rESS2WWGRS%2Bvdc%2FTSqcPSaAgj9%2FG2JeE%2FAHovckYT2bXmHQudrM6eumKZusvBcYlPtrDLzXQmlxRmk%2FY5QaCGFaNY8%2FKaYCFpIIRqhZWVFSI0VIWWOe%2F4FR6A6eCoawHAAAAAASUVORK5CYII%3D&logoColor=white&link=https://www.buymeacoffee.com/navchandar//"
+        alt="BuymeCoffee Badge">
+      </a>
+      <a href="https://ko-fi.com/navchandar/">
+      <img src="https://img.shields.io/badge/-Buy%20a%20KoFi-ff5f5f?style=for-the-badge&logo=data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAIAAADYYG7QAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAOiSURBVFhH7ZbLTxRBEMb963gkJIRleS4JyyJnDnqFKA%2BREOXAgcAJhAMEL77xoBdEjSQY8II3wchrgQUUdmZnusqvpofZzfDoBdF4mM2XSae3u%2BrXVdU1c4NLSv4rRUAmRUAmRUAmRUAmRUAmRUAmRUAmRUAmGYBo9jVlLfp1REfHfyjOZGjxM93v59JSMa6fp2QC2ssQMTkuuerqyjmQchTr38ICJZrE%2FllMBiB3M02KtEVflp0f2LmLJrUcV2PIwRBsy5bx2ndqTIR8aRmA1JYPpGDXdhxFsJdTFAzYsl1XhSftHNZrGkFc%2BUrLX2g7LSiYPM7K4NMCl5eH3EEmoO0dDQQf8Ef7BzwzQ733qKuLp6Zodw8EqDB%2B8pR6eqi7myYmaGs7h2joOGHLwSE3NIi1eJwnJ1l5GbRzwtTdU%2BhLqzggnNh16fAnd3aqqipqaBBVx%2BjWbZqb47t3KBaj%2BnqZxKC9nTY2XThGbLAXuxL57NDMY0FBkIjow8dgPlBxQFnLgplXs1RdrVpvcipFLS2EZ1OTcCQSMsYM1NaGNfxoAuuxC1R5ICQIVdzcLJcOBQCg9Y1CX1rFAVkWskAjI1RXCxpOJhUE00kPApJx0hcQe3sdrEeEcMUCIH2nYjG1uS0Fjr929wJHgS4RIRobo5oaam3V7uWsAYeewSCVUnV1PDCA0g6n7NojxEtLUiU6JJojJDhD%2FAD95u0ZKfN0TTWEK2PnbAxGR1G2ChVTGJ6ABsHDVerry7cibCm4ZTRxXbfMu%2FbSWrIWP3ioauJ%2BkAImTVNbSx0dlMlIg9BMf6sPedbBhB7IjkNDQ1wTVwFTczODBplCHzo89LrlCY33hHshgJ3jrBwJ49U1bmwM%2BdIyAZ10atiVCHlxkh4zOqpA4DEhg6gb7u%2Fn4ywuF3q3rNTSWLAAkQZjXlzkpqu%2By%2FJAiJD%2FApHTSz2Nj0v9trSAjAcHJX5K5Wm8Lf5gd492dunHOs2%2Fp55en%2BMsGqjYGgp85Jlw1ulpac3DwxI2ZPOEBuh6sezN7EvrQresrMxbPocGMgDRt1W5n8GtKYgTnlK8y8soW0mirvrC2GAXFmxucUWFbxAcZWWB8TNlAGLkBT%2FLCoBCQpyEww7Pi3T9PnsudkwcgUxAFRX0bl7sotPDsf7gKhQcn573ZuQkKytS77Bzfo5CMgFBCPj0NKfTwcdoUcKn5ouXPs1lVATQv1UEZFIEZFIEZFIEZFIEdLFKSn4Dz0s70NgRCBAAAAAASUVORK5CYII%3D&logoColor=1fb3ef&link=https://ko-fi.com/navchandar//"
+        alt="KO-FI Badge">
+      </a>
+    </footer>
+  </body>
 </html>
