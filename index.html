@@ -16,7 +16,8 @@
       --hover-color: #00509d;
       --code-bg-color: #272822;
       --dark-bg-color: #111;
-      --dark-text-color: #eee;
+      --dark-text-color: #d0d0d0;
+      --mild-dark-text-color: #d9d9d9;
     }
     
     html {
@@ -32,9 +33,22 @@
     
     body.dark-mode {
       background-color: var(--dark-bg-color);
-      color: var(--dark-text-color);
+      color: var(--dark-text-color) !important;
     }
-    
+
+    body.dark-mode h1,
+    body.dark-mode h2,
+    body.dark-mode h3,
+    body.dark-mode p,
+    body.dark-mode a {
+      color: var(--dark-text-color) !important;
+    }
+
+    body.dark-mode li,
+    body.dark-mode code {
+      color: var(--mild-dark-text-color) !important;
+    }
+
     /* Reset some default styles for consistency */
     h1,
     h2,
@@ -171,18 +185,6 @@
       box-shadow: 0.0666em 0.0666em 0.0666em var(--main-color);
     }
     </style>
-    <script>
-        // Script to auto toggle dark mode
-        function toggleDarkMode() {
-            const currentHour = new Date().getHours();
-            const isDayTime = currentHour >= 8 && currentHour < 18;
-            document.body.classList.toggle('dark-mode', !isDayTime);
-          }
-          // Call the function initially
-          toggleDarkMode();
-          // Check every 10 minutes
-          setInterval(toggleDarkMode, 10 * 60 * 1000);
-      </script>
   </head>
   <body>
     <header>
@@ -367,5 +369,17 @@ scanner -i .\tests -f "png" -r yes -b yes -l yes</code>
         alt="KO-FI Badge">
       </a>
     </footer>
+    <script>
+        // Script to auto toggle dark mode
+        function toggleDarkMode() {
+            const currentHour = new Date().getHours();
+            const isDayTime = currentHour >= 8 && currentHour < 18;
+            document.body.classList.toggle('dark-mode', !isDayTime);
+          }
+          // Call the function initially
+          toggleDarkMode();
+          // Check every 10 minutes
+          setInterval(toggleDarkMode, 10 * 60 * 1000);
+      </script>
   </body>
 </html>
