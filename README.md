@@ -53,6 +53,9 @@ This is extended to provide a command-line interface (CLI) for easy usage.
 scanner -i .\tests
 scanner -i .\tests -f "pdf"
 
+# Convert all pdf files in folder to scanned pdf, set contrast, sharpness and brightness factors
+scanner -i .\tests -c 2 -sh 10 -br 2
+
 # Convert all pdf files in folder to scanned without askew
 scanner -i .\tests -a no
 
@@ -106,6 +109,15 @@ These are the command-line arguments accepted:
 
 - `-l, --blur` : Controls whether to make the output a little bit blurry. Accepted values are "yes" or "no". The default value is "no". 
     - Example: `-l yes` or `--blur no`
+
+- `-c, --contrast` : Controls contrast factor of the image. A factor of 0.0 gives a solid gray image. A factor of 1.0 gives the original image. Greater values increase the contrast of the image. The default value is 1. 
+    - Example: `-c 2`
+
+- `-sh, --sharpness` : Controls sharpness factor of the image. A factor of 0.0 gives a blurred image. A factor of 1.0 gives the original image. Greater values increase the sharpness of the image. The default value is 1. 
+    - Example: `-sh 2`
+
+- `-br, --brightness` : Controls brightness factor of the image. A factor of 0.0 gives a black image. A factor of 1.0 gives the original image. Greater values increase the brightness of the image. The default value is 1. 
+    - Example: `-br 2`
 
 - `-r, --recurse` : Allows scripts to find all matching files including subdirectories. Accepted values are "yes" or "no". The default value is "yes". 
     - Example: `-r yes` or `--recurse no`
