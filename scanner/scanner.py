@@ -97,7 +97,6 @@ def parse_args():
         default="no",
         help="Make output documents black and white. Make it look like a photocopy (default: no)",
     )
-
     parser.add_argument(
         "-l",
         "--blur",
@@ -106,7 +105,33 @@ def parse_args():
         default="no",
         help="Make output documents look blurry. (default: no)",
     )
-
+    parser.add_argument(
+        "-c",
+        "--contrast",
+        type=float,
+        default=1.0,
+        help="A factor of 0.0 gives a solid gray image.\
+    A factor of 1.0 gives the original image. \
+    Greater values increase the contrast of the image",
+    )
+    parser.add_argument(
+        "-sh",
+        "--sharpness",
+        type=float,
+        default=1.0,
+        help="A factor of 0.0 gives a blurred image image.\
+    A factor of 1.0 gives the original image. \
+    Greater values increase the sharpness of the image",
+    )
+    parser.add_argument(
+        "-br",
+        "--brightness",
+        type=float,
+        default=1.0,
+        help="A factor of 0.0 gives a black image.\
+    A factor of 1.0 gives the original image. \
+    Greater values increase the brightness of the image",
+    )
     return parser.parse_args()
 
 
@@ -152,6 +177,22 @@ def get_blackandwhite(args):
 def get_blur(args):
     """Return if output files should be blurry"""
     return _is_true(args.blur)
+
+
+def get_contrast(args):
+    """Return the output file contrast from command-line argument"""
+    return args.contrast
+
+
+def get_sharpness(args):
+    """Return the output file sharpness from command-line argument"""
+    return args.sharpness
+
+
+def get_brightness(args):
+    """Return the output file brightness from command-line argument"""
+    return args.brightness
+
 
 def get_sort_key(args):
     """Return the key with which files should be sorted and then coverted"""
@@ -248,12 +289,30 @@ def blur_image(image):
     return blurred_image
 
 
+def change_contrast(image, contrast_factor):
+    """Change contrast of a PIL Image object"""
+    return ImageEnhance.Contrast(image).enhance(contrast_factor)
+
+
+def change_sharpness(image, sharpness_factor):
+    """Change sharpness of a PIL Image object"""
+    return ImageEnhance.Sharpness(image).enhance(sharpness_factor)
+
+
+def change_brightness(image, brightness_factor):
+    """Change brightness of a PIL Image object"""
+    return ImageEnhance.Brightness(image).enhance(brightness_factor)
+
+
 def _convert_pdf_pages_to_jpg_list(
     pdf_path,
     image_quality=100,
     askew=True,
     black_and_white=False,
     blur=False,
+    contrast=1.0,
+    sharpness=1.0,
+    brightness=1.0,
 ):
     """
     Reads given pdf file and reads all pages and converts them to image objects
@@ -289,6 +348,17 @@ def _convert_pdf_pages_to_jpg_list(
         # Make image blurry
         if blur:
             image = blur_image(image)
+            
+        if contrast != 1.0:
+            image = change_contrast(image, contrast)
+        
+        # change image sharpness
+        if sharpness != 1.0:
+            image = change_sharpness(image, sharpness)
+            
+        # change image brightness
+        if brightness != 1.0:
+            image = change_brightness(image, brightness)
 
         image = _change_image_to_byte_buffer(image)
         images_list.append(image)
@@ -374,7 +444,16 @@ def _calc_energy_savings(pages_scanned):
         print_color(savings, "Green")
 
 
-def convert_images_to_pdf(input_image_list, image_quality, askew, black_and_white, blur):
+def convert_images_to_pdf(
+    input_image_list,
+    image_quality,
+    askew,
+    black_and_white,
+    blur,
+    contrast,
+    sharpness,
+    brightness
+):
     """Converts all image files in a folder to PDF"""
     images_list = []
     output_pdf_path = None
@@ -401,6 +480,18 @@ def convert_images_to_pdf(input_image_list, image_quality, askew, black_and_whit
                     # Make image blurry
                     if blur:
                         image = blur_image(image)
+                    
+                    # change image contrast
+                    if contrast != 1.0:
+                        image = change_contrast(image, contrast)
+                    
+                    # change image sharpness
+                    if sharpness != 1.0:
+                        image = change_sharpness(image, sharpness)
+                        
+                    # change image brightness
+                    if brightness != 1.0:
+                        image = change_brightness(image, brightness)
 
                     image = _change_image_to_byte_buffer(image)
                     images_list.append(image)
@@ -412,7 +503,7 @@ def convert_images_to_pdf(input_image_list, image_quality, askew, black_and_whit
     return output_pdf_path
 
 
-def convert_pdf_to_scanned(pdf_list, image_quality, askew, black_and_white, blur):
+def convert_pdf_to_scanned(pdf_list, image_quality, askew, black_and_white, blur, contrast, sharpness, brightness):
     """
     Converts PDF files into scanned PDF files
     """
@@ -423,7 +514,7 @@ def convert_pdf_to_scanned(pdf_list, image_quality, askew, black_and_white, blur
             try:
                 output_path = _add_suffix(pdf_path)
                 images = _convert_pdf_pages_to_jpg_list(
-                    pdf_path, image_quality, askew, black_and_white, blur
+                    pdf_path, image_quality, askew, black_and_white, blur, contrast, sharpness, brightness
                 )
                 pages_scanned += _save_image_obj_to_pdf(images, output_path)
                 output_file_list.append(output_path)
@@ -477,7 +568,7 @@ def sort_by_top_level_directory(path):
     return len(directories)
 
 
-def convert_and_save(files_list, doc_type, quality, askew, black_and_white, blur):
+def convert_and_save(files_list, doc_type, quality, askew, black_and_white, blur, contrast, sharpness, brightness):
     """Convert input files into necessary output document format"""
     pdf_path = None
 
@@ -486,9 +577,13 @@ def convert_and_save(files_list, doc_type, quality, askew, black_and_white, blur
 
     # Convert the files found into output files
     if doc_type == "image":
-        pdf_path = convert_images_to_pdf(files_list, quality, askew, black_and_white, blur)
+        pdf_path = convert_images_to_pdf(
+            files_list, quality, askew, black_and_white, blur, contrast, sharpness, brightness
+        )
     elif doc_type == "pdf":
-        pdf_path = convert_pdf_to_scanned(files_list, quality, askew, black_and_white, blur)
+        pdf_path = convert_pdf_to_scanned(
+            files_list, quality, askew, black_and_white, blur, contrast, sharpness, brightness
+        )
     else:
         print_color("Error: Unsupported file format!", "Red")
 
@@ -511,12 +606,16 @@ def main():
     recurse = get_recurse(args)
     black_and_white = get_blackandwhite(args)
     blur = get_blur(args)
+    contrast = get_contrast(args)
+    sharpness = get_sharpness(args)
+    brightness = get_brightness(args)
     sort_key = get_sort_key(args)
     doc_type, file_type_list = get_file_type(args)
 
     print_color(
         f"{quality=} {recurse=} {askew=} "
-        f"{black_and_white=} {blur=} {doc_type=} "
+        f"{black_and_white=} {blur=} {contrast=} "
+        f"{sharpness=} {brightness=} {doc_type=} "
         f"{sort_key=} {file_type_list=}",
         "Cyan",
     )
@@ -527,7 +626,7 @@ def main():
     files_list = sorted(files_list, key=sort_by_top_level_directory)
 
     # Convert input files to look like scanned
-    convert_and_save(files_list, doc_type, quality, askew, black_and_white, blur)
+    convert_and_save(files_list, doc_type, quality, askew, black_and_white, blur, contrast, sharpness, brightness)
 
 
 if __name__ == "__main__":
