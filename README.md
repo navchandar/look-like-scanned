@@ -145,6 +145,10 @@ These are the command-line arguments accepted:
  
  [MIT license](LICENSE)
 
+## Authors
+<a href="https://github.com/navchandar/look-like-scanned/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=navchandar/look-like-scanned" />
+</a>
 
 ## Support This Project
 
