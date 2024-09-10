@@ -35,8 +35,10 @@
     body {
       background-color: var(--background-color);
       font-family: var(--font-family);
-      padding: 2em;
       color: var(--main-color);
+      padding: 2em;
+      width: 65em;
+      margin: 0 auto;
     }
 
     body.dark-mode {
@@ -82,8 +84,8 @@
 
     /* Style unordered lists */
     ul {
-      list-style: disc;
-      margin-left: 1.2em;
+      list-style-type: square;
+      margin-left: 0.2em;
       margin-bottom: 1.5em;
     }
 
@@ -133,6 +135,29 @@
       padding-left: 0.666em;
     }
 
+    li>code {
+      font-size: 1em;
+      line-height: 1.5em;
+      border: 0.333em solid var(--code-bg-color);
+      padding-left: 0.333em;
+    }
+
+    .comment {
+      color: lightgoldenrodyellow;
+      font-size: smaller;
+    }
+
+    /* Style images */
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    a>img:hover {
+      box-shadow: 0.0666em 0.0666em 0.0666em var(--main-color);
+    }
+
+    
     @media all and (min-width:800px) and (max-width: 1024px) {
       pre {
         max-width: 70vw;
@@ -156,35 +181,20 @@
       body {
         padding: 0.5em;
         padding-left: 1em;
+        width: auto;
+        margin: 5px 5px;
       }
 
       ul {
         margin-left: -2em;
       }
 
+      code {
+        font-size: smaller;
+      }
+
     }
 
-    li>code {
-      font-size: 1em;
-      line-height: 1.5em;
-      border: 0.333em solid var(--code-bg-color);
-      padding-left: 0.333em;
-    }
-
-    .comment {
-      color: lightgoldenrodyellow;
-      font-size: smaller;
-    }
-
-    /* Style images */
-    img {
-      max-width: 100%;
-      height: auto;
-    }
-
-    a>img:hover {
-      box-shadow: 0.0666em 0.0666em 0.0666em var(--main-color);
-    }
 
   </style>
 </head>
@@ -196,33 +206,31 @@
   <main>
     <section>
       <ul>
-        <ul>
-          <li>
-            This Python package lets you make digital documents look like they were scanned.
-            <i>No limits. No fees. No ads.</i>
-          </li>
-          <li>
-            The goal is to <strong>save trees</strong> and focus on <strong>privacy, security, open-source collaboration, and transparency</strong>.
-          </li>
-          <li>
-            No need to print and scan documents again. No need to upload your confidential files to untrustworthy websites.
-          </li>
-          <li>
-            The script reads each page of a PDF (or multiple images) and turns them into new images, adding slight random adjustments for skew and brightness.
-          </li>
-          <li>
-            This makes the documents look like they were scanned, all done locally on your computer.
-          </li>
-          <li>
-            The new pages are combined into an Output PDF file in the same order and saved in the same folder.
-          </li>
-          <li>
-            The original PDF/Image files are never changed. The Output PDF files are named with <i>"{filename}_output.pdf"</i> to tell them apart.
-          </li>
-          <li>
-            Use simple command-line options to convert PDFs to scanned/grayscale PDFs, combine multiple images into a PDF file, and more.
-          </li>
-        </ul>
+        <li>
+          This Python package lets you make digital documents look like they were scanned.
+          <i>No limits. No fees. No ads.</i>
+        </li>
+        <li>
+          The goal is to <strong>save trees</strong> and focus on <strong>privacy, security, open-source collaboration, and transparency</strong>.
+        </li>
+        <li>
+          No need to print and scan documents again. No need to upload your confidential files to untrustworthy websites.
+        </li>
+        <li>
+          The script reads each page of a PDF (or multiple images) and turns them into new images, adding slight random adjustments for skew and brightness.
+        </li>
+        <li>
+          This makes the documents look like they were scanned, all done locally on your computer.
+        </li>
+        <li>
+          The new pages are combined into an Output PDF file in the same order and saved in the same folder.
+        </li>
+        <li>
+          The original PDF/Image files are never changed. The Output PDF files are named with <i>"{filename}_output.pdf"</i> to tell them apart.
+        </li>
+        <li>
+          Use simple command-line options to convert PDFs to scanned/grayscale PDFs, combine multiple images into a PDF file, and more.
+        </li>
       </ul>
     </section>
     <section>
