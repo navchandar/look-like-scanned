@@ -4,11 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Make Documents Look Like Scanned</title>
+  <title>Make Documents Look Like Scanned - Python Project Documentation</title>
   <meta name="description"
-    content="Open-source Python package to make documents look like they were scanned/printed or merge multiple images to make pdf">
+    content="Open-source Python package for a cli tool to make documents look like they were scanned/printed or merge multiple images to make pdf">
   <meta name="keywords"
-    content="Python, scanned documents, PDF, image conversion, look like scanned, Scan pdf online, Convert JPEG to PDF, Convert PNG to PDF">
+    content="Python, scanned documents, PDF, image conversion, look like scanned, Scan pdf online, Convert JPEG to PDF, Convert PNG to PDF, CLI">
   <link rel="shortcut icon"
     href="data:image/x-icon;base64,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L/84NC//OTUw/zo2Mf87NjH/N0JN/y9ai/85ODn/Sk8m/2Z6EP9mehD/aHwQ/3+VFP+SqhfZk6sX85OrF/+Tqxf/k6sX/5OqF/9aYCj/OTUy/zs3Mv87NzL/Ozcy/zo2Mf85NTD/OTUw/zk1MP85NTD/OTUw/zk1MP85NTD/OTUw/zk1MP85NTD/OjYx/zs3Mv86Ojv/N0NP/zo3NP9KTyb/ZXkQ/2h8EP9/lRT/kqoX/5OrF/OTqxf9k6sX/5OrF/+Tqxf/k6oX/1pgKP85NTL/Ozcy/zs3Mv87NzL/Q0A7/1NPS/9TT0v/U09L/1NPS/9TT0v/U09L/1NPS/9TT0v/U09L/1NPS/9DQDv/Ozcy/zs3Mv87NjD/OjYy/0pOJv9ofBD/f5UU/5KqF/+Tqxf/k6sX/ZOrF/2Tqxf/k6sX/5OrF/+Tqxf/YGcn/zg0M/86NTL/OjUy/zcyL/93dHL/5ubl/+fn5v/n5+b/5+fm/+fn5v/n5+b/5+fm/+fn5v/n5+b/5ubl/3h1cv83My//OjYz/zo2M/85NTP/T1Uk/3+VFP+Sqhf/k6sX/5OrF/+Tqxf9k6sX85OrF/+Tqxf/k6sX/5SsF/+DlRz/WmAp/1JWK/9SViv/T1Mn/5CTd///////////////////////////////////////////////////////iYp2/0NGJf9GSSn/Rkgp/0xQJv93iRr/k6sX/5OrF/+Tqxf/k6sX/5OrF/OTqxfZk6sX/5OrF/+Tqxf/k6sX/5SsF/+SqRf/kKcY/5CnGP+OphT/uMdq//7//v////////////////////////////////////////////7+/v+cqGb/YnYN/2R4Ef9mehH/fpQU/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX2ZOrF6yTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5GqE/+6yWr//v/+/////////////////////////////////////////////v7+/52pZf9jeAz/aHwQ/3+VFP+Sqhf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxesk6sXbJOrF/uTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/kaoT/7nJav/+//7////////////////////////////////////////////+/v7/nKll/2V6DP9/lRT/kqoX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX+5OrF2yTqxcpk6sX35OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+RqhP/uclq//7//v////////////////////////////////////////////////+frGb/fJMQ/5KqF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxffk6sXKZOrFwKTqxeXk6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5GqE/+5yWr//v/+//////////////////////////////////39/f/y8O//6+vi/6e3U/+QqRT/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF5eTqxcCk6sXAJOrFzeTqxfqk6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/kaoT/7rJa////////////////////////////////////////Pz9/9zZ0P+zvmz/lawb/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxfqk6sXN5OrFwCTqxcAk6sXAZOrF4mTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+RqhT/ssNa/+rv0v/r79P/6+/T/+vv0//r79P/6+/T/+vv1P/n7M//t8Nv/5SrGv+Tqxb/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF4mTqxcBk6sXAJOrFwCTqxcAk6sXGZOrF8KTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+WrR3/mrEn/5uxJ/+bsSf/m7En/5uxJ/+bsSf/m7En/5qwJv+UrBn/k6sW/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+TqxfCk6sXGZOrFwCTqxcAk6sXAJOrFwCTqxcAk6sXNZOrF9mTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxb/k6sW/5OrFv+Tqxb/k6sW/5OrFv+Tqxb/k6sW/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX2ZOrFzWTqxcAk6sXAJOrFwAAAAAAk6sXAJOrFwCTqxcAk6sXQZOrF9mTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF9mTqxdBk6sXAJOrFwCTqxcAAAAAAAAAAAAAAAAAk6sXAJOrFwCTqxcAk6sXNZOrF8KTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+TqxfCk6sXNZOrFwCTqxcAk6sXAAAAAAAAAAAAAAAAAAAAAAAAAAAAk6sXAJOrFwCTqxcAk6sXGZOrF4mTqxfqk6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxfqk6sXiZOrFxmTqxcAk6sXAJOrFwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAk6sXAJOrFwCTqxcAk6sXAZOrFzeTqxeXk6sX35OrF/uTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/uTqxffk6sXl5OrFzeTqxcBk6sXAJOrFwCTqxcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAk6sXAJOrFwCTqxcAk6sXAJOrFwKTqxcpk6sXbJOrF6yTqxfZk6sX85OrF/2Tqxf9k6sX85OrF9mTqxesk6sXbJOrFymTqxcCk6sXAJOrFwCTqxcAk6sXAAAAAAAAAAAAAAAAAAAAAAAAAAAA+AAAH/AAAA/gAAAHwAAAA4AAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAcAAAAPgAAAH8AAAD/gAAB8=" />
   <style>
@@ -20,7 +20,7 @@
       --code-bg-color: #272822;
       --dark-bg-color: #111;
       --dark-text-color: #d0d0d0;
-      --dark-link-color: #0000EE
+      --dark-link-color: #0000EE;
       --mild-dark-text-color: #d9d9d9;
       --background-color: #f9f9f9;
       --font-family: 'Roboto', sans-serif;
@@ -115,10 +115,11 @@
       white-space: pre;
       max-width: 70vw;
       min-width: 6.666em;
-      padding: 1em;
+      padding: 0.3em;
       border: 0.333em solid var(--code-bg-color);
       border-radius: 0.5em;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      position: relative;
     }
 
     code {
@@ -150,14 +151,32 @@
     /* Style images */
     img {
       max-width: 100%;
-      height: auto;
+      height: 30px;
     }
 
     a>img:hover {
       box-shadow: 0.0666em 0.0666em 0.0666em var(--main-color);
     }
 
-    
+    .code-container {
+      position: relative;
+      margin: 0;
+      padding: 0;
+    }
+
+    .copy-icon {
+      cursor: pointer;
+      margin-left: 10px;
+      color: blue;
+      position: absolute;
+      right: 0.5em;
+      top: 0.5em;
+    }
+
+    .copied {
+      color: green;
+    }
+
     @media all and (min-width:800px) and (max-width: 1024px) {
       pre {
         max-width: 70vw;
@@ -189,49 +208,51 @@
         margin-left: -2em;
       }
 
+      li {
+        margin-bottom: 0.3em;
+        line-height: 1.5em;
+      }
+
       code {
         font-size: smaller;
       }
 
+      img {
+        height: 20px;
+      }
+
     }
-
-
   </style>
 </head>
 
 <body>
   <header>
-    <h1>look-like-scanned</h1>
+    <h1>look-like-scanned Documentation</h1>
   </header>
   <main>
     <section>
+      <h2>Overview</h2>
+      <p>This Python package is a CLI tool that lets you make digital documents look like they were scanned. It is
+        designed to run locally with a focus on privacy, security, open-source collaboration, and transparency.
+      </p>
+
+      <h3>Features</h3>
       <ul>
-        <li>
-          This Python package lets you make digital documents look like they were scanned.
-          <i>No limits. No fees. No ads.</i>
-        </li>
-        <li>
-          The goal is to <strong>save trees</strong> and focus on <strong>privacy, security, open-source collaboration, and transparency</strong>.
-        </li>
-        <li>
-          No need to print and scan documents again. No need to upload your confidential files to untrustworthy websites.
-        </li>
-        <li>
-          The script reads each page of a PDF (or multiple images) and turns them into new images, adding slight random adjustments for skew and brightness.
-        </li>
-        <li>
-          This makes the documents look like they were scanned, all done locally on your computer.
-        </li>
-        <li>
-          The new pages are combined into an Output PDF file in the same order and saved in the same folder.
-        </li>
-        <li>
-          The original PDF/Image files are never changed. The Output PDF files are named with <i>"{filename}_output.pdf"</i> to tell them apart.
-        </li>
-        <li>
-          Use simple command-line options to convert PDFs to scanned/grayscale PDFs, combine multiple images into a PDF file, and more.
-        </li>
+        <li><strong>Unlimited Usage</strong>: No limits, fees, or ads. Free and Open-source.</li>
+        <li><strong>Powerful CLI</strong>: Use command-line options to convert PDFs to scanned/grayscale PDFs, combine
+          multiple images into a PDF file, etc.</li>
+        <li><strong>Local Processing</strong>: All operations are performed locally on your computer. No need to upload
+          your files to untrustworthy websites.</li>
+        <li><strong>Environmental Focus</strong>: Saves trees by eliminating the need to print and scan paper.</li>
       </ul>
+
+      <h3>Functionality</h3>
+      <p>The script processes each page of a PDF or multiple images, converting them into new images with slight random
+        adjustments for skew and brightness to mimic the appearance of scanned documents. The processed pages are
+        combined into an output PDF file and saved in the same folder. The original
+        files remain unchanged, and the output files are named with the format <i>{filename}_output.pdf</i> for
+        easy identification while maintaining the original page/image order .</p>
+      </p>
     </section>
     <section>
       <h2>Installation</h2>
@@ -246,26 +267,36 @@
       <a href="https://github.com/navchandar/look-like-scanned/issues"> <img
           src="https://img.shields.io/github/issues/navchandar/look-like-scanned" alt="Open Issues"></a>
       <br />
-      <p>Install from the <a href="https://pypi.org/project/look-like-scanned/">Python Package Index (PyPI)</a> by
-        running
-        this command
+      <p>
+        Install from the <a href="https://pypi.org/project/look-like-scanned/">Python Package Index (PyPI)</a> by
+        running this command
       </p>
-      <pre><code>pip install look-like-scanned</code></pre>
-      <p>Or to install the latest version from <a href="https://github.com/navchandar/look-like-scanned">GitHub</a></p>
-      <pre><code><span class="comment"># Clone repo from GitHub and install</span>
+
+      <div class="code-container">
+        <pre><code id="code1">pip install look-like-scanned</code></pre>
+        <span class="copy-icon" onclick="copyToClipboard('code1')" title="Copy Command">📋</span>
+      </div>
+
+      <p>Or to build the latest version from <a href="https://github.com/navchandar/look-like-scanned">GitHub</a></p>
+      <div class="code-container">
+        <pre><code id="code2"><span class="comment"># Clone repo from GitHub and install</span>
 git clone https://github.com/navchandar/look-like-scanned.git
 cd look-like-scanned
 pip install poetry
 poetry install
 pip install .</code></pre>
+        <span class="copy-icon" onclick="copyToClipboard('code2')" title="Copy Command">📋</span>
+      </div>
+
       <h3>Verify Installation</h3>
-      <pre><code>
-<span class="comment"># print help message and usage options available and verify the installation</span>
+      <div class="code-container">
+        <pre><code id="code3"><span class="comment"># print help message and usage options available and verify the installation</span>
 scanner -h
-<span style="color:aquamarine"># Scanner version: 1.0.0</span>
-</code>
+<span style="color:aquamarine"># Scanner version: 1.0.0</span></code>
 </pre>
-    </section>
+<span class="copy-icon" onclick="copyToClipboard('code3')" title="Copy Command">📋</span>
+</div>
+</section>
     <section>
       <h2>Usage</h2>
       <p>This package uses <a href="https://pypi.org/project/Pillow/">PIL</a> and <a
@@ -371,7 +402,7 @@ scanner -i .\tests -c 2 -sh 10 -br 2</code>
     <section>
       <h3 style="display: block;">Authors</h3>
       <a href="https://github.com/navchandar/look-like-scanned/graphs/contributors">
-        <img src="https://contrib.rocks/image?repo=navchandar/look-like-scanned" />
+        <img src="https://contrib.rocks/image?repo=navchandar/look-like-scanned" style="height: auto;" />
       </a>
       <br>
       <h3 style="display: inline-block;">License: </h3>
@@ -412,6 +443,26 @@ scanner -i .\tests -c 2 -sh 10 -br 2</code>
     toggleDarkMode();
     // Check every 10 minutes
     setInterval(toggleDarkMode, 10 * 60 * 1000);
+  </script>
+
+  <script>
+    function copyToClipboard(codeId) {
+      const codeElement = document.getElementById(codeId);
+      const text = codeElement.innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const copyIcon = codeElement.parentElement.nextElementSibling;
+        copyIcon.innerText = '✔';
+        copyIcon.classList.add('copied');
+        copyIcon.title = "Command copied to clipboard";
+        setTimeout(() => {
+          copyIcon.innerText = '📋';
+          copyIcon.classList.remove('copied');
+          copyIcon.title = "Copy Command";
+        }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy text: ', err);
+      });
+    }
   </script>
 </body>
 
