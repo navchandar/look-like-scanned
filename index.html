@@ -79,7 +79,7 @@
     /* Style paragraphs */
     p {
       color: var(--secondary-color);
-      line-height: 1.1;
+      line-height: 1.25em;
     }
 
     /* Style unordered lists */
@@ -92,7 +92,7 @@
     /* Style list items */
     li {
       color: var(--secondary-color);
-      margin-bottom: 0.5em;
+      margin-bottom: 0.25em;
       line-height: 1.6em;
     }
 
@@ -140,7 +140,8 @@
       font-size: 1em;
       line-height: 1.5em;
       border: 0.333em solid var(--code-bg-color);
-      padding-left: 0.333em;
+      padding-left: 0.1em;
+    border-radius: 0.25em;
     }
 
     .comment {
@@ -227,13 +228,17 @@
 
 <body>
   <header>
-    <h1>look-like-scanned Documentation</h1>
+    <h1>look-like-scanned
+      <a href="https://pypi.org/project/look-like-scanned/"><img alt="Latest Version" style="height: 25px;"
+          src="https://img.shields.io/github/v/release/navchandar/look-like-scanned.svg?style=social"></a>
+    </h1>
   </header>
   <main>
     <section>
       <h2>Overview</h2>
-      <p>This Python package is a CLI tool that lets you make digital documents look like they were scanned. It is
-        designed to run locally with a focus on privacy, security, open-source collaboration, and transparency.
+      <p><i>Look-Like-Scanned</i> is a Python based CLI tool that lets you make digital documents look like
+        they were scanned. The package is designed to run locally with a focus on privacy, security, open-source
+        collaboration, and transparency.
       </p>
 
       <h3>Features</h3>
@@ -294,9 +299,9 @@ pip install .</code></pre>
 scanner -h
 <span style="color:aquamarine"># Scanner version: 1.0.0</span></code>
 </pre>
-<span class="copy-icon" onclick="copyToClipboard('code3')" title="Copy Command">📋</span>
-</div>
-</section>
+        <span class="copy-icon" onclick="copyToClipboard('code3')" title="Copy Command">📋</span>
+      </div>
+    </section>
     <section>
       <h2>Usage</h2>
       <p>This package uses <a href="https://pypi.org/project/Pillow/">PIL</a> and <a
