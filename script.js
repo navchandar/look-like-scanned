@@ -12,11 +12,12 @@ setInterval(toggleDarkMode, 10 * 60 * 1000);
 // script to copy code to user's clipboard on click
 function copyToClipboard(codeId) {
     let text = ""
-    let childNodes = document.querySelector('#' + codeId).childNodes;
+    let codeElement = document.querySelector('#' + codeId);
+    let childNodes = codeElement.childNodes;
     if (childNodes.length > 1) {
         text = childNodes[1].textContent.trim()
     } else {
-        text = document.querySelector('#' + codeId).innerText.trim();
+        text = codeElement.innerText.trim();
     }
     // copy the text to clipboard
     navigator.clipboard.writeText(text).then(() => {
