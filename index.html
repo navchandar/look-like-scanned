@@ -8,7 +8,7 @@
   <meta name="description"
     content="Open-source Python package for a cli tool to make documents look like they were scanned/printed or merge multiple images to make pdf">
   <meta name="keywords"
-    content="Python, scanned documents, PDF, image conversion, look like scanned, Scan pdf online, Convert JPEG to PDF, Convert PNG to PDF, CLI">
+    content="Python, scanned documents, PDF, image conversion, look like scanned, Scan pdf online, Convert JPEG to PDF, Convert PNG to PDF, CLI, Document Scanner, Image to PDF Converter, Python CLI Tool, Digital Document Conversion, PDF Generation, Image Processing, Automated Document Scanning, Python PDF Tools, Batch Image Conversion, PDF Conversion, Reverse OCR, Python Automation, Document Management, PDF Merging">
   <link rel="shortcut icon"
     href="data:image/x-icon;base64,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L/84NC//OTUw/zo2Mf87NjH/N0JN/y9ai/85ODn/Sk8m/2Z6EP9mehD/aHwQ/3+VFP+SqhfZk6sX85OrF/+Tqxf/k6sX/5OqF/9aYCj/OTUy/zs3Mv87NzL/Ozcy/zo2Mf85NTD/OTUw/zk1MP85NTD/OTUw/zk1MP85NTD/OTUw/zk1MP85NTD/OjYx/zs3Mv86Ojv/N0NP/zo3NP9KTyb/ZXkQ/2h8EP9/lRT/kqoX/5OrF/OTqxf9k6sX/5OrF/+Tqxf/k6oX/1pgKP85NTL/Ozcy/zs3Mv87NzL/Q0A7/1NPS/9TT0v/U09L/1NPS/9TT0v/U09L/1NPS/9TT0v/U09L/1NPS/9DQDv/Ozcy/zs3Mv87NjD/OjYy/0pOJv9ofBD/f5UU/5KqF/+Tqxf/k6sX/ZOrF/2Tqxf/k6sX/5OrF/+Tqxf/YGcn/zg0M/86NTL/OjUy/zcyL/93dHL/5ubl/+fn5v/n5+b/5+fm/+fn5v/n5+b/5+fm/+fn5v/n5+b/5ubl/3h1cv83My//OjYz/zo2M/85NTP/T1Uk/3+VFP+Sqhf/k6sX/5OrF/+Tqxf9k6sX85OrF/+Tqxf/k6sX/5SsF/+DlRz/WmAp/1JWK/9SViv/T1Mn/5CTd///////////////////////////////////////////////////////iYp2/0NGJf9GSSn/Rkgp/0xQJv93iRr/k6sX/5OrF/+Tqxf/k6sX/5OrF/OTqxfZk6sX/5OrF/+Tqxf/k6sX/5SsF/+SqRf/kKcY/5CnGP+OphT/uMdq//7//v////////////////////////////////////////////7+/v+cqGb/YnYN/2R4Ef9mehH/fpQU/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX2ZOrF6yTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5GqE/+6yWr//v/+/////////////////////////////////////////////v7+/52pZf9jeAz/aHwQ/3+VFP+Sqhf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxesk6sXbJOrF/uTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/kaoT/7nJav/+//7////////////////////////////////////////////+/v7/nKll/2V6DP9/lRT/kqoX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX+5OrF2yTqxcpk6sX35OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+RqhP/uclq//7//v////////////////////////////////////////////////+frGb/fJMQ/5KqF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxffk6sXKZOrFwKTqxeXk6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5GqE/+5yWr//v/+//////////////////////////////////39/f/y8O//6+vi/6e3U/+QqRT/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF5eTqxcCk6sXAJOrFzeTqxfqk6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/kaoT/7rJa////////////////////////////////////////Pz9/9zZ0P+zvmz/lawb/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxfqk6sXN5OrFwCTqxcAk6sXAZOrF4mTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+RqhT/ssNa/+rv0v/r79P/6+/T/+vv0//r79P/6+/T/+vv1P/n7M//t8Nv/5SrGv+Tqxb/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF4mTqxcBk6sXAJOrFwCTqxcAk6sXGZOrF8KTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+WrR3/mrEn/5uxJ/+bsSf/m7En/5uxJ/+bsSf/m7En/5qwJv+UrBn/k6sW/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+TqxfCk6sXGZOrFwCTqxcAk6sXAJOrFwCTqxcAk6sXNZOrF9mTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxb/k6sW/5OrFv+Tqxb/k6sW/5OrFv+Tqxb/k6sW/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX2ZOrFzWTqxcAk6sXAJOrFwAAAAAAk6sXAJOrFwCTqxcAk6sXQZOrF9mTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF9mTqxdBk6sXAJOrFwCTqxcAAAAAAAAAAAAAAAAAk6sXAJOrFwCTqxcAk6sXNZOrF8KTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+TqxfCk6sXNZOrFwCTqxcAk6sXAAAAAAAAAAAAAAAAAAAAAAAAAAAAk6sXAJOrFwCTqxcAk6sXGZOrF4mTqxfqk6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxfqk6sXiZOrFxmTqxcAk6sXAJOrFwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAk6sXAJOrFwCTqxcAk6sXAZOrFzeTqxeXk6sX35OrF/uTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/uTqxffk6sXl5OrFzeTqxcBk6sXAJOrFwCTqxcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAk6sXAJOrFwCTqxcAk6sXAJOrFwKTqxcpk6sXbJOrF6yTqxfZk6sX85OrF/2Tqxf9k6sX85OrF9mTqxesk6sXbJOrFymTqxcCk6sXAJOrFwCTqxcAk6sXAAAAAAAAAAAAAAAAAAAAAAAAAAAA+AAAH/AAAA/gAAAHwAAAA4AAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAcAAAAPgAAAH8AAAD/gAAB8=" />
   <link rel="stylesheet" href="styles.css">
@@ -67,120 +67,192 @@
       </p>
 
       <div class="code-container">
-        <pre><code id="code1">pip install look-like-scanned</code></pre>
-        <span class="copy-icon" onclick="copyToClipboard('code1')" title="Copy Command">📋</span>
+        <pre><code id="pypi_install">pip install look-like-scanned</code></pre>
+        <span class="copy-icon" onclick="copyToClipboard('pypi_install')" title="Copy Command">📋</span>
       </div>
 
       <p>Or to build the latest version from <a href="https://github.com/navchandar/look-like-scanned"
           target="_blank">GitHub</a></p>
       <div class="code-container">
-        <pre><code id="code2"><span class="comment"># Clone repo from GitHub and install</span>
+        <pre><code id="direct_install"><span class="comment"># Clone repo from GitHub and install</span>
 git clone https://github.com/navchandar/look-like-scanned.git
 cd look-like-scanned
 pip install poetry
 poetry install
 pip install .</code></pre>
-        <span class="copy-icon" onclick="copyToClipboard('code2')" title="Copy Command">📋</span>
+        <span class="copy-icon" onclick="copyToClipboard('direct_install')" title="Copy Command">📋</span>
       </div>
 
       <h3>Verify Installation</h3>
       <div class="code-container">
-        <pre><code id="code3"><span class="comment"># print help message and usage options available and verify the installation</span>
+        <pre><code id="check_install"><span class="comment"># print help message and usage options available and verify the installation</span>
 scanner -h
 <span style="color:aquamarine"># Scanner version: 1.0.0</span></code>
 </pre>
-        <span class="copy-icon" onclick="copyToClipboard('code3')" title="Copy Command">📋</span>
+        <span class="copy-icon" onclick="copyToClipboard('check_install')" title="Copy Command">📋</span>
       </div>
-    </section>
-    <section>
-      <h2>Usage</h2>
-      <p>This package uses <a href="https://pypi.org/project/Pillow/" target="_blank">PIL</a> and <a
-          href="https://pypi.org/project/pypdfium2/">pypdfium2</a> to convert and manipulate image and PDF objects.
-      </p>
-      <p>This is extended to provide a command-line interface (CLI) for easy usage.</p>
-      <pre>
-        <code>
-<span class="comment"># Convert all pdf files in folder to scanned pdf</span>
-scanner -i .\tests
-scanner -i .\tests -f "pdf"
-
-<span class="comment"># Convert all pdf files in folder to scanned without askew</span>
-scanner -i .\tests -a no
-
-<span class="comment"># Convert specific pdf file in folder to scanned pdf</span>
-scanner -i .\tests -f "test.pdf"
-
-<span class="comment"># Convert all jpg, jpeg, png, webp files in folder to one pdf file</span>
-scanner -i .\tests -f "image"
-
-<span class="comment"># Convert all png files in folder to pdf with 100% quality to one pdf file</span>
-scanner -i .\tests -f "png" -q 100
-
-<span class="comment"># Convert specific jpg file in folder to pdf with 75% quality to one pdf file</span>
-scanner -i .\tests -f "JPG_Test.jpg" -q 75
-
-<span class="comment"># Convert all PDF files including sub folders</span>
-scanner -i .\tests -f "pdf" -r yes
-
-<span class="comment"># Convert all Images including sub folders into one PDF</span>
-scanner -i .\tests -f "image" -r yes
-
-<span class="comment"># Convert all image files in folder in the order of file names</span>
-scanner -i .\tests -f "image" -s "name"
-
-<span class="comment"># Convert all PDF files including sub folders and save in black & white format</span>
-scanner -i .\tests -f "pdf" -r yes -b yes
-
-<span class="comment"># Convert all png files including sub folders and make it a little blurry</span>
-scanner -i .\tests -f "png" -r yes -b yes -l yes
-
-<span class="comment"># Convert all pdf files in folder to scanned pdf, set contrast, sharpness and brightness factors</span>
-scanner -i .\tests -c 2 -sh 10 -br 2</code>
-    </pre>
     </section>
     <section>
       <h3>Arguments</h3>
       <p>These are the command-line arguments accepted:</p>
       <ul>
-        <li><code>-i, --input_folder</code> - Specifies the input folder to read files from and convert. The default
+        <li><code>-i, --input_folder</code> - Specifies the input folder to read files from and convert. Default
           value is the current directory.
         </li>
-        <li><code>-f, --file_type_or_name</code> - Specifies the file types to process or the file name to convert. The
-          default value is "pdf" to convert all PDF files in the given input folder.
+        <li><code>-f, --file_type_or_name</code> - Specifies the file types to process or the file name to convert.
+          Default value is "pdf" to convert all PDF files in the given input folder.
         </li>
         <li><code>-q, --file_quality</code> - Specifies the quality of the converted output files. The value must be
-          between 50 and 100. The default value is 95.
+          between 50 and 100. Default value is 95.
         </li>
         <li><code>-a, --askew</code> - Controls whether to make the output documents slightly askew or slightly tilted.
-          Accepted values are "yes" or "no". The default value is "yes".
+          Accepted values are "yes" or "no". Default value is "yes".
         </li>
         <li><code>-b, --black_and_white</code> - Controls whether to save output documents in black and white format (to
-          make it look like a photocopy). Accepted values are "yes" or "no". The default value is "no".
+          make it look like a photocopy). Accepted values are "yes" or "no". Default value is "no".
         </li>
         <li><code>-c, --contrast</code> - Controls contrast of the image. A factor of 0.0 gives a solid gray image.
-          A factor of 1.0 gives the original image. Greater values increase the contrast of the image. The default value
-          is 1.
+          A factor of 1.0 gives the original image. Greater values increase the contrast of the image. Default value is
+          1.
         </li>
         <li><code>-sh, --sharpness</code> - Controls sharpness of the image. A factor of 0.0 gives a blurred image.
-          A factor of 1.0 gives the original image. Greater values increase the sharpness of the image. The default
-          value is 1.
+          A factor of 1.0 gives the original image. Greater values increase the sharpness of the image. Default value is
+          1.
         </li>
         <li><code>-br, --brightness</code> - Controls brightness of the image. A factor of 0.0 gives a black image.
-          A factor of 1.0 gives the original image. Greater values increase the brightness of the image. The default
-          value is 1.
+          A factor of 1.0 gives the original image. Greater values increase the brightness of the image. Default value
+          is 1.
         </li>
         <li><code>-l, --blur</code> - Controls whether to make the output a little bit blurry. Accepted values are
-          "yes" or "no". The default value is "no".
+          "yes" or "no". Default value is "no".
         </li>
         <li><code>-r, --recurse</code> - Allows scripts to find all matching files including subdirectories. Accepted
-          values are "yes" or "no". The default value is "yes".
+          values are "yes" or "no". Default value is "yes".
         </li>
         <li><code>-s, --sort_by</code> - Alllows scripts to sort the files based on name, creation time or modified
           time.
-          Accepted values are "name", "ctime", "mtime", "none". The default value is "name".
-          If "none" is selected, then the default order of files returned by the OS is used for document conversion.
+          Accepted values are "name", "ctime", "mtime", "none". Default value is "name".
+          If "none" is selected, then Default order of files returned by the OS is used for document conversion.
         </li>
       </ul>
+    </section>
+
+    <section>
+      <h2>Usage Examples</h2>
+      <p>This package uses <a href="https://pypi.org/project/Pillow/" target="_blank">PIL</a> and <a
+          href="https://pypi.org/project/pypdfium2/" target="_blank">pypdfium2</a> to convert and manipulate image and
+        PDF objects.
+      </p>
+      <p>This is extended to provide a command-line interface (CLI) for easy usage.</p>
+
+      <div class="code-container">
+        <pre><code id="code1"><span class="comment"># Convert all pdf files in folder to scanned pdf</span>
+scanner -i .\tests scanner -i .\tests -f "pdf"</code></pre>
+        <span class="copy-icon" onclick="copyToClipboard('code1')" title="Copy Command">📋</span>
+      </div>
+
+      <div class="code-container">
+        <pre><code id="code2"><span class="comment"># Convert all pdf files in folder to scanned without askew</span>
+scanner -i .\tests -a no</code></pre>
+        <span class="copy-icon" onclick="copyToClipboard('code2')" title="Copy Command">📋</span>
+      </div>
+
+      <div class="code-container">
+        <pre><code id="code3"><span class="comment"># Convert specific pdf file in folder to scanned pdf</span>
+scanner -i .\tests -f "test.pdf"</code></pre>
+        <span class="copy-icon" onclick="copyToClipboard('code3')" title="Copy Command">📋</span>
+      </div>
+
+      <div class="code-container">
+        <pre><code id="code4"><span class="comment"># Convert all jpg, jpeg, png, webp files in folder to one pdf file</span>
+scanner -i .\tests -f "image"</code></pre>
+        <span class="copy-icon" onclick="copyToClipboard('code4')" title="Copy Command">📋</span>
+      </div>
+
+      <div class="code-container">
+        <pre><code id="code5"><span class="comment"># Convert all png files in folder to pdf with 100% quality to one pdf file</span>
+scanner -i .\tests -f "png" -q 100</code></pre>
+        <span class="copy-icon" onclick="copyToClipboard('code5')" title="Copy Command">📋</span>
+      </div>
+
+      <div class="code-container">
+        <pre><code id="code6"><span class="comment"># Convert specific jpg file in folder to pdf with 75% quality to one pdf file</span>
+scanner -i .\tests -f "JPG_Test.jpg" -q 75</code></pre>
+        <span class="copy-icon" onclick="copyToClipboard('code6')" title="Copy Command">📋</span>
+      </div>
+
+      <div class="code-container">
+        <pre><code id="code7"><span class="comment"># Convert all pdf files including sub folders</span>
+scanner -i .\tests -f "pdf" -r yes</code></pre>
+        <span class="copy-icon" onclick="copyToClipboard('code7')" title="Copy Command">📋</span>
+      </div>
+
+      <div class="code-container">
+        <pre><code id="code8"><span class="comment"># Convert all Images including sub folders into one pdf</span>
+scanner -i .\tests -f "image" -r yes</code></pre>
+        <span class="copy-icon" onclick="copyToClipboard('code8')" title="Copy Command">📋</span>
+      </div>
+
+      <div class="code-container">
+        <pre><code id="code9"><span class="comment"># Convert all image files in folder in the order of file names</span>
+scanner -i .\tests -f "image" -s "name"</code></pre>
+        <span class="copy-icon" onclick="copyToClipboard('code9')" title="Copy Command">📋</span>
+      </div>
+
+      <div class="code-container">
+        <pre><code id="code10"><span class="comment"># Convert all pdf files including sub folders and save in black & white format</span>
+scanner -i .\tests -f "pdf" -r yes -b yes</code></pre>
+        <span class="copy-icon" onclick="copyToClipboard('code10')" title="Copy Command">📋</span>
+      </div>
+
+      <div class="code-container">
+        <pre><code id="code11"><span class="comment"># Convert all png files including sub folders and make it a little blurry</span>
+scanner -i .\tests -f "png" -r yes -b yes -l yes</code></pre>
+        <span class="copy-icon" onclick="copyToClipboard('code11')" title="Copy Command">📋</span>
+      </div>
+
+      <div class="code-container">
+        <pre><code id="code12"><span class="comment"># Convert all pdf files in folder to scanned pdf, set contrast, sharpness and brightness factors</span>
+scanner -i .\tests -c 2 -sh 10 -br 2</code></pre>
+        <span class="copy-icon" onclick="copyToClipboard('code12')" title="Copy Command">📋</span>
+      </div>
+
+      <div class="code-container">
+        <pre><code id="code13"><span class="comment"># Convert all pdf files in folder to scanned pdf with high contrast and sharpness</span>
+scanner -i .\tests -f "pdf" -c 3 -sh 5</code></pre>
+        <span class="copy-icon" onclick="copyToClipboard('code13')" title="Copy Command">📋</span>
+      </div>
+
+      <div class="code-container">
+        <pre><code id="code14"><span class="comment"># Convert all pdf files in folder to scanned pdf, including subfolders, with high contrast and brightness</span>
+scanner -i .\tests -f "pdf" -r yes -c 3 -br 3</code></pre>
+        <span class="copy-icon" onclick="copyToClipboard('code14')" title="Copy Command">📋</span>
+      </div>
+
+      <div class="code-container">
+        <pre><code id="code15"><span class="comment"># Convert all image files in folder to pdf, sorted by creation time</span>
+scanner -i .\tests -f "image" -s "ctime"</code></pre>
+        <span class="copy-icon" onclick="copyToClipboard('code15')" title="Copy Command">📋</span>
+      </div>
+
+      <div class="code-container">
+        <pre><code id="code16"><span class="comment"># Convert all image files in folder to pdf, sorted by modified time, with slight blur</span>
+scanner -i .\tests -f "image" -s "mtime" -l yes</code></pre>
+        <span class="copy-icon" onclick="copyToClipboard('code16')" title="Copy Command">📋</span>
+      </div>
+
+      <div class="code-container">
+        <pre><code id="code17"><span class="comment"># Convert all jpg files in folder to pdf with 80% quality and slightly askew</span>
+scanner -i .\tests -f "jpg" -q 80 -a yes</code></pre>
+        <span class="copy-icon" onclick="copyToClipboard('code17')" title="Copy Command">📋</span>
+      </div>
+
+      <div class="code-container">
+        <pre><code id="code18"><span class="comment"># Convert all png files in folder to pdf with high sharpness and low contrast</span>
+scanner -i .\tests -f "png" -sh 5 -c 0.5</code></pre>
+        <span class="copy-icon" onclick="copyToClipboard('code18')" title="Copy Command">📋</span>
+      </div>
+
     </section>
     <section>
       <h3>❗❗ <strong>Note:</strong> ❗❗</h3>
