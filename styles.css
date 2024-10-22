@@ -165,6 +165,50 @@ a>img:hover {
     color: green;
 }
 
+header {
+    background-color: #f8f9fa6c;
+    padding: 10px;
+    text-align: center;
+}
+
+nav {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #11111165;
+    padding-top: 20px;
+    transition: 0.3s;
+}
+
+nav a {
+    padding: 10px 15px;
+    text-decoration: none;
+    font-size: 18px;
+    color: white;
+    display: block;
+    transition: 0.3s;
+}
+
+nav a:hover {
+    background-color: #575757c0;
+}
+
+.main-content {
+    margin-left: 260px;
+    padding: 20px;
+}
+
+.hamburger {
+    display: none;
+    font-size: 30px;
+    cursor: pointer;
+    position: absolute;
+    top: 15px;
+    left: 15px;
+}
+
 @media all and (min-width:800px) and (max-width: 1024px) {
     pre {
         max-width: 70vw;
@@ -214,4 +258,16 @@ a>img:hover {
         top: 0.5em;
     }
 
+    nav {
+        width: 0;
+        padding-top: 60px;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .hamburger {
+        display: block;
+    }
 }

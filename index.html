@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Make Documents Look Like Scanned - Python Project Documentation</title>
   <meta name="description"
     content="Open-source Python package for a cli tool to make documents look like they were scanned/printed or merge multiple images to make pdf">
@@ -21,267 +21,275 @@
           src="https://img.shields.io/github/v/release/navchandar/look-like-scanned.svg?style=social"></a>
     </h1>
   </header>
-  <main>
-    <section>
-      <h2>Overview</h2>
-      <p><i>Look-Like-Scanned</i> is a Python based CLI tool that lets you make digital documents look like
-        they were scanned. The package is designed to run locally with a focus on privacy, security, open-source
-        collaboration, and transparency.
-      </p>
+  <div class="main-content">
+    <main>
+      <section id="overview">
+        <h2>Overview</h2>
+        <p><i>Look-Like-Scanned</i> is a Python based CLI tool that lets you make digital documents look like
+          they were scanned. The package is designed to run locally with a focus on privacy, security, open-source
+          collaboration, and transparency.
+        </p>
 
-      <h3>Features</h3>
-      <ul>
-        <li><strong>Unlimited Usage</strong>: No limits, fees, or ads. Free and Open-source.</li>
-        <li><strong>Powerful CLI</strong>: Use command-line options to convert PDFs to scanned/grayscale PDFs, combine
-          multiple images into a PDF file, etc.</li>
-        <li><strong>Local Processing</strong>: All operations are performed locally on your computer. No need to upload
-          your files to untrustworthy websites.</li>
-        <li><strong>Environmental Focus</strong>: Saves trees by eliminating the need to print and scan paper.</li>
-      </ul>
+        <h3>Features</h3>
+        <ul>
+          <li><strong>Unlimited Usage</strong>: No limits, fees, or ads. Free and Open-source.</li>
+          <li><strong>Powerful CLI</strong>: Use command-line options to convert PDFs to scanned/grayscale PDFs, combine
+            multiple images into a PDF file, etc.</li>
+          <li><strong>Local Processing</strong>: All operations are performed locally on your computer. No need to
+            upload
+            your files to untrustworthy websites.</li>
+          <li><strong>Environmental Focus</strong>: Saves trees by eliminating the need to print and scan paper.</li>
+        </ul>
 
-      <h3>Functionality</h3>
-      <p>The script processes each page of a PDF or multiple images, converting them into new images with slight random
-        adjustments for skew and brightness to mimic the appearance of scanned documents. The processed pages are
-        combined into an output PDF file and saved in the same folder. The original
-        files remain unchanged, and the output files are named with the format <i>{filename}_output.pdf</i> for
-        easy identification while maintaining the original page/image order .</p>
-      </p>
-    </section>
-    <section>
-      <h2>Installation</h2>
-      <a href="https://pypi.org/project/look-like-scanned/" target="_blank"><img
-          src="https://img.shields.io/pypi/pyversions/look-like-scanned" alt="Supported Python Versions"></a>
-      <a href="https://github.com/navchandar/look-like-scanned/blob/main/LICENSE" target="_blank"><img
-          src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT LICENSE"></a>
-      <a href="https://www.pepy.tech/projects/look-like-scanned" target="_blank"><img
-          src="https://static.pepy.tech/badge/look-like-scanned" alt="Downloads Count"></a>
-      <a href="https://github.com/navchandar/look-like-scanned/stargazers" target="_blank"><img
-          src="https://img.shields.io/github/stars/navchandar/look-like-scanned" alt="Star Count"></a>
-      <a href="https://github.com/navchandar/look-like-scanned/issues" target="_blank"> <img
-          src="https://img.shields.io/github/issues/navchandar/look-like-scanned" alt="Open Issues"></a>
-      <br />
-      <p>
-        Install from the <a href="https://pypi.org/project/look-like-scanned/" target="_blank">Python Package Index
-          (PyPI)</a> by
-        running this command
-      </p>
+        <h3>Functionality</h3>
+        <p>The script processes each page of a PDF or multiple images, converting them into new images with slight
+          random
+          adjustments for skew and brightness to mimic the appearance of scanned documents. The processed pages are
+          combined into an output PDF file and saved in the same folder. The original
+          files remain unchanged, and the output files are named with the format <i>{filename}_output.pdf</i> for
+          easy identification while maintaining the original page/image order .</p>
+        </p>
+      </section>
+      <section id="installation">
+        <h2>Installation</h2>
+        <a href="https://pypi.org/project/look-like-scanned/" target="_blank"><img
+            src="https://img.shields.io/pypi/pyversions/look-like-scanned" alt="Supported Python Versions"></a>
+        <a href="https://github.com/navchandar/look-like-scanned/blob/main/LICENSE" target="_blank"><img
+            src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT LICENSE"></a>
+        <a href="https://www.pepy.tech/projects/look-like-scanned" target="_blank"><img
+            src="https://static.pepy.tech/badge/look-like-scanned" alt="Downloads Count"></a>
+        <a href="https://github.com/navchandar/look-like-scanned/stargazers" target="_blank"><img
+            src="https://img.shields.io/github/stars/navchandar/look-like-scanned" alt="Star Count"></a>
+        <a href="https://github.com/navchandar/look-like-scanned/issues" target="_blank"> <img
+            src="https://img.shields.io/github/issues/navchandar/look-like-scanned" alt="Open Issues"></a>
+        <br />
+        <p>
+          Install from the <a href="https://pypi.org/project/look-like-scanned/" target="_blank">Python Package Index
+            (PyPI)</a> by
+          running this command
+        </p>
 
-      <div class="code-container">
-        <pre><code id="pypi_install">pip install look-like-scanned</code></pre>
-        <span class="copy-icon" onclick="copyToClipboard('pypi_install')" title="Copy Command">📋</span>
-      </div>
+        <div class="code-container">
+          <pre><code id="pypi_install">pip install look-like-scanned</code></pre>
+          <span class="copy-icon" onclick="copyToClipboard('pypi_install')" title="Copy Command">📋</span>
+        </div>
 
-      <p>Or to build the latest version from <a href="https://github.com/navchandar/look-like-scanned"
-          target="_blank">GitHub</a></p>
-      <div class="code-container">
-        <pre><code id="direct_install"><span class="comment"># Clone repo from GitHub and install</span>
+        <p>Or to build the latest version from <a href="https://github.com/navchandar/look-like-scanned"
+            target="_blank">GitHub</a></p>
+        <div class="code-container">
+          <pre><code id="direct_install"><span class="comment"># Clone repo from GitHub and install</span>
 git clone https://github.com/navchandar/look-like-scanned.git
 cd look-like-scanned
 pip install poetry
 poetry install
 pip install .</code></pre>
-        <span class="copy-icon" onclick="copyToClipboard('direct_install')" title="Copy Command">📋</span>
-      </div>
+          <span class="copy-icon" onclick="copyToClipboard('direct_install')" title="Copy Command">📋</span>
+        </div>
 
-      <h3>Verify Installation</h3>
-      <div class="code-container">
-        <pre><code id="check_install"><span class="comment"># print help message and usage options available and verify the installation</span>
+        <h3>Verify Installation</h3>
+        <div class="code-container">
+          <pre><code id="check_install"><span class="comment"># print help message and usage options available and verify the installation</span>
 scanner -h
 <span style="color:aquamarine"># Scanner version: 1.0.0</span></code>
 </pre>
-        <span class="copy-icon" onclick="copyToClipboard('check_install')" title="Copy Command">📋</span>
-      </div>
-    </section>
-    <section>
-      <h3>Arguments</h3>
-      <p>These are the command-line arguments accepted:</p>
-      <ul>
-        <li><code>-i, --input_folder</code> - Specifies the input folder to read files from and convert. Default
-          value is the current directory.
-        </li>
-        <li><code>-f, --file_type_or_name</code> - Specifies the file types to process or the file name to convert.
-          Default value is "pdf" to convert all PDF files in the given input folder.
-        </li>
-        <li><code>-q, --file_quality</code> - Specifies the quality of the converted output files. The value must be
-          between 50 and 100. Default value is 95.
-        </li>
-        <li><code>-a, --askew</code> - Controls whether to make the output documents slightly askew or slightly tilted.
-          Accepted values are "yes" or "no". Default value is "yes".
-        </li>
-        <li><code>-b, --black_and_white</code> - Controls whether to save output documents in black and white format (to
-          make it look like a photocopy). Accepted values are "yes" or "no". Default value is "no".
-        </li>
-        <li><code>-c, --contrast</code> - Controls contrast of the image. A factor of 0.0 gives a solid gray image.
-          A factor of 1.0 gives the original image. Greater values increase the contrast of the image. Default value is
-          1.
-        </li>
-        <li><code>-sh, --sharpness</code> - Controls sharpness of the image. A factor of 0.0 gives a blurred image.
-          A factor of 1.0 gives the original image. Greater values increase the sharpness of the image. Default value is
-          1.
-        </li>
-        <li><code>-br, --brightness</code> - Controls brightness of the image. A factor of 0.0 gives a black image.
-          A factor of 1.0 gives the original image. Greater values increase the brightness of the image. Default value
-          is 1.
-        </li>
-        <li><code>-l, --blur</code> - Controls whether to make the output a little bit blurry. Accepted values are
-          "yes" or "no". Default value is "no".
-        </li>
-        <li><code>-r, --recurse</code> - Allows scripts to find all matching files including subdirectories. Accepted
-          values are "yes" or "no". Default value is "yes".
-        </li>
-        <li><code>-s, --sort_by</code> - Alllows scripts to sort the files based on name, creation time or modified
-          time.
-          Accepted values are "name", "ctime", "mtime", "none". Default value is "name".
-          If "none" is selected, then Default order of files returned by the OS is used for document conversion.
-        </li>
-      </ul>
-    </section>
+          <span class="copy-icon" onclick="copyToClipboard('check_install')" title="Copy Command">📋</span>
+        </div>
+      </section>
+      <section id="arguments">
+        <h3>Arguments</h3>
+        <p>These are the command-line arguments accepted:</p>
+        <ul>
+          <li><code>-i, --input_folder</code> - Specifies the input folder to read files from and convert. Default
+            value is the current directory.
+          </li>
+          <li><code>-f, --file_type_or_name</code> - Specifies the file types to process or the file name to convert.
+            Default value is "pdf" to convert all PDF files in the given input folder.
+          </li>
+          <li><code>-q, --file_quality</code> - Specifies the quality of the converted output files. The value must be
+            between 50 and 100. Default value is 95.
+          </li>
+          <li><code>-a, --askew</code> - Controls whether to make the output documents slightly askew or slightly
+            tilted.
+            Accepted values are "yes" or "no". Default value is "yes".
+          </li>
+          <li><code>-b, --black_and_white</code> - Controls whether to save output documents in black and white format
+            (to
+            make it look like a photocopy). Accepted values are "yes" or "no". Default value is "no".
+          </li>
+          <li><code>-c, --contrast</code> - Controls contrast of the image. A factor of 0.0 gives a solid gray image.
+            A factor of 1.0 gives the original image. Greater values increase the contrast of the image. Default value
+            is
+            1.
+          </li>
+          <li><code>-sh, --sharpness</code> - Controls sharpness of the image. A factor of 0.0 gives a blurred image.
+            A factor of 1.0 gives the original image. Greater values increase the sharpness of the image. Default value
+            is
+            1.
+          </li>
+          <li><code>-br, --brightness</code> - Controls brightness of the image. A factor of 0.0 gives a black image.
+            A factor of 1.0 gives the original image. Greater values increase the brightness of the image. Default value
+            is 1.
+          </li>
+          <li><code>-l, --blur</code> - Controls whether to make the output a little bit blurry. Accepted values are
+            "yes" or "no". Default value is "no".
+          </li>
+          <li><code>-r, --recurse</code> - Allows scripts to find all matching files including subdirectories. Accepted
+            values are "yes" or "no". Default value is "yes".
+          </li>
+          <li><code>-s, --sort_by</code> - Alllows scripts to sort the files based on name, creation time or modified
+            time.
+            Accepted values are "name", "ctime", "mtime", "none". Default value is "name".
+            If "none" is selected, then Default order of files returned by the OS is used for document conversion.
+          </li>
+        </ul>
+      </section>
+      <section id="usage">
+        <h2>Usage Examples</h2>
+        <p>This package uses <a href="https://pypi.org/project/Pillow/" target="_blank">PIL</a> and <a
+            href="https://pypi.org/project/pypdfium2/" target="_blank">pypdfium2</a> to convert and manipulate image and
+          PDF objects.
+        </p>
+        <p>This is extended to provide a command-line interface (CLI) for easy usage.</p>
 
-    <section>
-      <h2>Usage Examples</h2>
-      <p>This package uses <a href="https://pypi.org/project/Pillow/" target="_blank">PIL</a> and <a
-          href="https://pypi.org/project/pypdfium2/" target="_blank">pypdfium2</a> to convert and manipulate image and
-        PDF objects.
-      </p>
-      <p>This is extended to provide a command-line interface (CLI) for easy usage.</p>
-
-      <div class="code-container">
-        <pre><code id="code1"><span class="comment"># Convert all pdf files in given folder to scanned pdf</span>
+        <div class="code-container">
+          <pre><code id="code1"><span class="comment"># Convert all pdf files in given folder to scanned pdf</span>
 scanner -i .\tests</code></pre>
-        <span class="copy-icon" onclick="copyToClipboard('code1')" title="Copy Command">📋</span>
-      </div>
+          <span class="copy-icon" onclick="copyToClipboard('code1')" title="Copy Command">📋</span>
+        </div>
 
-      <div class="code-container">
-        <pre><code id="code2"><span class="comment"># Convert all pdf files in folder to scanned without askew</span>
+        <div class="code-container">
+          <pre><code id="code2"><span class="comment"># Convert all pdf files in folder to scanned without askew</span>
 scanner -i .\tests -a no</code></pre>
-        <span class="copy-icon" onclick="copyToClipboard('code2')" title="Copy Command">📋</span>
-      </div>
+          <span class="copy-icon" onclick="copyToClipboard('code2')" title="Copy Command">📋</span>
+        </div>
 
-      <div class="code-container">
-        <pre><code id="code3"><span class="comment"># Convert specific pdf file in folder to scanned pdf</span>
+        <div class="code-container">
+          <pre><code id="code3"><span class="comment"># Convert specific pdf file in folder to scanned pdf</span>
 scanner -i .\tests -f "test.pdf"</code></pre>
-        <span class="copy-icon" onclick="copyToClipboard('code3')" title="Copy Command">📋</span>
-      </div>
+          <span class="copy-icon" onclick="copyToClipboard('code3')" title="Copy Command">📋</span>
+        </div>
 
-      <div class="code-container">
-        <pre><code id="code4"><span class="comment"># Convert all jpg, jpeg, png, webp files in folder to one pdf file</span>
+        <div class="code-container">
+          <pre><code id="code4"><span class="comment"># Convert all jpg, jpeg, png, webp files in folder to one pdf file</span>
 scanner -i .\tests -f "image"</code></pre>
-        <span class="copy-icon" onclick="copyToClipboard('code4')" title="Copy Command">📋</span>
-      </div>
+          <span class="copy-icon" onclick="copyToClipboard('code4')" title="Copy Command">📋</span>
+        </div>
 
-      <div class="code-container">
-        <pre><code id="code5"><span class="comment"># Convert all png files in folder to pdf with 100% quality to one pdf file</span>
+        <div class="code-container">
+          <pre><code id="code5"><span class="comment"># Convert all png files in folder to pdf with 100% quality to one pdf file</span>
 scanner -i .\tests -f "png" -q 100</code></pre>
-        <span class="copy-icon" onclick="copyToClipboard('code5')" title="Copy Command">📋</span>
-      </div>
+          <span class="copy-icon" onclick="copyToClipboard('code5')" title="Copy Command">📋</span>
+        </div>
 
-      <div class="code-container">
-        <pre><code id="code6"><span class="comment"># Convert specific jpg file in folder to pdf with 75% quality to one pdf file</span>
+        <div class="code-container">
+          <pre><code id="code6"><span class="comment"># Convert specific jpg file in folder to pdf with 75% quality to one pdf file</span>
 scanner -i .\tests -f "JPG_Test.jpg" -q 75</code></pre>
-        <span class="copy-icon" onclick="copyToClipboard('code6')" title="Copy Command">📋</span>
-      </div>
+          <span class="copy-icon" onclick="copyToClipboard('code6')" title="Copy Command">📋</span>
+        </div>
 
-      <div class="code-container">
-        <pre><code id="code7"><span class="comment"># Convert all pdf files including sub folders</span>
+        <div class="code-container">
+          <pre><code id="code7"><span class="comment"># Convert all pdf files including sub folders</span>
 scanner -i .\tests -f "pdf" -r yes</code></pre>
-        <span class="copy-icon" onclick="copyToClipboard('code7')" title="Copy Command">📋</span>
-      </div>
+          <span class="copy-icon" onclick="copyToClipboard('code7')" title="Copy Command">📋</span>
+        </div>
 
-      <div class="code-container">
-        <pre><code id="code8"><span class="comment"># Convert all Images including sub folders into one pdf</span>
+        <div class="code-container">
+          <pre><code id="code8"><span class="comment"># Convert all Images including sub folders into one pdf</span>
 scanner -i .\tests -f "image" -r yes</code></pre>
-        <span class="copy-icon" onclick="copyToClipboard('code8')" title="Copy Command">📋</span>
-      </div>
+          <span class="copy-icon" onclick="copyToClipboard('code8')" title="Copy Command">📋</span>
+        </div>
 
-      <div class="code-container">
-        <pre><code id="code9"><span class="comment"># Convert all image files in folder in the order of file names</span>
+        <div class="code-container">
+          <pre><code id="code9"><span class="comment"># Convert all image files in folder in the order of file names</span>
 scanner -i .\tests -f "image" -s "name"</code></pre>
-        <span class="copy-icon" onclick="copyToClipboard('code9')" title="Copy Command">📋</span>
-      </div>
+          <span class="copy-icon" onclick="copyToClipboard('code9')" title="Copy Command">📋</span>
+        </div>
 
-      <div class="code-container">
-        <pre><code id="code10"><span class="comment"># Convert all pdf files including sub folders and save in black & white format</span>
+        <div class="code-container">
+          <pre><code id="code10"><span class="comment"># Convert all pdf files including sub folders and save in black & white format</span>
 scanner -i .\tests -f "pdf" -r yes -b yes</code></pre>
-        <span class="copy-icon" onclick="copyToClipboard('code10')" title="Copy Command">📋</span>
-      </div>
+          <span class="copy-icon" onclick="copyToClipboard('code10')" title="Copy Command">📋</span>
+        </div>
 
-      <div class="code-container">
-        <pre><code id="code11"><span class="comment"># Convert all png files including sub folders and make it a little blurry</span>
+        <div class="code-container">
+          <pre><code id="code11"><span class="comment"># Convert all png files including sub folders and make it a little blurry</span>
 scanner -i .\tests -f "png" -r yes -b yes -l yes</code></pre>
-        <span class="copy-icon" onclick="copyToClipboard('code11')" title="Copy Command">📋</span>
-      </div>
+          <span class="copy-icon" onclick="copyToClipboard('code11')" title="Copy Command">📋</span>
+        </div>
 
-      <div class="code-container">
-        <pre><code id="code12"><span class="comment"># Convert all pdf files in folder to scanned pdf, set contrast, sharpness and brightness factors</span>
+        <div class="code-container">
+          <pre><code id="code12"><span class="comment"># Convert all pdf files in folder to scanned pdf, set contrast, sharpness and brightness factors</span>
 scanner -i .\tests -c 2 -sh 10 -br 2</code></pre>
-        <span class="copy-icon" onclick="copyToClipboard('code12')" title="Copy Command">📋</span>
-      </div>
+          <span class="copy-icon" onclick="copyToClipboard('code12')" title="Copy Command">📋</span>
+        </div>
 
-      <div class="code-container">
-        <pre><code id="code13"><span class="comment"># Convert all pdf files in folder to scanned pdf with high contrast and sharpness</span>
+        <div class="code-container">
+          <pre><code id="code13"><span class="comment"># Convert all pdf files in folder to scanned pdf with high contrast and sharpness</span>
 scanner -i .\tests -f "pdf" -c 3 -sh 5</code></pre>
-        <span class="copy-icon" onclick="copyToClipboard('code13')" title="Copy Command">📋</span>
-      </div>
+          <span class="copy-icon" onclick="copyToClipboard('code13')" title="Copy Command">📋</span>
+        </div>
 
-      <div class="code-container">
-        <pre><code id="code14"><span class="comment"># Convert all pdf files in folder to scanned pdf, including subfolders, with high contrast and brightness</span>
+        <div class="code-container">
+          <pre><code id="code14"><span class="comment"># Convert all pdf files in folder to scanned pdf, including subfolders, with high contrast and brightness</span>
 scanner -i .\tests -f "pdf" -r yes -c 3 -br 3</code></pre>
-        <span class="copy-icon" onclick="copyToClipboard('code14')" title="Copy Command">📋</span>
-      </div>
+          <span class="copy-icon" onclick="copyToClipboard('code14')" title="Copy Command">📋</span>
+        </div>
 
-      <div class="code-container">
-        <pre><code id="code15"><span class="comment"># Convert all image files in folder to pdf, sorted by creation time</span>
+        <div class="code-container">
+          <pre><code id="code15"><span class="comment"># Convert all image files in folder to pdf, sorted by creation time</span>
 scanner -i .\tests -f "image" -s "ctime"</code></pre>
-        <span class="copy-icon" onclick="copyToClipboard('code15')" title="Copy Command">📋</span>
-      </div>
+          <span class="copy-icon" onclick="copyToClipboard('code15')" title="Copy Command">📋</span>
+        </div>
 
-      <div class="code-container">
-        <pre><code id="code16"><span class="comment"># Convert all image files in folder to pdf, sorted by modified time, with slight blur</span>
+        <div class="code-container">
+          <pre><code id="code16"><span class="comment"># Convert all image files in folder to pdf, sorted by modified time, with slight blur</span>
 scanner -i .\tests -f "image" -s "mtime" -l yes</code></pre>
-        <span class="copy-icon" onclick="copyToClipboard('code16')" title="Copy Command">📋</span>
-      </div>
+          <span class="copy-icon" onclick="copyToClipboard('code16')" title="Copy Command">📋</span>
+        </div>
 
-      <div class="code-container">
-        <pre><code id="code17"><span class="comment"># Convert all jpg files in folder to pdf with 80% quality and slightly askew</span>
+        <div class="code-container">
+          <pre><code id="code17"><span class="comment"># Convert all jpg files in folder to pdf with 80% quality and slightly askew</span>
 scanner -i .\tests -f "jpg" -q 80 -a yes</code></pre>
-        <span class="copy-icon" onclick="copyToClipboard('code17')" title="Copy Command">📋</span>
-      </div>
+          <span class="copy-icon" onclick="copyToClipboard('code17')" title="Copy Command">📋</span>
+        </div>
 
-      <div class="code-container">
-        <pre><code id="code18"><span class="comment"># Convert all png files in folder to pdf with high sharpness and low contrast</span>
+        <div class="code-container">
+          <pre><code id="code18"><span class="comment"># Convert all png files in folder to pdf with high sharpness and low contrast</span>
 scanner -i .\tests -f "png" -sh 5 -c 0.5</code></pre>
-        <span class="copy-icon" onclick="copyToClipboard('code18')" title="Copy Command">📋</span>
-      </div>
+          <span class="copy-icon" onclick="copyToClipboard('code18')" title="Copy Command">📋</span>
+        </div>
 
-    </section>
-    <section>
-      <h3>❗❗ <strong>Note:</strong> ❗❗</h3>
-      <ul>
-        <li>The supported file types are: ".jpg", ".png", ".jpeg", ".webp", ".pdf".</li>
-        <li>The output PDF file size <strong>will be bigger</strong> than the input file because the pages are stored in
-          image format.
-        </li>
-        <li>Bookmarks / Links / Metadata will be removed when saving the output file.</li>
-        <li>Transparency will be removed from PNG files when converting to PDF.</li>
-        <li>Password protected PDF files are not yet supported.</li>
-      </ul>
-    </section>
-    <section>
-      <h3 style="display: block;">Authors</h3>
-      <a href="https://github.com/navchandar/look-like-scanned/graphs/contributors" target="_blank">
-        <img src="https://contrib.rocks/image?repo=navchandar/look-like-scanned" style="height: auto;" />
-      </a>
-      <br>
-      <h3 style="display: inline-block;">License: </h3>
-      <a href="https://github.com/navchandar/look-like-scanned/blob/main/LICENSE" target="_blank">OSI Approved - MIT
-        License</a>
-      <br>
-      <h3 style="display: inline-block;">Contact: </h3>
-      <span><a href="https://github.com/navchandar/look-like-scanned/issues" target="_blank">For Feedback / Issues /
-          Bugs</a></span>
-      <br>
-    </section>
-  </main>
+      </section>
+      <section id="note">
+        <h3>❗❗ <strong>Note:</strong> ❗❗</h3>
+        <ul>
+          <li>The supported file types are: ".jpg", ".png", ".jpeg", ".webp", ".pdf".</li>
+          <li>The output PDF file size <strong>will be bigger</strong> than the input file because the pages are stored
+            in
+            image format.
+          </li>
+          <li>Bookmarks / Links / Metadata will be removed when saving the output file.</li>
+          <li>Transparency will be removed from PNG files when converting to PDF.</li>
+          <li>Password protected PDF files are not yet supported.</li>
+        </ul>
+      </section>
+      <section id="authors">
+        <h3 style="display: block;">Authors</h3>
+        <a href="https://github.com/navchandar/look-like-scanned/graphs/contributors" target="_blank">
+          <img src="https://contrib.rocks/image?repo=navchandar/look-like-scanned" style="height: auto;" />
+        </a>
+        <br>
+        <h3 style="display: inline-block;">License: </h3>
+        <a href="https://github.com/navchandar/look-like-scanned/blob/main/LICENSE" target="_blank">OSI Approved - MIT
+          License</a>
+        <br>
+        <h3 style="display: inline-block;">Contact: </h3>
+        <span><a href="https://github.com/navchandar/look-like-scanned/issues" target="_blank">For Feedback / Issues /
+            Bugs</a></span>
+        <br>
+      </section>
+    </main>
+  </div>
   <footer>
     <h3>Support This Project</h3>
     <a href="https://paypal.me/navchandar/" target="_blank">
