@@ -1,10 +1,27 @@
 """Script to test scanner package"""
 import os
+import glob
 import pytest
 import subprocess
 from scanner.scanner import convert_images_to_pdf, convert_pdf_to_scanned, _add_suffix, human_size
 
 TEST_DIR = "./tests"
+
+
+def cleanup_output_files(directory):
+    """Delete all *_output*.pdf files in the given directory"""
+    for file in glob.glob(os.path.join(directory, "*_output*.pdf")):
+        try:
+            os.remove(file)
+            print(f"Deleted file: {file}")
+        except Exception as e:
+            print(f"Failed to delete {file}: {e}")
+
+
+@pytest.fixture(autouse=True)
+def cleanup_after_test():
+    yield
+    cleanup_output_files(TEST_DIR)
 
 
 def test_add_suffix():
@@ -89,6 +106,7 @@ def test_scanner_cli(test_case):
     result = run_cli_command(args)
     assert result.returncode == 0
     assert "Matching Files Found" in result.stdout
+    assert "Output PDF" in result.stdout
 
 
 # Run the tests

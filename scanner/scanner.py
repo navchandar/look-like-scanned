@@ -314,88 +314,96 @@ def _convert_pdf_pages_to_jpg_list(
     sharpness=1.0,
     brightness=1.0,
 ):
-    """
-    Reads given pdf file and reads all pages and converts them to image objects
-    """
+    """Reads given PDF file and converts all pages to image objects"""
     images_list = []
-    doc = pdfium.PdfDocument(pdf_path)
+    try:
+        doc = pdfium.PdfDocument(pdf_path)
 
-    # If pdf contains forms, initiate form fields to render on output
-    if doc.get_formtype():
-        doc.init_forms()
+        # If pdf contains forms, initiate form fields to render on output
+        if doc.get_formtype():
+            doc.init_forms()
 
-    for page in doc:
-        # increase render resolution for better scanned image quality
-        bitmap = page.render(scale=2)
-        image = bitmap.to_pil()
-        image = image.convert("RGB")
+        for page in doc:
+            try:
+               # increase render resolution for better scanned image quality
+                bitmap = page.render(scale=2)
+                image = bitmap.to_pil().convert("RGB")
+                image = reduce_image_quality(image, image_quality)
+                image = ImageEnhance.Brightness(image).enhance(random.uniform(1.01, 1.02))
 
-        # Reduce image quality a little bit
-        image = reduce_image_quality(image, image_quality)
+                # Rotate every image by a small random angle
+                if askew:
+                    image = rotate_image(image, random.uniform(-0.55, 0.55))
 
-        # increase brightness a little bit
-        enhancer = ImageEnhance.Brightness(image)
-        image = enhancer.enhance(random.uniform(1.01, 1.02))
+                # Make image black and white like a photocopy
+                if black_and_white:
+                    image = black_and_white_image(image)
 
-        # Rotate every image by a small random angle
-        if askew:
-            image = rotate_image(image, random.uniform(-0.55, 0.55))
+                # Make image blurry
+                if blur:
+                    image = blur_image(image)
 
-        # Make image black and white like a photocopy
-        if black_and_white:
-            image = black_and_white_image(image)
+                # Adjust image constrast
+                if contrast != 1.0:
+                    image = change_contrast(image, contrast)
 
-        # Make image blurry
-        if blur:
-            image = blur_image(image)
-            
-        if contrast != 1.0:
-            image = change_contrast(image, contrast)
-        
-        # change image sharpness
-        if sharpness != 1.0:
-            image = change_sharpness(image, sharpness)
-            
-        # change image brightness
-        if brightness != 1.0:
-            image = change_brightness(image, brightness)
+                # change image sharpness
+                if sharpness != 1.0:
+                    image = change_sharpness(image, sharpness)
 
-        image = _change_image_to_byte_buffer(image)
-        images_list.append(image)
-        page.close()
-    doc.close()
+                # change image brightness
+                if brightness != 1.0:
+                    image = change_brightness(image, brightness)
+
+                image = _change_image_to_byte_buffer(image)
+                images_list.append(image)
+            except Exception as page_err:
+                print_color(f"Error processing page: {page_err}", "Red")
+            finally:
+                page.close()
+
+        doc.close()
+    except Exception as err:
+        print_color(f"Failed to convert PDF to images: {err}", "Red")
+
     return images_list
 
-
 def _save_image_obj_to_pdf(images_list, output_pdf_path, pdf_version=17):
-    """
-    Save image objects into output pdf
-    """
+    """Save image objects into output PDF"""
     pages_scanned = 0
-    if images_list:
+    if not images_list:
+        return pages_scanned
+
+    try:
         output_pdf = pdfium.PdfDocument.new()
         for image_file in images_list:
-            pdf_image = pdfium.PdfImage.new(output_pdf)
-            pdf_image.load_jpeg(image_file)
-            width, height = pdf_image.get_size()
-            # since render size increased by 2, decrease by same amount
-            width = width / 2
-            height = height / 2
+            try:
+                pdf_image = pdfium.PdfImage.new(output_pdf)
+                pdf_image.load_jpeg(image_file)
+                width, height = pdf_image.get_size()
+                # since render size increased by 2, decrease by same amount
+                width = width / 2
+                height = height / 2
 
-            matrix = pdfium.PdfMatrix().scale(width, height)
-            pdf_image.set_matrix(matrix)
+                matrix = pdfium.PdfMatrix().scale(width, height)
+                pdf_image.set_matrix(matrix)
 
-            page = output_pdf.new_page(width, height)
-            page.insert_obj(pdf_image)
-            page.gen_content()
-            page.close()
-            pdf_image.close()
-            pages_scanned += 1
+                page = output_pdf.new_page(width, height)
+                page.insert_obj(pdf_image)
+                page.gen_content()
+                page.close()
+                pdf_image.close()
+                pages_scanned += 1
+            except Exception as img_err:
+                print_color(f"Error adding image to PDF: {img_err}", "Red")
 
         output_pdf.save(output_pdf_path, version=pdf_version)
         output_pdf.close()
         file_size = get_file_size(output_pdf_path)
         print(f"{output_pdf_path=} {file_size=}")
+    except Exception as err:
+        print_color(f"Failed to save PDF: {err}", "Red")
+
     return pages_scanned
 
 
