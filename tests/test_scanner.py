@@ -74,12 +74,13 @@ def test_convert_pdf_to_scanned():
 
 # Define test name id and CLI parameters used for testing
 cli_test_cases = {
-    "convert_pdf": ["-i", TEST_DIR, "-f", "pdf"],
-    "convert_image": ["-i", TEST_DIR, "-f", "image"],
+    "convert_multi_pdf": ["-i", TEST_DIR, "-f", "pdf"],
+    "convert_multi_image": ["-i", TEST_DIR, "-f", "image"],
+    "convert_single_pdf": ["-i", TEST_DIR, "-f", "Test_pdf.pdf"],
+    "convert_single_image": ["-i", TEST_DIR, "-f", "Test_image_PNG.png"],
     "enhanced_pdf": ["-i", TEST_DIR, "-f", "pdf", "-c", "2", "-sh", "10", "-br", "2"],
     "bw_blur_pdf": ["-i", TEST_DIR, "-f", "pdf", "-r", "yes", "-b", "yes", "-l", "yes"],
     "no_askew_pdf": ["-i", TEST_DIR, "-f", "pdf", "-a", "no"],
-    "specific_pdf": ["-i", TEST_DIR, "-f", "test.pdf"],
     "image_sort_by_name": ["-i", TEST_DIR, "-f", "image", "-s", "name"],
     "pdf_sort_by_ctime": ["-i", TEST_DIR, "-f", "pdf", "-s", "ctime"],
     "pdf_sort_by_mtime": ["-i", TEST_DIR, "-f", "pdf", "-s", "mtime"],
@@ -107,6 +108,7 @@ def test_scanner_cli(test_case):
     assert result.returncode == 0
     assert "Matching Files Found" in result.stdout
     assert "Output PDF" in result.stdout
+    print(f"Test: test_scanner_cli[{name}] completed")
 
 
 # Run the tests

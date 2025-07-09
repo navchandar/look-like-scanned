@@ -525,7 +525,8 @@ def convert_pdf_to_scanned(pdf_list, image_quality, askew, black_and_white, blur
                     pdf_path, image_quality, askew, black_and_white, blur, contrast, sharpness, brightness
                 )
                 pages_scanned += _save_image_obj_to_pdf(images, output_path)
-                output_file_list.append(output_path)
+                if pages_scanned:
+                    output_file_list.append(output_path)
             except Exception as err:
                 print_color(f"Error converting file {pdf_path} :- {err}", "Red")
 
