@@ -12,7 +12,9 @@ setInterval(toggleDarkMode, 10 * 60 * 1000);
 // script to copy code to user's clipboard on click
 function copyToClipboard(codeId) {
     let text = ""
-    let codeElement = document.querySelector('#' + codeId);
+    const codeElement = document.getElementById(codeId);
+    if (!codeElement) return;
+
     let childNodes = codeElement.childNodes;
     if (childNodes.length > 1) {
         text = childNodes[1].textContent.trim()
@@ -21,18 +23,20 @@ function copyToClipboard(codeId) {
     }
     // copy the text to clipboard
     navigator.clipboard.writeText(text).then(() => {
-        // update copy icon style
-        const copyIcon = codeElement.parentElement.nextElementSibling;
-        copyIcon.innerText = '✔';
-        copyIcon.classList.add('copied');
-        copyIcon.title = "Command copied to clipboard";
-        setTimeout(() => {
-            copyIcon.innerText = '📋';
-            copyIcon.classList.remove('copied');
-            copyIcon.title = "Copy Command";
-        }, 2000);
+        // update copy icon style on copy
+        const copyIcon = codeEcodeElement.parentElement.nextElementSibling;
+        if (copyIcon) {
+            copyIcon.innerText = '✔';
+            copyIcon.classList.add('copied');
+            copyIcon.setAttribute('aria-label', 'Copied!');
+            setTimeout(() => {
+                copyIcon.innerText = '📋';
+                copyIcon.classList.remove('copied');
+                copyIcon.setAttribute('aria-label', 'Copy to clipboard');
+            }, 2000);
+        }
     }).catch(err => {
-        console.error('Failed to copy text: ', err);
+        console.error('Failed to copy text:', err);
     });
 }
 

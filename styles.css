@@ -171,11 +171,55 @@ a>img:hover {
 }
 
 header {
-    background-color: #f8f9fa6c;
+    background-color: #3a3a3a3b;
     padding: 10px;
-    padding-bottom: 0px;
+    padding-bottom: 5px;
     text-align: center;
+    border-radius: 5px;
 }
+
+header h1 {
+    font-family: var(--heading-font-family);
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: var(--main-color);
+    margin: 0.2em 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    flex-wrap: wrap;
+    text-shadow: 1px 1px 2px rgb(255, 255, 255);
+    transition: color 0.3s ease;
+}
+
+header h1:hover {
+    text-shadow: 2px 2px 4px rgb(255, 255, 255);
+}
+
+body.dark-mode header {
+    background-color: #b3b3b391;
+}
+
+body.dark-mode header h1 {
+    color: var(--dark-text-color);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.69);
+}
+
+body.dark-mode header h1:hover {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.69);
+}
+
+header h1 img {
+    height: 28px;
+    vertical-align: middle;
+    transition: transform 0.3s ease;
+}
+
+header h1 img:hover {
+    transform: scale(1.1);
+}
+
 
 nav {
     height: 100%;
@@ -215,7 +259,12 @@ nav a:hover {
 }
 
 
-body, h1, h2, h3, p, a {
+body,
+h1,
+h2,
+h3,
+p,
+a {
     transition: color 0.3s, background-color 0.3s;
 }
 
