@@ -13,9 +13,9 @@ def cleanup_output_files(directory):
     for file in glob.glob(os.path.join(directory, "*_output*.pdf")):
         try:
             os.remove(file)
-            print(f"Deleted file: {file}")
+            print(f"\nDeleted file: {file}")
         except Exception as e:
-            print(f"Failed to delete {file}: {e}")
+            print(f"\nFailed to delete {file}: {e}")
 
 
 @pytest.fixture(autouse=True)
@@ -25,14 +25,15 @@ def cleanup_after_test():
 
 
 def test_add_suffix():
-    assert _add_suffix("document.pdf") == "document_output.pdf"
-    assert _add_suffix("report") == "report_output.pdf"
+    err = "Suffix not added correctly to 'document.pdf'"
+    assert _add_suffix("document.pdf") == "document_output.pdf", err
+    assert _add_suffix("report") == "report_output.pdf", err
 
 
 def test_human_size():
-    assert human_size(0) == "0 B"
-    assert human_size(1024) == "1.0KiB"
-    assert human_size(1048576) == "1.0MiB"
+    assert human_size(0) == "0 B", "Expected '0 B' for input 0"
+    assert human_size(1024) == "1.0KiB", "Expected '1.0KiB' for input 1024"
+    assert human_size(1048576) == "1.0MiB", "Expected '1.0MiB' for input 1048576"
 
 
 def is_pdf_valid(file_path):
@@ -50,10 +51,10 @@ def test_convert_images_to_pdf():
     test_files = ["./tests/Test_image_JPG.jpg", "./tests/Test_image_Webp.webp"]
     output_pdf = convert_images_to_pdf(test_files, 90, False, False, False, 0.5, 0.75, 2)
     print(output_pdf)
-    assert output_pdf.endswith(".pdf")
-    assert os.path.exists(output_pdf)
-    assert os.stat(output_pdf).st_size > 100
-    assert is_pdf_valid(output_pdf)
+    assert output_pdf.endswith(".pdf"), "Output file does not have a .pdf extension"
+    assert os.path.exists(output_pdf), f"Output PDF file does not exist: {output_pdf}"
+    assert os.stat(output_pdf).st_size > 100, f"Output PDF file is blank: {output_pdf}"
+    assert is_pdf_valid(output_pdf), f"Output PDF file is not valid: {output_pdf}"
 
 
 def test_convert_pdf_to_scanned():
@@ -64,12 +65,12 @@ def test_convert_pdf_to_scanned():
         if file.lower().endswith(".pdf")
     ]
     output_files = convert_pdf_to_scanned(test_files, 90, True, True, True, 0.5, 0.75, 2)
-    assert len(output_files) > 1
+    assert len(output_files) > 1, "Expected more than one output PDF file"
     for i, output_pdf in enumerate(output_files):
-        assert output_pdf.lower().endswith(".pdf")
-        assert os.path.exists(output_pdf)
-        assert os.stat(output_pdf).st_size > 100
-        assert is_pdf_valid(output_pdf)
+        assert output_pdf.lower().endswith(".pdf"), f"Output file {i} does not have a .pdf extension"
+        assert os.path.exists(output_pdf), f"Output file {i} does not exist: {output_pdf}"
+        assert os.stat(output_pdf).st_size > 100, f"Output file {i} is blank: {output_pdf}"
+        assert is_pdf_valid(output_pdf), f"Output file {i} is not a valid PDF: {output_pdf}"
 
 
 # Define test name id and CLI parameters used for testing
@@ -105,10 +106,10 @@ def run_cli_command(args):
 def test_scanner_cli(test_case):
     name, args = test_case
     result = run_cli_command(args)
-    assert result.returncode == 0
-    assert "Matching Files Found" in result.stdout
-    assert "Output PDF" in result.stdout
-    print(f"Test: test_scanner_cli[{name}] completed")
+    code = result.returncode
+    assert code == 0, f"CLI test '{name}' failed with return code: {code}"
+    assert "Matching Files Found" in result.stdout, f"'Matching Files Found' not in CLI output for test '{name}'"
+    assert "Output PDF" in result.stdout, f"'Output PDF' not in CLI output for test '{name}'"
 
 
 # Run the tests

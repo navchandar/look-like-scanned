@@ -325,7 +325,7 @@ def _convert_pdf_pages_to_jpg_list(
 
         for page in doc:
             try:
-               # increase render resolution for better scanned image quality
+                # increase render resolution for better scanned image quality
                 bitmap = page.render(scale=2)
                 image = bitmap.to_pil().convert("RGB")
                 image = reduce_image_quality(image, image_quality)
@@ -356,7 +356,10 @@ def _convert_pdf_pages_to_jpg_list(
                     image = change_brightness(image, brightness)
 
                 image = _change_image_to_byte_buffer(image)
-                images_list.append(image)
+                if image:
+                    images_list.append(image)
+                else:
+                    print_color(f"Error processing page: No Image content", "Red")
             except Exception as page_err:
                 print_color(f"Error processing page: {page_err}", "Red")
             finally:
@@ -525,7 +528,7 @@ def convert_pdf_to_scanned(pdf_list, image_quality, askew, black_and_white, blur
                     pdf_path, image_quality, askew, black_and_white, blur, contrast, sharpness, brightness
                 )
                 pages_scanned += _save_image_obj_to_pdf(images, output_path)
-                if pages_scanned:
+                if images and pages_scanned:
                     output_file_list.append(output_path)
             except Exception as err:
                 print_color(f"Error converting file {pdf_path} :- {err}", "Red")
