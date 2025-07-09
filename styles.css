@@ -15,7 +15,7 @@
 
 
 html {
-    font-size: 16px;
+    font-size: clamp(14px, 1.5vw, 16px);
 }
 
 body {
@@ -94,18 +94,20 @@ a:hover {
     box-shadow: 0 2px 0 var(--hover-color);
 }
 
+
 /* Style code blocks */
 pre {
     display: block;
     background: var(--code-bg-color);
     white-space: pre;
-    max-width: 70vw;
+    /*max-width: 70vw;*/
     min-width: 6.666em;
     padding: 0.3em;
     border: 0.333em solid var(--code-bg-color);
     border-radius: 0.5em;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     position: relative;
+    overflow-x: auto;
 }
 
 code {
@@ -152,6 +154,9 @@ a>img:hover {
 }
 
 .copy-icon {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    padding: 4px;
     cursor: pointer;
     margin-left: 10px;
     color: blue;
@@ -168,6 +173,7 @@ a>img:hover {
 header {
     background-color: #f8f9fa6c;
     padding: 10px;
+    padding-bottom: 0px;
     text-align: center;
 }
 
@@ -196,7 +202,7 @@ nav a:hover {
 }
 
 .main-content {
-    padding: 5px;
+    padding: 3%;
 }
 
 .hamburger {
@@ -208,9 +214,15 @@ nav a:hover {
     left: 15px;
 }
 
+
+body, h1, h2, h3, p, a {
+    transition: color 0.3s, background-color 0.3s;
+}
+
+
 @media all and (min-width:800px) and (max-width: 1024px) {
     pre {
-        max-width: 70vw;
+        /*max-width: 70vw;*/
         min-width: 6.666em;
         border-radius: 0.333em;
     }
@@ -218,7 +230,7 @@ nav a:hover {
 
 @media all and (max-width: 800px) {
     pre {
-        max-width: 100vw;
+        /*max-width: 100vw;*/
         min-width: 6.666em;
         border-radius: 0.3em;
         padding: 0px
@@ -254,7 +266,9 @@ nav a:hover {
     }
 
     .copy-icon {
-        top: 0.5em;
+        top: 0px;
+        right: 0px;
+        padding: 3px;
     }
 
     nav {
