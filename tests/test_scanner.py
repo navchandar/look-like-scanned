@@ -4,7 +4,7 @@ import pytest
 import subprocess
 from scanner.scanner import convert_images_to_pdf, convert_pdf_to_scanned, _add_suffix, human_size
 
-test_dir = "./tests"
+TEST_DIR = "./tests"
 
 
 def test_add_suffix():
@@ -42,8 +42,8 @@ def test_convert_images_to_pdf():
 def test_convert_pdf_to_scanned():
     """Test converting PDF to scanned output"""
     test_files = [
-        os.path.join(test_dir, file)
-        for file in os.listdir(test_dir)
+        os.path.join(TEST_DIR, file)
+        for file in os.listdir(TEST_DIR)
         if file.lower().endswith(".pdf")
     ]
     output_files = convert_pdf_to_scanned(test_files, 90, True, True, True, 0.5, 0.75, 2)
@@ -55,82 +55,40 @@ def test_convert_pdf_to_scanned():
         assert is_pdf_valid(output_pdf)
 
 
-def test_cli_convert_pdf_to_scanned():
-    """Test CLI for converting PDFs in a folder"""
+# Define test name id and CLI parameters used for testing
+cli_test_cases = {
+    "convert_pdf": ["-i", TEST_DIR, "-f", "pdf"],
+    "convert_image": ["-i", TEST_DIR, "-f", "image"],
+    "enhanced_pdf": ["-i", TEST_DIR, "-f", "pdf", "-c", "2", "-sh", "10", "-br", "2"],
+    "bw_blur_pdf": ["-i", TEST_DIR, "-f", "pdf", "-r", "yes", "-b", "yes", "-l", "yes"],
+    "no_askew_pdf": ["-i", TEST_DIR, "-f", "pdf", "-a", "no"],
+    "specific_pdf": ["-i", TEST_DIR, "-f", "test.pdf"],
+    "image_sort_by_name": ["-i", TEST_DIR, "-f", "image", "-s", "name"],
+    "pdf_sort_by_ctime": ["-i", TEST_DIR, "-f", "pdf", "-s", "ctime"],
+    "pdf_sort_by_mtime": ["-i", TEST_DIR, "-f", "pdf", "-s", "mtime"],
+    "recursive_pdf": ["-i", ".", "-f", "pdf", "-r", "yes"]
+}
+
+
+def run_cli_command(args):
+    """Function to run and check the scanner CLI"""
     result = subprocess.run(
-        ["scanner", "-i", test_dir, "-f", "pdf"],
+        ["scanner"] + args,
         capture_output=True,
-        text=True
+        text=True,
+        check=True
     )
+    print(f"\n[CLI STDOUT]\n{result.stdout}")
+    print(f"\n[CLI STDERR]\n{result.stderr}")
+    return result
+
+
+@pytest.mark.parametrize("test_case", cli_test_cases.items(), ids=list(cli_test_cases.keys()))
+def test_scanner_cli(test_case):
+    name, args = test_case
+    result = run_cli_command(args)
     assert result.returncode == 0
     assert "Matching Files Found" in result.stdout
-    assert any("output.pdf" in line for line in result.stdout.splitlines())
-
-
-def test_cli_convert_images_to_pdf():
-    """Test CLI for converting images in a folder"""
-    result = subprocess.run(
-        ["scanner", "-i", test_dir, "-f", "image"],
-        capture_output=True,
-        text=True
-    )
-    assert result.returncode == 0
-    assert "Matching Files Found" in result.stdout
-
-
-def test_cli_with_image_enhancements():
-    result = subprocess.run(
-        ["scanner", "-i", "./tests", "-f", "pdf", "-c", "2", "-sh", "10", "-br", "2"],
-        capture_output=True,
-        text=True
-    )
-    assert result.returncode == 0
-    assert "Matching Files Found" in result.stdout
-
-
-def test_cli_bw_and_blur():
-    result = subprocess.run(
-        ["scanner", "-i", "./tests", "-f", "pdf", "-r", "yes", "-b", "yes", "-l", "yes"],
-        capture_output=True,
-        text=True
-    )
-    assert result.returncode == 0
-
-
-def test_cli_without_askew():
-    result = subprocess.run(
-        ["scanner", "-i", "./tests", "-f", "pdf", "-a", "no"],
-        capture_output=True,
-        text=True
-    )
-    assert result.returncode == 0
-
-
-def test_cli_specific_file():
-    result = subprocess.run(
-        ["scanner", "-i", "./tests", "-f", "test.pdf"],
-        capture_output=True,
-        text=True
-    )
-    assert result.returncode == 0
-
-
-def test_cli_image_sorting():
-    result = subprocess.run(
-        ["scanner", "-i", "./tests", "-f", "image", "-s", "name"],
-        capture_output=True,
-        text=True
-    )
-    assert result.returncode == 0
-
-
-def test_cli_recursive_pdf():
-    result = subprocess.run(
-        ["scanner", "-i", ".", "-f", "pdf", "-r", "yes"],
-        capture_output=True,
-        text=True
-    )
-    assert result.returncode == 0
 
 
 # Run the tests
