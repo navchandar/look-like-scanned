@@ -24,7 +24,7 @@ function copyToClipboard(codeId) {
     // copy the text to clipboard
     navigator.clipboard.writeText(text).then(() => {
         // update copy icon style on copy
-        const copyIcon = codeEcodeElement.parentElement.nextElementSibling;
+        const copyIcon = codeElement.parentElement.nextElementSibling;
         if (copyIcon) {
             copyIcon.innerText = '✔';
             copyIcon.classList.add('copied');
