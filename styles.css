@@ -8,7 +8,7 @@
     --dark-text-color: #d0d0d0;
     --dark-link-color: #47AEF9;
     --mild-dark-text-color: #d9d9d9;
-    --background-color: #f9f9f9;
+    --background-color: #eee;
     --font-family: 'Roboto', sans-serif;
     --heading-font-family: 'Montserrat', sans-serif;
 }
@@ -220,6 +220,9 @@ header h1 img:hover {
     transform: scale(1.1);
 }
 
+header img {
+    height: 25px;
+}
 
 nav {
     height: 100%;
