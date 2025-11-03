@@ -36,7 +36,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.8"
 pillow = "^10.0.1"
-pypdfium2 = "^4.20.0"
+pypdfium2 = "^5.0.0"
 colorama = "^0.4.6"
 
 
