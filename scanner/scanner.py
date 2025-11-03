@@ -383,7 +383,7 @@ def _save_image_obj_to_pdf(images_list, output_pdf_path, pdf_version=17):
             try:
                 pdf_image = pdfium.PdfImage.new(output_pdf)
                 pdf_image.load_jpeg(image_file)
-                width, height = pdf_image.get_size()
+                width, height = pdf_image.get_px_size()
                 # since render size increased by 2, decrease by same amount
                 width = width / 2
                 height = height / 2
