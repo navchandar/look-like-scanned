@@ -26,19 +26,24 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Install System Dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          libjpeg-dev \
-          zlib1g-dev \
-          libwebp-dev
-          
     # Set up Python
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.x'
+
+    - name: Cache Poetry dependencies
+      uses: actions/cache@v4
+      with:
+        # This is Poetry's default global cache path on Linux runners
+        path: ~/.cache/pypoetry/virtualenvs 
+        key: poetry-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+        restore-keys: poetry-${{ runner.os }}-
+        
+    - name: Install System Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libjpeg-dev zlib1g-dev libwebp-dev
 
     # Install Poetry and dependencies
     - name: Install dependencies with Poetry
@@ -52,7 +57,6 @@ jobs:
       with:
         languages: ${{ matrix.language }}
         # Exclude the test folder from the CodeQL database creation
-        setup-python-dependencies: false
         config: |
           paths-ignore:
             - 'tests/**'
