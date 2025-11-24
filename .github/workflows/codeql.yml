@@ -2,11 +2,11 @@ name: "CodeQL"
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
   schedule:
-    - cron: '30 5 * * 0' # Runs at 05:30 on Sundays
+    - cron: "30 5 * * 0" # Runs at 05:30 on Sundays
 
 jobs:
   analyze:
@@ -20,54 +20,54 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'python', 'actions' ]
+        language: ["python", "actions"]
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    # Set up Python
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.x'
+      # Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
 
-    - name: Cache Poetry dependencies
-      uses: actions/cache@v4
-      with:
-        # This is Poetry's default global cache path on Linux runners
-        path: ~/.cache/pypoetry/virtualenvs 
-        key: poetry-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
-        restore-keys: poetry-${{ runner.os }}-
-        
-    - name: Install System Dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y libjpeg-dev zlib1g-dev libwebp-dev
+      - name: Cache Poetry dependencies
+        uses: actions/cache@v4
+        with:
+          # This is Poetry's default global cache path on Linux runners
+          path: ~/.cache/pypoetry/virtualenvs
+          key: poetry-main-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: poetry-main-${{ runner.os }}-
 
-    # Install Poetry and dependencies
-    - name: Install dependencies with Poetry
-      run: |
-        pip install poetry
-        poetry install --only main --no-root
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libjpeg-dev zlib1g-dev libwebp-dev libtiff-dev pkg-config
 
-    # Configure CodeQL to ignore the tests folder
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v4
-      with:
-        languages: ${{ matrix.language }}
-        # Exclude the test folder from the CodeQL database creation
-        config: |
-          paths-ignore:
-            - 'tests/**'
+      # Install Poetry and dependencies
+      - name: Install dependencies with Poetry
+        run: |
+          pip install poetry
+          poetry install --only main --no-root
 
-    # Run the CodeQL Autobuild step
-    # This is crucial for compiled languages, but for Python, it's a safe step
-    # to ensure CodeQL correctly links installed dependencies for a deeper scan.
-    - name: Autobuild (Optional but Recommended for Poetry)
-      uses: github/codeql-action/autobuild@v4
+      # Configure CodeQL to ignore the tests folder
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+          # Exclude the test folder from the CodeQL database creation
+          config: |
+            paths-ignore:
+              - 'tests/**'
 
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v4
-      with:
-        category: "/language:${{matrix.language}}"
+      # Run the CodeQL Autobuild step
+      # This is crucial for compiled languages, but for Python, it's a safe step
+      # to ensure CodeQL correctly links installed dependencies for a deeper scan.
+      - name: Autobuild (Optional but Recommended for Poetry)
+        uses: github/codeql-action/autobuild@v4
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:${{matrix.language}}"
