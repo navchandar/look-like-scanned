@@ -26,6 +26,14 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Install System Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          libjpeg-dev \
+          zlib1g-dev \
+          libwebp-dev
+          
     # Set up Python
     - name: Set up Python
       uses: actions/setup-python@v5
@@ -36,7 +44,7 @@ jobs:
     - name: Install dependencies with Poetry
       run: |
         pip install poetry
-        poetry install --no-root # Installs dependencies from pyproject.toml
+        poetry install --only main --no-root
 
     # Configure CodeQL to ignore the tests folder
     - name: Initialize CodeQL
