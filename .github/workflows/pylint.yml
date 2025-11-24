@@ -42,4 +42,5 @@ jobs:
         env:
           PYTHONPATH: "${{ env.PYTHONPATH }}:${{ github.workspace }}"
         run: |
-          pip install . ;pylint --fail-under=8 $(git ls-files '*.py')
+          pip install .
+          pylint --fail-under=8 $(git ls-files '*.py')
