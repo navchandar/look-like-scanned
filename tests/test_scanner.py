@@ -129,6 +129,8 @@ class TestDocumentScanner:
         args.brightness = 1.0
         args.recurse = "no"
         args.sort_by = "name"
+        args.noise = 10
+        args.blur_variation = "no"
         return args
 
     def test_process_pdf(self, test_env, mock_args):

@@ -8,11 +8,11 @@ import os
 import random
 from importlib import metadata
 from pathlib import Path
-from typing import List, Optional, Tuple, Union
+from typing import List, Tuple, Union
 
 import pypdfium2 as pdfium
 from colorama import Fore, Style, init
-from PIL import Image, ImageEnhance, ImageFilter
+from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageOps
 
 # Initialize colorama
 init()
@@ -110,6 +110,22 @@ def parse_arguments() -> argparse.Namespace:
         default="no",
         choices=CHOICES,
         help="Make output documents look a little bit blurry. Default: no",
+    )
+    parser.add_argument(
+        "-v",
+        "--variation",
+        type=str,
+        default="no",
+        choices=CHOICES,
+        help="Apply varying levels of blur/focus (depth of field effect). Default: no",
+    )
+    parser.add_argument(
+        "-n",
+        "--noise",
+        type=int,
+        default=0,
+        choices=range(0, 101),
+        help="Add random noise to simulate imperfections (0-100). Default: 0",
     )
     parser.add_argument(
         "-c",
@@ -263,11 +279,85 @@ class DocumentScanner:
         self.askew = args.askew.lower() in YES_VALUES
         self.black_and_white = args.black_and_white.lower() in YES_VALUES
         self.blur = args.blur.lower() in YES_VALUES
+        self.blur_variation = args.variation.lower() in YES_VALUES
+        self.noise_factor = args.noise
         self.contrast = args.contrast
         self.sharpness = args.sharpness
         self.brightness = args.brightness
         self.recurse = args.recurse.lower() in YES_VALUES
         self.sort_by = args.sort_by.lower()
+
+    def _add_noise(self, image: Image.Image) -> Image.Image:
+        """Adds random salt-and-pepper noise using pure Python/PIL."""
+        if self.noise_factor == 0:
+            return image
+
+        width, height = image.size
+        pixels = image.load()
+
+        # Calculate number of noisy pixels (max 50% density)
+        density = min(self.noise_factor / 200.0, 0.5)
+        total_pixels = width * height
+        noise_count = int(total_pixels * density)
+
+        is_rgb = image.mode == "RGB"
+
+        for _ in range(noise_count):
+            x = random.randint(0, width - 1)
+            y = random.randint(0, height - 1)
+            # 50/50 chance of Salt (255) or Pepper (0)
+            val = 255 if random.random() > 0.5 else 0
+
+            if is_rgb:
+                pixels[x, y] = (val, val, val)
+            else:
+                pixels[x, y] = val
+
+        return image
+
+    def _generate_gradient_mask(self, width: int, height: int) -> Image.Image:
+        """Generates a gradient mask efficiently to simulate uneven focus for the blur variation effect"""
+        # Create a small gradient and resize it to the image size for efficiency.
+        # 256 size is enough for a smooth gradient
+        mask = Image.new("L", (256, 256))
+
+        direction = random.choice(["horizontal", "vertical", "diagonal"])
+
+        # Draw gradient on small image
+        draw = ImageDraw.Draw(mask)
+
+        if direction == "horizontal":
+            for x in range(256):
+                draw.line([(x, 0), (x, 255)], fill=x)
+        elif direction == "vertical":
+            for y in range(256):
+                draw.line([(0, y), (255, y)], fill=y)
+        else:  # diagonal approximation
+            for i in range(256):
+                # Draw overlapping lines to simulate diagonal
+                draw.line([(0, i), (i, 0)], fill=i)  # Top-Left dark
+                draw.line([(i, 255), (255, i)], fill=255 - i)  # Bottom-right light
+
+        # Resize to actual image dimensions
+        return mask.resize((width, height), Image.Resampling.BILINEAR)
+
+    def _add_blur_variation(self, image: Image.Image) -> Image.Image:
+        """
+        Simulates an uneven scanner lid by blurring one side of the image.
+        """
+        if not self.blur_variation:
+            return image
+        # Create blurred version
+        blur_radius = random.uniform(2.0, 5.0)
+        blurred_image = image.filter(ImageFilter.GaussianBlur(radius=blur_radius))
+
+        # Create Gradient Mask
+        mask = self._generate_gradient_mask(image.width, image.height)
+
+        # Randomly invert mask to change direction of blur
+        if random.random() > 0.5:
+            mask = ImageOps.invert(mask)
+        return Image.composite(blurred_image, image, mask)
 
     def _apply_effects(self, image: Image.Image) -> Image.Image:
         """Applies configured visual effects to a single image object."""
@@ -306,6 +396,10 @@ class DocumentScanner:
         if self.blur:
             blur = random.uniform(1.1, 1.4)
             image = image.filter(ImageFilter.GaussianBlur(blur))
+        # Blur Variation (Uneven focus)
+        image = self._add_blur_variation(image)
+        # Add Noise if specified
+        image = self._add_noise(image)
 
         # User Adjustments for contrast, sharpness, brightness
         if self.contrast != 1.0:

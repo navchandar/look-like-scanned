@@ -42,4 +42,4 @@ jobs:
           PYTHONPATH: "${{ env.PYTHONPATH }}:${{ github.workspace }}"
         run: |
           pip install . ;
-          poetry run pytest -s
+          poetry run pytest -sv
