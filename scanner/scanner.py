@@ -163,59 +163,83 @@ def get_target_files(
 ) -> Tuple[List[Path], str]:
     """
     Scans directory for matching files based on input arguments.
-    If no extension, assume partial match name, default to pdf unless logic dictates otherwise
     Returns: (List of file paths, and 'mode' [image|pdf])
     """
     if not input_dir.exists():
         print_color(f"Error: Input folder path not found: {input_dir}", "red")
         return [], "pdf"
 
-    # Determine processing mode - default to PDF
+    # Setup Filter Logic
     mode = "pdf"
-    target_extensions = SUPPORTED_DOCS
+    target_extensions = set()
+    specific_filename = None
+    # If set, look for this exact file
 
-    # Check if filter_arg is a keyword ('image', 'pdf') or a filename
-    if filter_arg.lower() == "image":
+    arg_lower = filter_arg.lower()
+
+    # Helper to check if string looks like a supported extension (e.g. "jpg" or ".jpg")
+    def clean_ext(val):
+        return "." + val.lstrip(".")
+
+    # Case A: Broad Keywords
+    if arg_lower == "image":
         mode = "image"
         target_extensions = SUPPORTED_IMAGES
-    elif filter_arg.lower() == "pdf":
+    elif arg_lower == "pdf":
         mode = "pdf"
         target_extensions = SUPPORTED_DOCS
+
+    # Case B: User provided an extension (e.g. "png" or ".png")
+    elif clean_ext(arg_lower) in SUPPORTED_IMAGES:
+        mode = "image"
+        target_extensions = {clean_ext(arg_lower)}
+    elif clean_ext(arg_lower) in SUPPORTED_DOCS:
+        mode = "pdf"
+        target_extensions = {clean_ext(arg_lower)}
+
+    # Case C: Specific Filename (e.g. "doc.pdf")
     else:
-        # If it is a specific filename or extension
-        suffix = Path(filter_arg).suffix.lower()
-        if suffix in SUPPORTED_IMAGES:
+        specific_filename = filter_arg
+        # Deduce mode from the specific file's extension for processing later
+        sfx = Path(filter_arg).suffix.lower()
+        if sfx in SUPPORTED_IMAGES:
             mode = "image"
-            target_extensions = {suffix}
-        elif suffix in SUPPORTED_DOCS:
+        elif sfx in SUPPORTED_DOCS:
             mode = "pdf"
-            target_extensions = {suffix}
+        else:
+            print_color(
+                f"Error: The provided file name does not have a supported extension: {filter_arg}",
+                "red",
+            )
+            return [], "pdf"
 
     print(f"Processing files from {input_dir} with mode={mode}...")
 
+    # Scan Files in the folders
     files = []
     pattern = "**/*" if recurse else "*"
 
     try:
         for p in input_dir.glob(pattern):
             if p.is_file():
-                # Check extension match
-                is_ext_match = p.suffix.lower() in target_extensions
+                match = False
 
-                # Check exact name match if filter_arg is not a generic keyword
-                is_name_match = True
-                if filter_arg.lower() not in [
-                    "image",
-                    "pdf",
-                ] and not filter_arg.startswith("."):
-                    is_name_match = p.name == filter_arg
+                # STRICT MATCH: If user gave a specific filename, only match that name
+                if specific_filename:
+                    if p.name == specific_filename:
+                        match = True
 
-                if is_ext_match and is_name_match:
+                # BROAD MATCH: match any file with the target extensions
+                elif p.suffix.lower() in target_extensions:
+                    match = True
+
+                if match:
                     files.append(p)
+
     except Exception as e:
         print_color(f"Error searching files: {e}", "red")
 
-    # Sort Logic
+    # Primary Sort: User preference (Name, Time)
     if sort_key != "none":
         if sort_key == "ctime":
             files.sort(key=lambda f: f.stat().st_ctime)
@@ -224,8 +248,9 @@ def get_target_files(
         else:  # name
             files.sort(key=lambda f: f.name)
 
-        # Secondary sort by directory depth to keep folders together during recursion
-        files.sort(key=lambda f: len(f.parts))
+    # Secondary Sort: Directory Depth
+    # This keeps top-level files together in the final PDF if merging.
+    files.sort(key=lambda f: len(f.parts))
 
     return files, mode
 
