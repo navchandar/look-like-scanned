@@ -130,6 +130,12 @@ scanner -h
           <li><code>-l, --blur</code> - Controls whether to make the output a little bit blurry. Accepted values are
             "yes" or "no". Default value is "no".
           </li>
+          <li><code>-n, --noise</code> - Controls the amount of noise/grain added to the image. 
+            Accepted values are integers from 0 to 100. Default value is 0.
+          </li>
+          <li><code>-v, --variation</code> - Controls whether to apply a variable blur (depth of field) 
+            to simulate an uneven scanner lid. Accepted values are "yes" or "no". Default value is "no".
+          </li>
           <li><code>-r, --recurse</code> - Allows scripts to find all matching files including subdirectories. Accepted
             values are "yes" or "no". Default value is "yes".
           </li>
@@ -254,6 +260,24 @@ scanner -i .\tests -f "jpg" -q 80 -a yes</code></pre>
           <pre><code id="code18"><span class="comment"># Convert all png files in folder to pdf with high sharpness and low contrast</span>
 scanner -i .\tests -f "png" -sh 5 -c 0.5</code></pre>
           <span class="copy-icon" onclick="copyToClipboard('code18')" title="Copy Command">📋</span>
+        </div>
+
+        <div class="code-container">
+          <pre><code id="code19"><span class="comment"># Convert all PDF files with a noise level of 25 (grainy effect)</span>
+scanner -i .\tests -f "pdf" -n 25</code></pre>
+          <span class="copy-icon" onclick="copyToClipboard('code19')" title="Copy Command">📋</span>
+        </div>
+
+        <div class="code-container">
+          <pre><code id="code20"><span class="comment"># Convert all files with uneven focus blur (depth of field)</span>
+scanner -i .\tests -f "pdf" -v yes</code></pre>
+          <span class="copy-icon" onclick="copyToClipboard('code20')" title="Copy Command">📋</span>
+        </div>
+
+        <div class="code-container">
+          <pre><code id="code21"><span class="comment"># Add Slight Noise, Uneven Focus, and Black & White Photocopy effect</span>
+scanner -i .\tests -f "jpg" -n 5 -v yes -b yes</code></pre>
+          <span class="copy-icon" onclick="copyToClipboard('code21')" title="Copy Command">📋</span>
         </div>
 
       </section>
