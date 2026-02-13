@@ -101,10 +101,10 @@ scanner -i .\tests -f "pdf" -n 20 -v yes -b yes
 scanner -i .\tests -f "test.jpg" -n 50
 
 # Simulate a "Bad/Old Scanner" (Low quality, high noise, blur, and high contrast)
-scanner -i .\tests -q 75 -n 15 -l yes -c 1.4 -sh 0.8
+scanner -i .\tests -q 75 -n 20 -l yes -c 1.5 -sh 0.8
 
 # Simulate a "High-Quality/Modern Scanner" (High quality, slight noise for texture, sharpened)
-scanner -i .\tests -q 95 -n 3 -a yes -sh 1.5 -br 1.1
+scanner -i .\tests -q 95 -n 0 -a yes -sh 1.5 -br 1.1
 
 # Target specific image formats only (e.g., just HEIC files from an iPhone)
 scanner -i .\photos -f "heic"
