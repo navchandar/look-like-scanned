@@ -336,7 +336,10 @@ class DocumentScanner:
         return image
 
     def _generate_gradient_mask(self, width: int, height: int) -> Image.Image:
-        """Generates a gradient mask efficiently to simulate uneven focus for the blur variation effect"""
+        """
+        Generates a gradient mask efficiently to simulate
+        uneven focus for the blur variation effect
+        """
         # Create a small gradient and resize it to the image size for efficiency.
         # 256 size is enough for a smooth gradient
         mask = Image.new("L", (256, 256))
@@ -538,10 +541,11 @@ class DocumentScanner:
                         try:
                             # use a try-except because some frames might lack EXIF data
                             frame = ImageOps.exif_transpose(frame)
-                        except Exception:
+                        except:
                             pass
 
-                        # Handle RGBA/P modes and transparency by compositing onto white background in PDF conversion
+                        # Handle RGBA/P modes and transparency
+                        # by compositing onto white background in PDF conversion
                         if frame.mode in ("RGBA", "LA") or (
                             frame.mode == "P" and "transparency" in frame.info
                         ):

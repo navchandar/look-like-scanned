@@ -60,7 +60,7 @@ def is_valid_pdf(file_path):
     try:
         with open(file_path, "rb") as f:
             return f.read(4) == b"%PDF"
-    except Exception:
+    except:
         return False
 
 
@@ -191,7 +191,7 @@ class TestDocumentScanner:
         """
         Loops over ALL .tiff files in tests/.
         - If valid: Ensures all pages are extracted.
-        - If invalid (e.g. JPEG2000): Ensures tool skips gracefully without crashing.
+        - If invalid (e.g. JPEG2000): Ensures tool skips gracefully.
         """
         tiff_files = list(TEST_DIR.glob("*.tif*"))
         if not tiff_files:
@@ -232,7 +232,8 @@ class TestDocumentScanner:
                         mock_save.called
                     ), f"Scanner should have processed valid file {input_file.name}"
                     processed_imgs = mock_save.call_args[0][0]
-                    msg = f"Missed pages in {input_file.name}. {expected_pages=}, got {len(processed_imgs)}"
+                    msg = f"Missed pages in {input_file.name}.\n\
+                        {expected_pages=}, got {len(processed_imgs)}"
                     assert len(processed_imgs) == expected_pages, msg
                 else:
                     # ASSERTION FOR BAD FILES
@@ -285,6 +286,7 @@ class TestDocumentScanner:
 
 # --- Unit Tests ---
 def test_human_size():
+    """Test method calculation"""
     assert human_size(0) == "0.0 B"
     assert human_size(1024) == "1.0 KiB"
     assert human_size(1048576) == "1.0 MiB"
