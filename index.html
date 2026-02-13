@@ -1,342 +1,621 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Make Documents Look Like Scanned - Python Project Documentation
+    </title>
+    <meta
+      name="description"
+      content="Open-source Python package for a cli tool to make documents look like they were scanned/printed or merge multiple images to make pdf"
+    />
+    <meta
+      name="keywords"
+      content="Python, scanned documents, PDF, image conversion, look like scanned, Scan pdf online, Convert JPEG to PDF, Convert PNG to PDF, CLI, Document Scanner, Image to PDF Converter, Python CLI Tool, Digital Document Conversion, PDF Generation, Image Processing, Automated Document Scanning, Python PDF Tools, Batch Image Conversion, PDF Conversion, Reverse OCR, Python Automation, Document Management, PDF Merging"
+    />
+    <link
+      rel="shortcut icon"
+      href="data:image/x-icon;base64,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L/84NC//OTUw/zo2Mf87NjH/N0JN/y9ai/85ODn/Sk8m/2Z6EP9mehD/aHwQ/3+VFP+SqhfZk6sX85OrF/+Tqxf/k6sX/5OqF/9aYCj/OTUy/zs3Mv87NzL/Ozcy/zo2Mf85NTD/OTUw/zk1MP85NTD/OTUw/zk1MP85NTD/OTUw/zk1MP85NTD/OjYx/zs3Mv86Ojv/N0NP/zo3NP9KTyb/ZXkQ/2h8EP9/lRT/kqoX/5OrF/OTqxf9k6sX/5OrF/+Tqxf/k6oX/1pgKP85NTL/Ozcy/zs3Mv87NzL/Q0A7/1NPS/9TT0v/U09L/1NPS/9TT0v/U09L/1NPS/9TT0v/U09L/1NPS/9DQDv/Ozcy/zs3Mv87NjD/OjYy/0pOJv9ofBD/f5UU/5KqF/+Tqxf/k6sX/ZOrF/2Tqxf/k6sX/5OrF/+Tqxf/YGcn/zg0M/86NTL/OjUy/zcyL/93dHL/5ubl/+fn5v/n5+b/5+fm/+fn5v/n5+b/5+fm/+fn5v/n5+b/5ubl/3h1cv83My//OjYz/zo2M/85NTP/T1Uk/3+VFP+Sqhf/k6sX/5OrF/+Tqxf9k6sX85OrF/+Tqxf/k6sX/5SsF/+DlRz/WmAp/1JWK/9SViv/T1Mn/5CTd///////////////////////////////////////////////////////iYp2/0NGJf9GSSn/Rkgp/0xQJv93iRr/k6sX/5OrF/+Tqxf/k6sX/5OrF/OTqxfZk6sX/5OrF/+Tqxf/k6sX/5SsF/+SqRf/kKcY/5CnGP+OphT/uMdq//7//v////////////////////////////////////////////7+/v+cqGb/YnYN/2R4Ef9mehH/fpQU/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX2ZOrF6yTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5GqE/+6yWr//v/+/////////////////////////////////////////////v7+/52pZf9jeAz/aHwQ/3+VFP+Sqhf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxesk6sXbJOrF/uTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/kaoT/7nJav/+//7////////////////////////////////////////////+/v7/nKll/2V6DP9/lRT/kqoX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX+5OrF2yTqxcpk6sX35OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+RqhP/uclq//7//v////////////////////////////////////////////////+frGb/fJMQ/5KqF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxffk6sXKZOrFwKTqxeXk6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5GqE/+5yWr//v/+//////////////////////////////////39/f/y8O//6+vi/6e3U/+QqRT/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF5eTqxcCk6sXAJOrFzeTqxfqk6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/kaoT/7rJa////////////////////////////////////////Pz9/9zZ0P+zvmz/lawb/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxfqk6sXN5OrFwCTqxcAk6sXAZOrF4mTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+RqhT/ssNa/+rv0v/r79P/6+/T/+vv0//r79P/6+/T/+vv1P/n7M//t8Nv/5SrGv+Tqxb/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF4mTqxcBk6sXAJOrFwCTqxcAk6sXGZOrF8KTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+WrR3/mrEn/5uxJ/+bsSf/m7En/5uxJ/+bsSf/m7En/5qwJv+UrBn/k6sW/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+TqxfCk6sXGZOrFwCTqxcAk6sXAJOrFwCTqxcAk6sXNZOrF9mTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxb/k6sW/5OrFv+Tqxb/k6sW/5OrFv+Tqxb/k6sW/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX2ZOrFzWTqxcAk6sXAJOrFwAAAAAAk6sXAJOrFwCTqxcAk6sXQZOrF9mTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF9mTqxdBk6sXAJOrFwCTqxcAAAAAAAAAAAAAAAAAk6sXAJOrFwCTqxcAk6sXNZOrF8KTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+TqxfCk6sXNZOrFwCTqxcAk6sXAAAAAAAAAAAAAAAAAAAAAAAAAAAAk6sXAJOrFwCTqxcAk6sXGZOrF4mTqxfqk6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxfqk6sXiZOrFxmTqxcAk6sXAJOrFwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAk6sXAJOrFwCTqxcAk6sXAZOrFzeTqxeXk6sX35OrF/uTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/uTqxffk6sXl5OrFzeTqxcBk6sXAJOrFwCTqxcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAk6sXAJOrFwCTqxcAk6sXAJOrFwKTqxcpk6sXbJOrF6yTqxfZk6sX85OrF/2Tqxf9k6sX85OrF9mTqxesk6sXbJOrFymTqxcCk6sXAJOrFwCTqxcAk6sXAAAAAAAAAAAAAAAAAAAAAAAAAAAA+AAAH/AAAA/gAAAHwAAAA4AAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAcAAAAPgAAAH8AAAD/gAAB8="
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Make Documents Look Like Scanned - Python Project Documentation</title>
-  <meta name="description"
-    content="Open-source Python package for a cli tool to make documents look like they were scanned/printed or merge multiple images to make pdf">
-  <meta name="keywords"
-    content="Python, scanned documents, PDF, image conversion, look like scanned, Scan pdf online, Convert JPEG to PDF, Convert PNG to PDF, CLI, Document Scanner, Image to PDF Converter, Python CLI Tool, Digital Document Conversion, PDF Generation, Image Processing, Automated Document Scanning, Python PDF Tools, Batch Image Conversion, PDF Conversion, Reverse OCR, Python Automation, Document Management, PDF Merging">
-  <link rel="shortcut icon"
-    href="data:image/x-icon;base64,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L/84NC//OTUw/zo2Mf87NjH/N0JN/y9ai/85ODn/Sk8m/2Z6EP9mehD/aHwQ/3+VFP+SqhfZk6sX85OrF/+Tqxf/k6sX/5OqF/9aYCj/OTUy/zs3Mv87NzL/Ozcy/zo2Mf85NTD/OTUw/zk1MP85NTD/OTUw/zk1MP85NTD/OTUw/zk1MP85NTD/OjYx/zs3Mv86Ojv/N0NP/zo3NP9KTyb/ZXkQ/2h8EP9/lRT/kqoX/5OrF/OTqxf9k6sX/5OrF/+Tqxf/k6oX/1pgKP85NTL/Ozcy/zs3Mv87NzL/Q0A7/1NPS/9TT0v/U09L/1NPS/9TT0v/U09L/1NPS/9TT0v/U09L/1NPS/9DQDv/Ozcy/zs3Mv87NjD/OjYy/0pOJv9ofBD/f5UU/5KqF/+Tqxf/k6sX/ZOrF/2Tqxf/k6sX/5OrF/+Tqxf/YGcn/zg0M/86NTL/OjUy/zcyL/93dHL/5ubl/+fn5v/n5+b/5+fm/+fn5v/n5+b/5+fm/+fn5v/n5+b/5ubl/3h1cv83My//OjYz/zo2M/85NTP/T1Uk/3+VFP+Sqhf/k6sX/5OrF/+Tqxf9k6sX85OrF/+Tqxf/k6sX/5SsF/+DlRz/WmAp/1JWK/9SViv/T1Mn/5CTd///////////////////////////////////////////////////////iYp2/0NGJf9GSSn/Rkgp/0xQJv93iRr/k6sX/5OrF/+Tqxf/k6sX/5OrF/OTqxfZk6sX/5OrF/+Tqxf/k6sX/5SsF/+SqRf/kKcY/5CnGP+OphT/uMdq//7//v////////////////////////////////////////////7+/v+cqGb/YnYN/2R4Ef9mehH/fpQU/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX2ZOrF6yTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5GqE/+6yWr//v/+/////////////////////////////////////////////v7+/52pZf9jeAz/aHwQ/3+VFP+Sqhf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxesk6sXbJOrF/uTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/kaoT/7nJav/+//7////////////////////////////////////////////+/v7/nKll/2V6DP9/lRT/kqoX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX+5OrF2yTqxcpk6sX35OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+RqhP/uclq//7//v////////////////////////////////////////////////+frGb/fJMQ/5KqF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxffk6sXKZOrFwKTqxeXk6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5GqE/+5yWr//v/+//////////////////////////////////39/f/y8O//6+vi/6e3U/+QqRT/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF5eTqxcCk6sXAJOrFzeTqxfqk6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/kaoT/7rJa////////////////////////////////////////Pz9/9zZ0P+zvmz/lawb/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxfqk6sXN5OrFwCTqxcAk6sXAZOrF4mTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+RqhT/ssNa/+rv0v/r79P/6+/T/+vv0//r79P/6+/T/+vv1P/n7M//t8Nv/5SrGv+Tqxb/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF4mTqxcBk6sXAJOrFwCTqxcAk6sXGZOrF8KTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+WrR3/mrEn/5uxJ/+bsSf/m7En/5uxJ/+bsSf/m7En/5qwJv+UrBn/k6sW/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+TqxfCk6sXGZOrFwCTqxcAk6sXAJOrFwCTqxcAk6sXNZOrF9mTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxb/k6sW/5OrFv+Tqxb/k6sW/5OrFv+Tqxb/k6sW/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX2ZOrFzWTqxcAk6sXAJOrFwAAAAAAk6sXAJOrFwCTqxcAk6sXQZOrF9mTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF9mTqxdBk6sXAJOrFwCTqxcAAAAAAAAAAAAAAAAAk6sXAJOrFwCTqxcAk6sXNZOrF8KTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+TqxfCk6sXNZOrFwCTqxcAk6sXAAAAAAAAAAAAAAAAAAAAAAAAAAAAk6sXAJOrFwCTqxcAk6sXGZOrF4mTqxfqk6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxfqk6sXiZOrFxmTqxcAk6sXAJOrFwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAk6sXAJOrFwCTqxcAk6sXAZOrFzeTqxeXk6sX35OrF/uTqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/+Tqxf/k6sX/5OrF/uTqxffk6sXl5OrFzeTqxcBk6sXAJOrFwCTqxcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAk6sXAJOrFwCTqxcAk6sXAJOrFwKTqxcpk6sXbJOrF6yTqxfZk6sX85OrF/2Tqxf9k6sX85OrF9mTqxesk6sXbJOrFymTqxcCk6sXAJOrFwCTqxcAk6sXAAAAAAAAAAAAAAAAAAAAAAAAAAAA+AAAH/AAAA/gAAAHwAAAA4AAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAcAAAAPgAAAH8AAAD/gAAB8=" />
-  <link rel="stylesheet" href="styles.css">
-</head>
+  <body class="dark-mode">
+    <header>
+      <h1>
+        look-like-scanned
+        <a target="_blank" href="https://pypi.org/project/look-like-scanned/"
+          ><img
+            alt="Latest Version"
+            style="height: 25px"
+            src="https://img.shields.io/github/v/release/navchandar/look-like-scanned.svg?style=social"
+        /></a>
+      </h1>
+      <a href="https://pypi.org/project/look-like-scanned/" target="_blank"
+        ><img
+          src="https://img.shields.io/pypi/pyversions/look-like-scanned"
+          alt="Supported Python Versions"
+      /></a>
+      <a href="https://www.pepy.tech/projects/look-like-scanned" target="_blank"
+        ><img
+          src="https://static.pepy.tech/badge/look-like-scanned"
+          alt="Downloads Count"
+      /></a>
+      <a
+        href="https://github.com/navchandar/look-like-scanned/stargazers"
+        target="_blank"
+        ><img
+          src="https://img.shields.io/github/stars/navchandar/look-like-scanned"
+          alt="Star Count"
+      /></a>
+      <a
+        href="https://github.com/navchandar/look-like-scanned/blob/main/LICENSE"
+        target="_blank"
+        ><img
+          src="https://img.shields.io/badge/license-MIT-blue.svg"
+          alt="MIT LICENSE"
+      /></a>
+    </header>
+    <div class="main-content">
+      <main>
+        <section id="overview">
+          <h2>Overview</h2>
+          <p>
+            <i>Look-Like-Scanned</i> is a Python based CLI tool that lets you
+            make digital documents look like they were scanned. The package is
+            designed to run locally with a focus on privacy, security,
+            open-source collaboration, and transparency.
+          </p>
 
-<body class="dark-mode">
-  <header>
-    <h1>look-like-scanned
-      <a target="_blank" href="https://pypi.org/project/look-like-scanned/"><img alt="Latest Version"
-          style="height: 25px;"
-          src="https://img.shields.io/github/v/release/navchandar/look-like-scanned.svg?style=social"></a>
-    </h1>
-    <a href="https://pypi.org/project/look-like-scanned/" target="_blank"><img
-        src="https://img.shields.io/pypi/pyversions/look-like-scanned" alt="Supported Python Versions"></a>
-    <a href="https://www.pepy.tech/projects/look-like-scanned" target="_blank"><img
-        src="https://static.pepy.tech/badge/look-like-scanned" alt="Downloads Count"></a>
-    <a href="https://github.com/navchandar/look-like-scanned/stargazers" target="_blank"><img
-        src="https://img.shields.io/github/stars/navchandar/look-like-scanned" alt="Star Count"></a>
-    <a href="https://github.com/navchandar/look-like-scanned/blob/main/LICENSE" target="_blank"><img
-        src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT LICENSE"></a>
-  </header>
-  <div class="main-content">
-    <main>
-      <section id="overview">
-        <h2>Overview</h2>
-        <p><i>Look-Like-Scanned</i> is a Python based CLI tool that lets you make digital documents look like
-          they were scanned. The package is designed to run locally with a focus on privacy, security, open-source
-          collaboration, and transparency.
-        </p>
+          <h3>Features</h3>
+          <ul>
+            <li>
+              <strong>Unlimited Usage</strong>: No limits, fees, or ads. Free
+              and Open-source.
+            </li>
+            <li>
+              <strong>Powerful CLI</strong>: Use command-line options to convert
+              PDFs to scanned/grayscale PDFs, combine multiple images into a PDF
+              file, etc.
+            </li>
+            <li>
+              <strong>Local Processing</strong>: All operations are performed
+              locally on your computer. No need to upload your files to
+              untrustworthy websites.
+            </li>
+            <li>
+              <strong>Environmental Focus</strong>: Saves trees by eliminating
+              the need to print and scan paper.
+            </li>
+          </ul>
 
-        <h3>Features</h3>
-        <ul>
-          <li><strong>Unlimited Usage</strong>: No limits, fees, or ads. Free and Open-source.</li>
-          <li><strong>Powerful CLI</strong>: Use command-line options to convert PDFs to scanned/grayscale PDFs, combine
-            multiple images into a PDF file, etc.</li>
-          <li><strong>Local Processing</strong>: All operations are performed locally on your computer. No need to
-            upload
-            your files to untrustworthy websites.</li>
-          <li><strong>Environmental Focus</strong>: Saves trees by eliminating the need to print and scan paper.</li>
-        </ul>
+          <h3>Functionality</h3>
+          <p>
+            The script processes each page of a PDF or multiple images,
+            converting them into new images with slight random adjustments for
+            skew and brightness to mimic the appearance of scanned documents.
+            The processed pages are combined into an output PDF file and saved
+            in the same folder. The original files remain unchanged, and the
+            output files are named with the format
+            <i>{filename}_output.pdf</i> for easy identification while
+            maintaining the original page/image order .
+          </p>
+        </section>
+        <section id="installation">
+          <h2>Installation</h2>
+          <p>
+            Install from the
+            <a
+              href="https://pypi.org/project/look-like-scanned/"
+              target="_blank"
+              >Python Package Index (PyPI)</a
+            >
+            by running this command
+          </p>
 
-        <h3>Functionality</h3>
-        <p>The script processes each page of a PDF or multiple images, converting them into new images with slight
-          random
-          adjustments for skew and brightness to mimic the appearance of scanned documents. The processed pages are
-          combined into an output PDF file and saved in the same folder. The original
-          files remain unchanged, and the output files are named with the format <i>{filename}_output.pdf</i> for
-          easy identification while maintaining the original page/image order .</p>
-      </section>
-      <section id="installation">
-        <h2>Installation</h2>
-        <p>
-          Install from the <a href="https://pypi.org/project/look-like-scanned/" target="_blank">Python Package Index
-            (PyPI)</a> by
-          running this command
-        </p>
+          <div class="code-container">
+            <pre><code id="pypi_install">pip install look-like-scanned</code></pre>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('pypi_install')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
 
-        <div class="code-container">
-          <pre><code id="pypi_install">pip install look-like-scanned</code></pre>
-          <span class="copy-icon" onclick="copyToClipboard('pypi_install')" title="Copy Command">📋</span>
-        </div>
-
-        <p>Or to build the latest version from <a href="https://github.com/navchandar/look-like-scanned"
-            target="_blank">GitHub</a></p>
-        <div class="code-container">
-          <pre><code id="direct_install"><span class="comment"># Clone repo from GitHub and install</span>
+          <p>
+            Or to build the latest version from
+            <a
+              href="https://github.com/navchandar/look-like-scanned"
+              target="_blank"
+              >GitHub</a
+            >
+          </p>
+          <div class="code-container">
+            <pre><code id="direct_install"><span class="comment"># Clone repo from GitHub and install</span>
 git clone https://github.com/navchandar/look-like-scanned.git
 cd look-like-scanned
 pip install poetry
 poetry install
 pip install .</code></pre>
-          <span class="copy-icon" onclick="copyToClipboard('direct_install')" title="Copy Command">📋</span>
-        </div>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('direct_install')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
 
-        <h3>Verify Installation</h3>
-        <div class="code-container">
-          <pre><code id="check_install"><span class="comment"># print help message and usage options available and verify the installation</span>
+          <h3>Verify Installation</h3>
+          <div class="code-container">
+            <pre><code id="check_install"><span class="comment"># print help message and usage options available and verify the installation</span>
 scanner -h
 <span style="color:aquamarine"># Scanner version: 1.0.0</span></code>
 </pre>
-          <span class="copy-icon" onclick="copyToClipboard('check_install')" title="Copy Command">📋</span>
-        </div>
-      </section>
-      <section id="arguments">
-        <h3>Arguments</h3>
-        <p>These are the command-line arguments accepted:</p>
-        <ul>
-          <li><code>-i, --input_folder</code> - Specifies the input folder to read files from and convert. Default
-            value is the current directory.
-          </li>
-          <li><code>-f, --file_type_or_name</code> - Specifies the file types to process or the file name to convert.
-            Default value is "pdf" to convert all PDF files in the given input folder.
-          </li>
-          <li><code>-q, --file_quality</code> - Specifies the quality of the converted output files. The value must be
-            between 50 and 100. Default value is 95.
-          </li>
-          <li><code>-a, --askew</code> - Controls whether to make the output documents slightly askew or slightly
-            tilted.
-            Accepted values are "yes" or "no". Default value is "yes".
-          </li>
-          <li><code>-b, --black_and_white</code> - Controls whether to save output documents in black and white format
-            (to
-            make it look like a photocopy). Accepted values are "yes" or "no". Default value is "no".
-          </li>
-          <li><code>-c, --contrast</code> - Controls contrast of the image. A factor of 0.0 gives a solid gray image.
-            A factor of 1.0 gives the original image. Greater values increase the contrast of the image. Default value
-            is
-            1.
-          </li>
-          <li><code>-sh, --sharpness</code> - Controls sharpness of the image. A factor of 0.0 gives a blurred image.
-            A factor of 1.0 gives the original image. Greater values increase the sharpness of the image. Default value
-            is
-            1.
-          </li>
-          <li><code>-br, --brightness</code> - Controls brightness of the image. A factor of 0.0 gives a black image.
-            A factor of 1.0 gives the original image. Greater values increase the brightness of the image. Default value
-            is 1.
-          </li>
-          <li><code>-l, --blur</code> - Controls whether to make the output a little bit blurry. Accepted values are
-            "yes" or "no". Default value is "no".
-          </li>
-          <li><code>-n, --noise</code> - Controls the amount of noise/grain added to the image. 
-            Accepted values are integers from 0 to 100. Default value is 0.
-          </li>
-          <li><code>-v, --variation</code> - Controls whether to apply a variable blur (depth of field) 
-            to simulate an uneven scanner lid. Accepted values are "yes" or "no". Default value is "no".
-          </li>
-          <li><code>-r, --recurse</code> - Allows scripts to find all matching files including subdirectories. Accepted
-            values are "yes" or "no". Default value is "yes".
-          </li>
-          <li><code>-s, --sort_by</code> - Alllows scripts to sort the files based on name, creation time or modified
-            time.
-            Accepted values are "name", "ctime", "mtime", "none". Default value is "name".
-            If "none" is selected, then Default order of files returned by the OS is used for document conversion.
-          </li>
-        </ul>
-      </section>
-      <section id="usage">
-        <h2>Usage Examples</h2>
-        <p>This package uses <a href="https://pypi.org/project/Pillow/" target="_blank">PIL</a> and <a
-            href="https://pypi.org/project/pypdfium2/" target="_blank">pypdfium2</a> to convert and manipulate image and
-          PDF objects.
-        </p>
-        <p>This is extended to provide a command-line interface (CLI) for easy usage.</p>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('check_install')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
+        </section>
+        <section id="arguments">
+          <h3>Arguments</h3>
+          <p>These are the command-line arguments accepted:</p>
+          <ul>
+            <li>
+              <code>-i, --input_folder</code> - Specifies the input folder to
+              read files from and convert. Default value is the current
+              directory.
+            </li>
+            <li>
+              <code>-f, --file_type_or_name</code> - Specifies the file types to
+              process or the file name to convert. Default value is "pdf" to
+              convert all PDF files in the given input folder.
+            </li>
+            <li>
+              <code>-q, --file_quality</code> - Specifies the quality of the
+              converted output files. The value must be between 50 and 100.
+              Default value is 95.
+            </li>
+            <li>
+              <code>-a, --askew</code> - Controls whether to make the output
+              documents slightly askew or slightly tilted. Accepted values are
+              "yes" or "no". Default value is "yes".
+            </li>
+            <li>
+              <code>-b, --black_and_white</code> - Controls whether to save
+              output documents in black and white format (to make it look like a
+              photocopy). Accepted values are "yes" or "no". Default value is
+              "no".
+            </li>
+            <li>
+              <code>-c, --contrast</code> - Controls contrast of the image. A
+              factor of 0.0 gives a solid gray image. A factor of 1.0 gives the
+              original image. Greater values increase the contrast of the image.
+              Default value is 1.
+            </li>
+            <li>
+              <code>-sh, --sharpness</code> - Controls sharpness of the image. A
+              factor of 0.0 gives a blurred image. A factor of 1.0 gives the
+              original image. Greater values increase the sharpness of the
+              image. Default value is 1.
+            </li>
+            <li>
+              <code>-br, --brightness</code> - Controls brightness of the image.
+              A factor of 0.0 gives a black image. A factor of 1.0 gives the
+              original image. Greater values increase the brightness of the
+              image. Default value is 1.
+            </li>
+            <li>
+              <code>-l, --blur</code> - Controls whether to make the output a
+              little bit blurry. Accepted values are "yes" or "no". Default
+              value is "no".
+            </li>
+            <li>
+              <code>-n, --noise</code> - Controls the amount of noise/grain
+              added to the image. Accepted values are integers from 0 to 100.
+              Default value is 0.
+            </li>
+            <li>
+              <code>-v, --variation</code> - Controls whether to apply a
+              variable blur (depth of field) to simulate an uneven scanner lid.
+              Accepted values are "yes" or "no". Default value is "no".
+            </li>
+            <li>
+              <code>-r, --recurse</code> - Allows scripts to find all matching
+              files including subdirectories. Accepted values are "yes" or "no".
+              Default value is "yes".
+            </li>
+            <li>
+              <code>-s, --sort_by</code> - Allows scripts to sort the files
+              based on name, creation time or modified time. Accepted values are
+              "name", "ctime", "mtime", <strong>"none"</strong>. Default value
+              is "name". If "none" is selected, then the default order of files
+              returned by the OS is used.
+            </li>
+            <li>
+              <code>-p, --password</code> - Password for decrypting locked PDF
+              files. By default, if omitted, the script will pause and prompt
+              you for a password whenever it encounters a locked file.
+            </li>
+          </ul>
+        </section>
+        <section id="usage">
+          <h2>Usage Examples</h2>
+          <p>
+            This package uses
+            <a href="https://pypi.org/project/Pillow/" target="_blank">PIL</a>
+            and
+            <a href="https://pypi.org/project/pypdfium2/" target="_blank"
+              >pypdfium2</a
+            >
+            to convert and manipulate image and PDF objects.
+          </p>
+          <p>
+            This is extended to provide a command-line interface (CLI) for easy
+            usage.
+          </p>
 
-        <div class="code-container">
-          <pre><code id="code1"><span class="comment"># Convert all pdf files in given folder to scanned pdf</span>
+          <div class="code-container">
+            <pre><code id="code1"><span class="comment"># Convert all pdf files in given folder to scanned pdf</span>
 scanner -i .\tests</code></pre>
-          <span class="copy-icon" onclick="copyToClipboard('code1')" title="Copy Command">📋</span>
-        </div>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('code1')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
 
-        <div class="code-container">
-          <pre><code id="code2"><span class="comment"># Convert all pdf files in folder to scanned without askew</span>
+          <div class="code-container">
+            <pre><code id="code2"><span class="comment"># Convert all pdf files in folder to scanned without askew</span>
 scanner -i .\tests -a no</code></pre>
-          <span class="copy-icon" onclick="copyToClipboard('code2')" title="Copy Command">📋</span>
-        </div>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('code2')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
 
-        <div class="code-container">
-          <pre><code id="code3"><span class="comment"># Convert specific pdf file in folder to scanned pdf</span>
+          <div class="code-container">
+            <pre><code id="code3"><span class="comment"># Convert specific pdf file in folder to scanned pdf</span>
 scanner -i .\tests -f "test.pdf"</code></pre>
-          <span class="copy-icon" onclick="copyToClipboard('code3')" title="Copy Command">📋</span>
-        </div>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('code3')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
 
-        <div class="code-container">
-          <pre><code id="code4"><span class="comment"># Convert all jpg, jpeg, png, webp files in folder to one pdf file</span>
+          <div class="code-container">
+            <pre><code id="code4"><span class="comment"># Convert all jpg, jpeg, png, webp files in folder to one pdf file</span>
 scanner -i .\tests -f "image"</code></pre>
-          <span class="copy-icon" onclick="copyToClipboard('code4')" title="Copy Command">📋</span>
-        </div>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('code4')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
 
-        <div class="code-container">
-          <pre><code id="code5"><span class="comment"># Convert all png files in folder to pdf with 100% quality to one pdf file</span>
+          <div class="code-container">
+            <pre><code id="code5"><span class="comment"># Convert all png files in folder to pdf with 100% quality to one pdf file</span>
 scanner -i .\tests -f "png" -q 100</code></pre>
-          <span class="copy-icon" onclick="copyToClipboard('code5')" title="Copy Command">📋</span>
-        </div>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('code5')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
 
-        <div class="code-container">
-          <pre><code id="code6"><span class="comment"># Convert specific jpg file in folder to pdf with 75% quality to one pdf file</span>
+          <div class="code-container">
+            <pre><code id="code6"><span class="comment"># Convert specific jpg file in folder to pdf with 75% quality to one pdf file</span>
 scanner -i .\tests -f "JPG_Test.jpg" -q 75</code></pre>
-          <span class="copy-icon" onclick="copyToClipboard('code6')" title="Copy Command">📋</span>
-        </div>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('code6')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
 
-        <div class="code-container">
-          <pre><code id="code7"><span class="comment"># Convert all pdf files including sub folders</span>
+          <div class="code-container">
+            <pre><code id="code7"><span class="comment"># Convert all pdf files including sub folders</span>
 scanner -i .\tests -f "pdf" -r yes</code></pre>
-          <span class="copy-icon" onclick="copyToClipboard('code7')" title="Copy Command">📋</span>
-        </div>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('code7')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
 
-        <div class="code-container">
-          <pre><code id="code8"><span class="comment"># Convert all Images including sub folders into one pdf</span>
+          <div class="code-container">
+            <pre><code id="code8"><span class="comment"># Convert all Images including sub folders into one pdf</span>
 scanner -i .\tests -f "image" -r yes</code></pre>
-          <span class="copy-icon" onclick="copyToClipboard('code8')" title="Copy Command">📋</span>
-        </div>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('code8')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
 
-        <div class="code-container">
-          <pre><code id="code9"><span class="comment"># Convert all image files in folder in the order of file names</span>
+          <div class="code-container">
+            <pre><code id="code9"><span class="comment"># Convert all image files in folder in the order of file names</span>
 scanner -i .\tests -f "image" -s "name"</code></pre>
-          <span class="copy-icon" onclick="copyToClipboard('code9')" title="Copy Command">📋</span>
-        </div>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('code9')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
 
-        <div class="code-container">
-          <pre><code id="code10"><span class="comment"># Convert all pdf files including sub folders and save in black & white format</span>
+          <div class="code-container">
+            <pre><code id="code10"><span class="comment"># Convert all pdf files including sub folders and save in black & white format</span>
 scanner -i .\tests -f "pdf" -r yes -b yes</code></pre>
-          <span class="copy-icon" onclick="copyToClipboard('code10')" title="Copy Command">📋</span>
-        </div>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('code10')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
 
-        <div class="code-container">
-          <pre><code id="code11"><span class="comment"># Convert all png files including sub folders and make it a little blurry</span>
+          <div class="code-container">
+            <pre><code id="code11"><span class="comment"># Convert all png files including sub folders and make it a little blurry</span>
 scanner -i .\tests -f "png" -r yes -b yes -l yes</code></pre>
-          <span class="copy-icon" onclick="copyToClipboard('code11')" title="Copy Command">📋</span>
-        </div>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('code11')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
 
-        <div class="code-container">
-          <pre><code id="code12"><span class="comment"># Convert all pdf files in folder to scanned pdf, set contrast, sharpness and brightness factors</span>
+          <div class="code-container">
+            <pre><code id="code12"><span class="comment"># Convert all pdf files in folder to scanned pdf, set contrast, sharpness and brightness factors</span>
 scanner -i .\tests -c 2 -sh 10 -br 2</code></pre>
-          <span class="copy-icon" onclick="copyToClipboard('code12')" title="Copy Command">📋</span>
-        </div>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('code12')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
 
-        <div class="code-container">
-          <pre><code id="code13"><span class="comment"># Convert all pdf files in folder to scanned pdf with high contrast and sharpness</span>
+          <div class="code-container">
+            <pre><code id="code13"><span class="comment"># Convert all pdf files in folder to scanned pdf with high contrast and sharpness</span>
 scanner -i .\tests -f "pdf" -c 3 -sh 5</code></pre>
-          <span class="copy-icon" onclick="copyToClipboard('code13')" title="Copy Command">📋</span>
-        </div>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('code13')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
 
-        <div class="code-container">
-          <pre><code id="code14"><span class="comment"># Convert all pdf files in folder to scanned pdf, including subfolders, with high contrast and brightness</span>
+          <div class="code-container">
+            <pre><code id="code14"><span class="comment"># Convert all pdf files in folder to scanned pdf, including subfolders, with high contrast and brightness</span>
 scanner -i .\tests -f "pdf" -r yes -c 3 -br 3</code></pre>
-          <span class="copy-icon" onclick="copyToClipboard('code14')" title="Copy Command">📋</span>
-        </div>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('code14')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
 
-        <div class="code-container">
-          <pre><code id="code15"><span class="comment"># Convert all image files in folder to pdf, sorted by creation time</span>
+          <div class="code-container">
+            <pre><code id="code15"><span class="comment"># Convert all image files in folder to pdf, sorted by creation time</span>
 scanner -i .\tests -f "image" -s "ctime"</code></pre>
-          <span class="copy-icon" onclick="copyToClipboard('code15')" title="Copy Command">📋</span>
-        </div>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('code15')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
 
-        <div class="code-container">
-          <pre><code id="code16"><span class="comment"># Convert all image files in folder to pdf, sorted by modified time, with slight blur</span>
+          <div class="code-container">
+            <pre><code id="code16"><span class="comment"># Convert all image files in folder to pdf, sorted by modified time, with slight blur</span>
 scanner -i .\tests -f "image" -s "mtime" -l yes</code></pre>
-          <span class="copy-icon" onclick="copyToClipboard('code16')" title="Copy Command">📋</span>
-        </div>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('code16')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
 
-        <div class="code-container">
-          <pre><code id="code17"><span class="comment"># Convert all jpg files in folder to pdf with 80% quality and slightly askew</span>
+          <div class="code-container">
+            <pre><code id="code17"><span class="comment"># Convert all jpg files in folder to pdf with 80% quality and slightly askew</span>
 scanner -i .\tests -f "jpg" -q 80 -a yes</code></pre>
-          <span class="copy-icon" onclick="copyToClipboard('code17')" title="Copy Command">📋</span>
-        </div>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('code17')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
 
-        <div class="code-container">
-          <pre><code id="code18"><span class="comment"># Convert all png files in folder to pdf with high sharpness and low contrast</span>
+          <div class="code-container">
+            <pre><code id="code18"><span class="comment"># Convert all png files in folder to pdf with high sharpness and low contrast</span>
 scanner -i .\tests -f "png" -sh 5 -c 0.5</code></pre>
-          <span class="copy-icon" onclick="copyToClipboard('code18')" title="Copy Command">📋</span>
-        </div>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('code18')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
 
-        <div class="code-container">
-          <pre><code id="code19"><span class="comment"># Convert all PDF files with a noise level of 25 (grainy effect)</span>
+          <div class="code-container">
+            <pre><code id="code19"><span class="comment"># Convert all PDF files with a noise level of 25 (grainy effect)</span>
 scanner -i .\tests -f "pdf" -n 25</code></pre>
-          <span class="copy-icon" onclick="copyToClipboard('code19')" title="Copy Command">📋</span>
-        </div>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('code19')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
 
-        <div class="code-container">
-          <pre><code id="code20"><span class="comment"># Convert all files with uneven focus blur (depth of field)</span>
+          <div class="code-container">
+            <pre><code id="code20"><span class="comment"># Convert all files with uneven focus blur (depth of field)</span>
 scanner -i .\tests -f "pdf" -v yes</code></pre>
-          <span class="copy-icon" onclick="copyToClipboard('code20')" title="Copy Command">📋</span>
-        </div>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('code20')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
 
-        <div class="code-container">
-          <pre><code id="code21"><span class="comment"># Add Slight Noise, Uneven Focus, and Black & White Photocopy effect</span>
+          <div class="code-container">
+            <pre><code id="code21"><span class="comment"># Add Slight Noise, Uneven Focus, and Black & White Photocopy effect</span>
 scanner -i .\tests -f "jpg" -n 5 -v yes -b yes</code></pre>
-          <span class="copy-icon" onclick="copyToClipboard('code21')" title="Copy Command">📋</span>
-        </div>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('code21')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
 
-      </section>
-      <section id="note">
-        <h3>❗❗ <strong>Note:</strong> ❗❗</h3>
-        <ul>
-          <li>The supported file types are: ".jpg", ".png", ".jpeg", ".webp", ".pdf".</li>
-          <li>The output PDF file size <strong>will be bigger</strong> than the input file because the pages are stored
-            in
-            image format.
-          </li>
-          <li>Bookmarks / Links / Metadata will be removed when saving the output file.</li>
-          <li>Transparency will be removed from PNG files when converting to PDF.</li>
-          <li>Password protected PDF files are not yet supported.</li>
-        </ul>
-      </section>
-      <section id="authors">
-        <h3 style="display: block;">Authors</h3>
-        <a href="https://github.com/navchandar/look-like-scanned/graphs/contributors" target="_blank">
-          <img src="https://contrib.rocks/image?repo=navchandar/look-like-scanned" style="height: auto;"
-            alt="Contributors">
-        </a>
-        <br>
-        <h3 style="display: inline-block;">License: </h3>
-        <a href="https://github.com/navchandar/look-like-scanned/blob/main/LICENSE" target="_blank">OSI Approved - MIT
-          License</a>
-        <br>
-        <h3 style="display: inline-block;">Contact: </h3>
-        <span><a href="https://github.com/navchandar/look-like-scanned/issues" target="_blank">For Feedback / Issues /
-            Bugs</a></span>
-        <br>
-      </section>
+          <div class="code-container">
+            <pre><code id="code22"><span class="comment"># Simulate a "Bad/Old Scanner" (Low quality, high noise, blur, and high contrast)</span>
+scanner -i .\tests -q 75 -n 15 -l yes -c 1.4 -sh 0.8</code></pre>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('code22')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
 
-      <section id="maintainer">
-        <h3 style="display:inline-block;">Maintained By</h3>
-        <a style="display:inline-block;" href="https://navchandar.github.io/">Naveenchandar</a>
-      </section>
+          <div class="code-container">
+            <pre><code id="code23"><span class="comment"># Simulate a "High-Quality/Modern Scanner" (High quality, slight noise, sharpened)</span>
+scanner -i .\tests -q 95 -n 0 -a yes -sh 1.5 -br 1.1</code></pre>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('code23')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
 
-    </main>
-  </div>
-  <footer>
-    <h3>Support This Project</h3>
-    <a href="https://paypal.me/navchandar/" target="_blank">
-      <img
-        src="https://img.shields.io/badge/-Paypal-0070ba?style=for-the-badge&logo=data%3Aimage%2Fjpeg%3Bbase64%2C%2F9j%2F4AAQSkZJRgABAQAAAQABAAD%2F2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz%2F2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz%2FwgARCAAwADADAREAAhEBAxEB%2F8QAHQAAAgIBBQAAAAAAAAAAAAAABwgGCQIAAwQFCv%2FEABwBAAEEAwEAAAAAAAAAAAAAAAYCAwcIAAEFBP%2FaAAwDAQACEAMQAAAAdZSiYpqCdXycvSppyvSMUbKuLEBqPeeyxsX4su2oRUX2QQweZr0j8qBdJUyhfS8vqPk%2FEV3tVbWaafq4naOlKlyuxybCnaAD9sq5XBxxSVysGLjOdMLWa4WvNYLKIfSoU5sq7yAEYZOOCWb7LwozP%2F%2FEAD0QAAAFAwMBBAQJDQAAAAAAAAECAwQFBgcIABESCSExUbUKd5bTExQXIiM4cYGyMjM3QUJHV2GCg5Oh0f%2FaAAgBAQABPwDA%2FBOyVX4SWdlpaztqZKVlKHhHTx68pJg4cO11GCBzqqHMkJjnMYRMYwiOpvA%2FHWnYpZ49srZts2aJmUWWNRkcBCFKG5hH6HuAA30NqsOAP2W%2FsH7IR%2FuNQdjsQaheC1aW3sO4WN3FJSEf7jTXp94%2BuEiGJZGzqhD9oGCjY7tAf7Os7MFLJ0dhFeSWibNWqi5SLoabeNHbOk2CLhmsmwXOmomoVIDEOUxQMBiiA66eX1ArGer%2BA8tQ11vLjrUB0%2Fat%2BKujs3z8SNkxIqKahimHifYQ7e42lq4lEC8jzEmUviLs%2FwD3Ta6Mk0U5pT0omYP2ivVCj%2BLXo4eXVUVjcyq6Cm6gfTER8QTeMwevTKmanKYxRKnyEfyuW466gwGHAC%2BX0n7v5%2Fy1xrp5ciYBWOKHYBbfQHlzfXpM9x14K0Nu4NAwcJp0%2BFwX%2BSZUBLqpltkiE8e3RC8zCBS8x8ADfXSKoCoLP3IYVYJVmK8m7aJtC8vzqQn3NyAB%2FwBDrqF%2FUAvoXwt9PeWrjrp8Bw6fdkDeNvYDy5vr0mWuzvr80NT3MTN2EWq7%2FqUMBR%2FBrFzGSlbuW6WlqgZKulwcCinxUMQOIfZq32CNKtDg8h6QcvBKOxVNlVQ3%2B4dtYOYMzU5WEZUEwzJHQ0SsksVuqUyainEdwKBdg27tdQr5mAV9fV9P%2BWuddPMAPgFY3l%2FD%2BB8uQ11P%2Bjlc7N%2FIY9VRFQQDWNSQM3bJuhUE5CchEAHYNU3jdIYsMho2SdM3r9qqZRRRrv8ABmEw7bBv9msE6EYw2MdLqHj2qbtymdZUTIFBQxvhTB2jtv3AGg7zcdvm9gB%2BouuoaQwYB3z9X0%2F5c41g5nRY%2BlMG7NRMteW1cXLRVEQjV4ydVbHoOGixGCJTpqEOqBiHIYBKJTAGidQ%2BwJQMX5cbPe2kb77U3d%2FDmpZo0k%2BuDYV2%2BOO5llawj%2BRjfcvqDz0x0gYdFmxvVZtq1alEqSZKyjgAgf5tE6h1gOH6c7P%2B2cb77Wc2dllKtwfvHExd5LVyspK0PNs2bJnVrBZw7WUYLkTTTTKqJjnMbYoFKA6%2F%2F8QAJREAAQMDAgYDAAAAAAAAAAAAAQACAwQRBQYSISJRBzEQFUET%2F9oACAEDAQE%2FAG%2BrIyCPmUa%2BDtMxCDtMlAFmFWYNym%2Fqx%2BoMVEXD2mTTu9FXqO1lzEJGnROVZhGoot2t0s4TD%2BTG9qhYAdSufZNlmjNx%2B3pqWgfyaTdUz7Qt%2FTYIbut2s3uvI1vSztnWuwiqFPRuspM2ZoxFuhriWnoLxp41r6itbiNe06RvuomiOPirtJ4hYzgdTUPL2ryPSzfdSQyb2svFGERQZchbJGNe97hMY1gs0W%2BOWi9lyMe6rcg4LUzCpliu8%2ByqSmjp4RFELAfP%2F9k%3D&logoColor=white&link=https://paypal.me/navchandar//"
-        alt="Paypal Badge">
-    </a>
-    <a href="https://www.buymeacoffee.com/navchandar/" target="_blank">
-      <img
-        src="https://img.shields.io/badge/-Buy%20a%20Coffee-ff813f?style=for-the-badge&logo=data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAIAAADYYG7QAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAP5SURBVFhH7ZdrTFNnGMfftvSUXmTcBtNCWy6mXBRoAZWL1GAgIRnSiGOZkmF0W3YpJEYXtIm3qPEWP%2BgHRRogQLgmEmPiEpOZGBSX%2BAUZLES3%2Bc0PRiMJX5a5ubPnlCMxT9tznrcDYxae%2FD6c0vP%2Bn185p%2B95ysTjnveKFSE1VoTU%2BF8Ina3NIjL4ST5aqwq30K3PCxzpViLVztVouSrcQk1FaSK59Hr93b0ulKAMn9Bs6wboIXcjVGlJcYt7DQpRhiRUk5UAVGfEGwTw4a7sZPNCQkNOMkoOhSQUo9OWlZXV%2FIdqbm622WwNeakoORSqUFdXl3wZoq3GxsalFBIEvdEYC5gAkxEwA2bTIpa3juGthXOAhVWAwSAsmdD%2B8rRUi%2FChWV%2FsENz5zJXHioBcVpjLCnJYgZOtfwO8LARypXfhHDjZ7WDF6UyjYVszEyAHJYdCEgJ2FaRAonh6o%2Fg74yPAnhxhULd3F6LMsFCFTlQ7rHEG6fhRSEsFppl4kf3wtST09EDZ24GRoApNf1cCoT996RJvWXBXBX6UhL4qZ5vSLSgwElShv45WgVCP1yneiMddFbgmCXmyNLtdH6HASFCFAGeyqb0yXey14a4KjEhCKas0Z2oyUVokOIRgn5W2Wq77OsCen5JuoOufUR%2F7JKHLH6%2B1J1kSLUZTrAEO7FaBSrKwOkGAsiaY7fGxKDYsJKHxPUXwKdva2k5EWy6Xy5OdgmLDQhKaO1QBQqOjo%2FJTgL%2Fchet9G60oNizUe2ibM8nr9crxnDUzMwOfZ%2BIL0mBEFfJX2bIz7HIHzhoaGgKheX8lygwLVWhoR64UOj8vN%2BEpv9%2BfnRqPAiNBFZoJ7tQTExNyE56qr6%2F35i%2FDxijE6Do6OuQmPJVhSzvssaO0SHAIua0f%2BHw%2BuQm55ubmpG9oUx5KiwSHUEtRqmdzpdyHXOPj4yA021qK0iLBIQS%2FyCC6s7MTNqTh4eGBgYG%2Bvr6enh6YbuGPcDUDgUB3d3dvb29%2Ff%2F%2Fg4ODIyMjY2FhdXd0GexKKUoBDCAYaEEKl1Wr0MRqDQWuM1QmCVqfTwHCIao%2BbekcDHELAy4MV%2FdtzwOzPB9q%2FH7N%2Ffgt5mgZ5%2FSt7dZ%2F9cYElGnWwy79oL0c5CvAJAb%2F4SqU9V3VMC45m5bZVaLkq3EKvj1V1NRDGtOBoxnWxFuAWAr6vIIxpwdHsXC11LlskGqF6Z5L6mBZgz06yGzvXobWqRCMEX5xXR6rESS2WWGRS%2Bvdc%2FTSqcPSaAgj9%2FG2JeE%2FAHovckYT2bXmHQudrM6eumKZusvBcYlPtrDLzXQmlxRmk%2FY5QaCGFaNY8%2FKaYCFpIIRqhZWVFSI0VIWWOe%2F4FR6A6eCoawHAAAAAASUVORK5CYII%3D&logoColor=white&link=https://www.buymeacoffee.com/navchandar//"
-        alt="BuymeCoffee Badge">
-    </a>
-    <a href="https://ko-fi.com/navchandar/" target="_blank">
-      <img
-        src="https://img.shields.io/badge/-Buy%20a%20KoFi-ff5f5f?style=for-the-badge&logo=data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAIAAADYYG7QAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAOiSURBVFhH7ZbLTxRBEMb963gkJIRleS4JyyJnDnqFKA%2BREOXAgcAJhAMEL77xoBdEjSQY8II3wchrgQUUdmZnusqvpofZzfDoBdF4mM2XSae3u%2BrXVdU1c4NLSv4rRUAmRUAmRUAmRUAmRUAmRUAmRUAmRUAmGYBo9jVlLfp1REfHfyjOZGjxM93v59JSMa6fp2QC2ssQMTkuuerqyjmQchTr38ICJZrE%2FllMBiB3M02KtEVflp0f2LmLJrUcV2PIwRBsy5bx2ndqTIR8aRmA1JYPpGDXdhxFsJdTFAzYsl1XhSftHNZrGkFc%2BUrLX2g7LSiYPM7K4NMCl5eH3EEmoO0dDQQf8Ef7BzwzQ733qKuLp6Zodw8EqDB%2B8pR6eqi7myYmaGs7h2joOGHLwSE3NIi1eJwnJ1l5GbRzwtTdU%2BhLqzggnNh16fAnd3aqqipqaBBVx%2BjWbZqb47t3KBaj%2BnqZxKC9nTY2XThGbLAXuxL57NDMY0FBkIjow8dgPlBxQFnLgplXs1RdrVpvcipFLS2EZ1OTcCQSMsYM1NaGNfxoAuuxC1R5ICQIVdzcLJcOBQCg9Y1CX1rFAVkWskAjI1RXCxpOJhUE00kPApJx0hcQe3sdrEeEcMUCIH2nYjG1uS0Fjr929wJHgS4RIRobo5oaam3V7uWsAYeewSCVUnV1PDCA0g6n7NojxEtLUiU6JJojJDhD%2FAD95u0ZKfN0TTWEK2PnbAxGR1G2ChVTGJ6ABsHDVerry7cibCm4ZTRxXbfMu%2FbSWrIWP3ioauJ%2BkAImTVNbSx0dlMlIg9BMf6sPedbBhB7IjkNDQ1wTVwFTczODBplCHzo89LrlCY33hHshgJ3jrBwJ49U1bmwM%2BdIyAZ10atiVCHlxkh4zOqpA4DEhg6gb7u%2Fn4ywuF3q3rNTSWLAAkQZjXlzkpqu%2By%2FJAiJD%2FApHTSz2Nj0v9trSAjAcHJX5K5Wm8Lf5gd492dunHOs2%2Fp55en%2BMsGqjYGgp85Jlw1ulpac3DwxI2ZPOEBuh6sezN7EvrQresrMxbPocGMgDRt1W5n8GtKYgTnlK8y8soW0mirvrC2GAXFmxucUWFbxAcZWWB8TNlAGLkBT%2FLCoBCQpyEww7Pi3T9PnsudkwcgUxAFRX0bl7sotPDsf7gKhQcn573ZuQkKytS77Bzfo5CMgFBCPj0NKfTwcdoUcKn5ouXPs1lVATQv1UEZFIEZFIEZFIEZFIEdLFKSn4Dz0s70NgRCBAAAAAASUVORK5CYII%3D&logoColor=1fb3ef&link=https://ko-fi.com/navchandar//"
-        alt="KO-FI Badge">
-    </a>
-  </footer>
-  <script src="script.js"></script>
-</body>
+          <div class="code-container">
+            <pre><code id="code24"><span class="comment"># Convert specific locked PDF with password and save output without password</span>
+scanner -i .\secure_docs -f "Locked_doc.pdf" -p p@ss123</code></pre>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('code24')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
 
+          <div class="code-container">
+            <pre><code id="code25"><span class="comment"># Interactive Mode: Process encrypted PDFs by entering passwords when prompted</span>
+scanner -i .\secure_docs -f "pdf"</code></pre>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('code25')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
+        </section>
+        <section id="note">
+          <h3>❗❗ <strong>Note:</strong> ❗❗</h3>
+          <ul>
+            <li>
+              The supported file types are: ".pdf", ".jpg", ".jpeg", ".png",
+              ".webp", ".tiff", ".tif", ".jp2", ".bmp".
+            </li>
+            <li>
+              The output PDF file size <strong>will be bigger</strong> than the
+              input file because the pages are stored as images.
+            </li>
+            <li>
+              Bookmarks / Links / Metadata will be removed when saving the
+              output file.
+            </li>
+            <li>
+              Transparency will be removed from PNG files when converting to
+              PDF.
+            </li>
+            <li>Password protected PDF files are also supported since v1.1.</li>
+          </ul>
+        </section>
+        <section id="authors">
+          <h3 style="display: block">Authors</h3>
+          <a
+            href="https://github.com/navchandar/look-like-scanned/graphs/contributors"
+            target="_blank"
+          >
+            <img
+              src="https://contrib.rocks/image?repo=navchandar/look-like-scanned"
+              style="height: auto"
+              alt="Contributors"
+            />
+          </a>
+          <br />
+          <h3 style="display: inline-block">License:</h3>
+          <a
+            href="https://github.com/navchandar/look-like-scanned/blob/main/LICENSE"
+            target="_blank"
+            >OSI Approved - MIT License</a
+          >
+          <br />
+          <h3 style="display: inline-block">Contact:</h3>
+          <span
+            ><a
+              href="https://github.com/navchandar/look-like-scanned/issues"
+              target="_blank"
+              >For Feedback / Issues / Bugs</a
+            ></span
+          >
+          <br />
+        </section>
+
+        <section id="maintainer">
+          <h3 style="display: inline-block">Maintained By</h3>
+          <a style="display: inline-block" href="https://navchandar.github.io/"
+            >Naveenchandar</a
+          >
+        </section>
+      </main>
+    </div>
+    <footer>
+      <h3>Support This Project</h3>
+      <a href="https://paypal.me/navchandar/" target="_blank">
+        <img
+          src="https://img.shields.io/badge/-Paypal-0070ba?style=for-the-badge&logo=data%3Aimage%2Fjpeg%3Bbase64%2C%2F9j%2F4AAQSkZJRgABAQAAAQABAAD%2F2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz%2F2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz%2FwgARCAAwADADAREAAhEBAxEB%2F8QAHQAAAgIBBQAAAAAAAAAAAAAABwgGCQIAAwQFCv%2FEABwBAAEEAwEAAAAAAAAAAAAAAAYCAwcIAAEFBP%2FaAAwDAQACEAMQAAAAdZSiYpqCdXycvSppyvSMUbKuLEBqPeeyxsX4su2oRUX2QQweZr0j8qBdJUyhfS8vqPk%2FEV3tVbWaafq4naOlKlyuxybCnaAD9sq5XBxxSVysGLjOdMLWa4WvNYLKIfSoU5sq7yAEYZOOCWb7LwozP%2F%2FEAD0QAAAFAwMBBAQJDQAAAAAAAAECAwQFBgcIABESCSExUbUKd5bTExQXIiM4cYGyMjM3QUJHV2GCg5Oh0f%2FaAAgBAQABPwDA%2FBOyVX4SWdlpaztqZKVlKHhHTx68pJg4cO11GCBzqqHMkJjnMYRMYwiOpvA%2FHWnYpZ49srZts2aJmUWWNRkcBCFKG5hH6HuAA30NqsOAP2W%2FsH7IR%2FuNQdjsQaheC1aW3sO4WN3FJSEf7jTXp94%2BuEiGJZGzqhD9oGCjY7tAf7Os7MFLJ0dhFeSWibNWqi5SLoabeNHbOk2CLhmsmwXOmomoVIDEOUxQMBiiA66eX1ArGer%2BA8tQ11vLjrUB0%2Fat%2BKujs3z8SNkxIqKahimHifYQ7e42lq4lEC8jzEmUviLs%2FwD3Ta6Mk0U5pT0omYP2ivVCj%2BLXo4eXVUVjcyq6Cm6gfTER8QTeMwevTKmanKYxRKnyEfyuW466gwGHAC%2BX0n7v5%2Fy1xrp5ciYBWOKHYBbfQHlzfXpM9x14K0Nu4NAwcJp0%2BFwX%2BSZUBLqpltkiE8e3RC8zCBS8x8ADfXSKoCoLP3IYVYJVmK8m7aJtC8vzqQn3NyAB%2FwBDrqF%2FUAvoXwt9PeWrjrp8Bw6fdkDeNvYDy5vr0mWuzvr80NT3MTN2EWq7%2FqUMBR%2FBrFzGSlbuW6WlqgZKulwcCinxUMQOIfZq32CNKtDg8h6QcvBKOxVNlVQ3%2B4dtYOYMzU5WEZUEwzJHQ0SsksVuqUyainEdwKBdg27tdQr5mAV9fV9P%2BWuddPMAPgFY3l%2FD%2BB8uQ11P%2Bjlc7N%2FIY9VRFQQDWNSQM3bJuhUE5CchEAHYNU3jdIYsMho2SdM3r9qqZRRRrv8ABmEw7bBv9msE6EYw2MdLqHj2qbtymdZUTIFBQxvhTB2jtv3AGg7zcdvm9gB%2BouuoaQwYB3z9X0%2F5c41g5nRY%2BlMG7NRMteW1cXLRVEQjV4ydVbHoOGixGCJTpqEOqBiHIYBKJTAGidQ%2BwJQMX5cbPe2kb77U3d%2FDmpZo0k%2BuDYV2%2BOO5llawj%2BRjfcvqDz0x0gYdFmxvVZtq1alEqSZKyjgAgf5tE6h1gOH6c7P%2B2cb77Wc2dllKtwfvHExd5LVyspK0PNs2bJnVrBZw7WUYLkTTTTKqJjnMbYoFKA6%2F%2F8QAJREAAQMDAgYDAAAAAAAAAAAAAQACAwQRBQYSISJRBzEQFUET%2F9oACAEDAQE%2FAG%2BrIyCPmUa%2BDtMxCDtMlAFmFWYNym%2Fqx%2BoMVEXD2mTTu9FXqO1lzEJGnROVZhGoot2t0s4TD%2BTG9qhYAdSufZNlmjNx%2B3pqWgfyaTdUz7Qt%2FTYIbut2s3uvI1vSztnWuwiqFPRuspM2ZoxFuhriWnoLxp41r6itbiNe06RvuomiOPirtJ4hYzgdTUPL2ryPSzfdSQyb2svFGERQZchbJGNe97hMY1gs0W%2BOWi9lyMe6rcg4LUzCpliu8%2ByqSmjp4RFELAfP%2F9k%3D&logoColor=white&link=https://paypal.me/navchandar//"
+          alt="Paypal Badge"
+        />
+      </a>
+      <a href="https://www.buymeacoffee.com/navchandar/" target="_blank">
+        <img
+          src="https://img.shields.io/badge/-Buy%20a%20Coffee-ff813f?style=for-the-badge&logo=data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAIAAADYYG7QAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAP5SURBVFhH7ZdrTFNnGMfftvSUXmTcBtNCWy6mXBRoAZWL1GAgIRnSiGOZkmF0W3YpJEYXtIm3qPEWP%2BgHRRogQLgmEmPiEpOZGBSX%2BAUZLES3%2Bc0PRiMJX5a5ubPnlCMxT9tznrcDYxae%2FD6c0vP%2Bn185p%2B95ysTjnveKFSE1VoTU%2BF8Ina3NIjL4ST5aqwq30K3PCxzpViLVztVouSrcQk1FaSK59Hr93b0ulKAMn9Bs6wboIXcjVGlJcYt7DQpRhiRUk5UAVGfEGwTw4a7sZPNCQkNOMkoOhSQUo9OWlZXV%2FIdqbm622WwNeakoORSqUFdXl3wZoq3GxsalFBIEvdEYC5gAkxEwA2bTIpa3juGthXOAhVWAwSAsmdD%2B8rRUi%2FChWV%2FsENz5zJXHioBcVpjLCnJYgZOtfwO8LARypXfhHDjZ7WDF6UyjYVszEyAHJYdCEgJ2FaRAonh6o%2Fg74yPAnhxhULd3F6LMsFCFTlQ7rHEG6fhRSEsFppl4kf3wtST09EDZ24GRoApNf1cCoT996RJvWXBXBX6UhL4qZ5vSLSgwElShv45WgVCP1yneiMddFbgmCXmyNLtdH6HASFCFAGeyqb0yXey14a4KjEhCKas0Z2oyUVokOIRgn5W2Wq77OsCen5JuoOufUR%2F7JKHLH6%2B1J1kSLUZTrAEO7FaBSrKwOkGAsiaY7fGxKDYsJKHxPUXwKdva2k5EWy6Xy5OdgmLDQhKaO1QBQqOjo%2FJTgL%2Fchet9G60oNizUe2ibM8nr9crxnDUzMwOfZ%2BIL0mBEFfJX2bIz7HIHzhoaGgKheX8lygwLVWhoR64UOj8vN%2BEpv9%2BfnRqPAiNBFZoJ7tQTExNyE56qr6%2F35i%2FDxijE6Do6OuQmPJVhSzvssaO0SHAIua0f%2BHw%2BuQm55ubmpG9oUx5KiwSHUEtRqmdzpdyHXOPj4yA021qK0iLBIQS%2FyCC6s7MTNqTh4eGBgYG%2Bvr6enh6YbuGPcDUDgUB3d3dvb29%2Ff%2F%2Fg4ODIyMjY2FhdXd0GexKKUoBDCAYaEEKl1Wr0MRqDQWuM1QmCVqfTwHCIao%2BbekcDHELAy4MV%2FdtzwOzPB9q%2FH7N%2Ffgt5mgZ5%2FSt7dZ%2F9cYElGnWwy79oL0c5CvAJAb%2F4SqU9V3VMC45m5bZVaLkq3EKvj1V1NRDGtOBoxnWxFuAWAr6vIIxpwdHsXC11LlskGqF6Z5L6mBZgz06yGzvXobWqRCMEX5xXR6rESS2WWGRS%2Bvdc%2FTSqcPSaAgj9%2FG2JeE%2FAHovckYT2bXmHQudrM6eumKZusvBcYlPtrDLzXQmlxRmk%2FY5QaCGFaNY8%2FKaYCFpIIRqhZWVFSI0VIWWOe%2F4FR6A6eCoawHAAAAAASUVORK5CYII%3D&logoColor=white&link=https://www.buymeacoffee.com/navchandar//"
+          alt="BuymeCoffee Badge"
+        />
+      </a>
+      <a href="https://ko-fi.com/navchandar/" target="_blank">
+        <img
+          src="https://img.shields.io/badge/-Buy%20a%20KoFi-ff5f5f?style=for-the-badge&logo=data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAIAAADYYG7QAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAOiSURBVFhH7ZbLTxRBEMb963gkJIRleS4JyyJnDnqFKA%2BREOXAgcAJhAMEL77xoBdEjSQY8II3wchrgQUUdmZnusqvpofZzfDoBdF4mM2XSae3u%2BrXVdU1c4NLSv4rRUAmRUAmRUAmRUAmRUAmRUAmRUAmRUAmGYBo9jVlLfp1REfHfyjOZGjxM93v59JSMa6fp2QC2ssQMTkuuerqyjmQchTr38ICJZrE%2FllMBiB3M02KtEVflp0f2LmLJrUcV2PIwRBsy5bx2ndqTIR8aRmA1JYPpGDXdhxFsJdTFAzYsl1XhSftHNZrGkFc%2BUrLX2g7LSiYPM7K4NMCl5eH3EEmoO0dDQQf8Ef7BzwzQ733qKuLp6Zodw8EqDB%2B8pR6eqi7myYmaGs7h2joOGHLwSE3NIi1eJwnJ1l5GbRzwtTdU%2BhLqzggnNh16fAnd3aqqipqaBBVx%2BjWbZqb47t3KBaj%2BnqZxKC9nTY2XThGbLAXuxL57NDMY0FBkIjow8dgPlBxQFnLgplXs1RdrVpvcipFLS2EZ1OTcCQSMsYM1NaGNfxoAuuxC1R5ICQIVdzcLJcOBQCg9Y1CX1rFAVkWskAjI1RXCxpOJhUE00kPApJx0hcQe3sdrEeEcMUCIH2nYjG1uS0Fjr929wJHgS4RIRobo5oaam3V7uWsAYeewSCVUnV1PDCA0g6n7NojxEtLUiU6JJojJDhD%2FAD95u0ZKfN0TTWEK2PnbAxGR1G2ChVTGJ6ABsHDVerry7cibCm4ZTRxXbfMu%2FbSWrIWP3ioauJ%2BkAImTVNbSx0dlMlIg9BMf6sPedbBhB7IjkNDQ1wTVwFTczODBplCHzo89LrlCY33hHshgJ3jrBwJ49U1bmwM%2BdIyAZ10atiVCHlxkh4zOqpA4DEhg6gb7u%2Fn4ywuF3q3rNTSWLAAkQZjXlzkpqu%2By%2FJAiJD%2FApHTSz2Nj0v9trSAjAcHJX5K5Wm8Lf5gd492dunHOs2%2Fp55en%2BMsGqjYGgp85Jlw1ulpac3DwxI2ZPOEBuh6sezN7EvrQresrMxbPocGMgDRt1W5n8GtKYgTnlK8y8soW0mirvrC2GAXFmxucUWFbxAcZWWB8TNlAGLkBT%2FLCoBCQpyEww7Pi3T9PnsudkwcgUxAFRX0bl7sotPDsf7gKhQcn573ZuQkKytS77Bzfo5CMgFBCPj0NKfTwcdoUcKn5ouXPs1lVATQv1UEZFIEZFIEZFIEZFIEdLFKSn4Dz0s70NgRCBAAAAAASUVORK5CYII%3D&logoColor=1fb3ef&link=https://ko-fi.com/navchandar//"
+          alt="KO-FI Badge"
+        />
+      </a>
+    </footer>
+    <script src="script.js"></script>
+  </body>
 </html>
