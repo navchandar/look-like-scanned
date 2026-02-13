@@ -104,8 +104,8 @@ Valid value - image, pdf, specific file names. Default: pdf",
         "--file_quality",
         type=int,
         default=95,
-        choices=range(50, 101, 5),
-        help="Quality of converted output. Valid range - 50 to 100. Default: 95",
+        choices=range(10, 101, 5),
+        help="Quality of converted output. Valid range - 10 to 100. Default: 95",
     )
     parser.add_argument(
         "-a",
