@@ -2,7 +2,6 @@
 
 import shutil
 import subprocess
-import sys
 import time
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -69,7 +68,8 @@ class TestDocumentScanner:
     """Test the DocumentScanner class logic directly."""
 
     @pytest.fixture
-    def mock_args(self):
+    def mock_args(self) -> MagicMock:
+        """Mock args with default values for testing. Adjust as needed for specific tests"""
         args = MagicMock()
         # Set defaults similar to argparse
         args.file_quality = 95
@@ -232,17 +232,15 @@ class TestDocumentScanner:
                         mock_save.called
                     ), f"Scanner should have processed valid file {input_file.name}"
                     processed_imgs = mock_save.call_args[0][0]
-                    assert (
-                        len(processed_imgs) == expected_pages
-                    ), f"Missed pages in {input_file.name}. Expected {expected_pages}, got {len(processed_imgs)}"
+                    msg = f"Missed pages in {input_file.name}. {expected_pages=}, got {len(processed_imgs)}"
+                    assert len(processed_imgs) == expected_pages, msg
                 else:
                     # ASSERTION FOR BAD FILES
                     # Critical check to run without an Exception being raised.
                     if mock_save.called:
                         processed_imgs = mock_save.call_args[0][0]
-                        assert (
-                            len(processed_imgs) == 0
-                        ), f"Scanner processed data from a broken file {input_file.name}? Expected 0 pages."
+                        msg = f"Scanner processed data from a broken file {input_file.name}? Expected 0 pages."
+                        assert len(processed_imgs) == 0, msg
 
     def test_transparency_on_png(self, tmp_path, mock_args):
         """
@@ -394,6 +392,7 @@ def test_scanner_cli(name, args, test_env):
 
 
 def test_cli_help():
+    """Check CLI help message"""
     result = run_cli(["-h"])
     assert result.returncode == 0
     assert "Convert PDF/Images" in result.stdout

@@ -78,7 +78,9 @@ def parse_arguments() -> argparse.Namespace:
         Supported image formats: {', '.join(sorted(SUPPORTED_IMAGES))}
         Supported document formats: {', '.join(sorted(SUPPORTED_DOCS))}"""
     )
-    usg = "Example:\nscanner -i /path/to/folder -f image -q 90 -a yes -b no -l yes -v yes -n 10 -c 1.2 -sh 1.3 -br 1.1 -r yes -s mtime"
+    usg = "Example: scanner -i /path/to/folder -f image -q 90 -a yes\
+-b no -l yes -v yes -n 10 -c 1.2 -sh 1.3 -br 1.1 -r yes -s mtime"
+
     parser = argparse.ArgumentParser(
         description=msg, epilog=usg, formatter_class=argparse.RawTextHelpFormatter
     )
@@ -94,7 +96,8 @@ def parse_arguments() -> argparse.Namespace:
         "--file_type_or_name",
         type=str,
         default="pdf",
-        help="File types or File name to process. Valid value - image, pdf, specific file names. Default: pdf",
+        help="File types or File name to process.\
+Valid value - image, pdf, specific file names. Default: pdf",
     )
     parser.add_argument(
         "-q",
@@ -451,7 +454,8 @@ class DocumentScanner:
                 pdf_image.load_jpeg(img_data)
 
                 width, height = pdf_image.get_px_size()
-                # Scale down because we render at 2x to improve quality, but PDF should be at original size
+                # Scale down because we render at 2x to improve quality
+                # But PDF should be at original size
                 width, height = width / 2, height / 2
 
                 matrix = pdfium.PdfMatrix().scale(width, height)
@@ -466,7 +470,7 @@ class DocumentScanner:
             # version 17 indicates a compatible PDF 1.7 format
             pdf.save(str(output_path), version=17)
             pdf.close()
-            
+
             file_size = human_size(output_path.stat().st_size)
             print(f"Output: {output_path} ({file_size=})")
             return len(images)

@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
 
     steps:
       - uses: actions/checkout@v4
@@ -42,4 +42,9 @@ jobs:
           PYTHONPATH: "${{ env.PYTHONPATH }}:${{ github.workspace }}"
         run: |
           pip install . ;
-          poetry run pytest -sv
+          poetry run pytest --junit-xml=test-results.xml
+      - name: Publish Test Summary
+        uses: test-summary/action@v2
+        with:
+          paths: "test-results.xml"
+        if: always()
