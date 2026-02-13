@@ -539,21 +539,23 @@ class DocumentScanner:
                 return doc
 
             except Exception:
-                # If pdf failed to open, it's likely locked or corrupt.
+                # If pdf failed to open, it's likely locked or corrupt
                 if current_password:
-                    # We tried a specific password and it failed
-                    print_color(f"Failed to open '{f_name}' with provided password.", "yellow")
-                else:
+                    # with the given password, pdf failed to open
+                    print_color(
+                        f"Failed to open '{f_name}' with given password.", "yellow"
+                    )
+                elif retries == 0:
                     # We tried without a password and it failed (First detection of Lock)
                     print_color(f"Locked PDF detected: {f_name}", "yellow")
 
-                # Check if we have hit the limit BEFORE asking again
-                if retries >= MAX_RETRIES - 1:
+                # Check if max limit reached, BEFORE asking for password
+                if retries >= MAX_RETRIES:
                     break
 
-                # Get new password from user
+                # Get new password input text from user
                 inp = self._get_password_input(f_name)
-                
+
                 # If user hits Enter (empty), we skip the file
                 if not inp:
                     print_color(f"Skipping locked file: {f_name}", "red")
@@ -562,7 +564,7 @@ class DocumentScanner:
                 current_password = inp
                 retries += 1
 
-        print_color(f"Skipping {f_name}: Too many failed attempts.", "red")
+        print_color(f"Skipping locked file: {f_name}, Too many failed attempts!", "red")
         return None
 
     def _handle_image_transparency(self, image: Image.Image) -> Image.Image:
