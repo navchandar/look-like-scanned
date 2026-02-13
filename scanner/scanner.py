@@ -6,6 +6,7 @@ import argparse
 import io
 import os
 import random
+import textwrap
 from importlib import metadata
 from pathlib import Path
 from typing import List, Tuple, Union
@@ -18,10 +19,19 @@ from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageOps
 init()
 
 # Constants
-SUPPORTED_IMAGES = {".jpg", ".png", ".jpeg", ".webp"}
-SUPPORTED_DOCS = {".pdf"}
-YES_VALUES = {"y", "yes", "t", "true", "on", "1"}
+YES_VALUES = {"y", "yes", "t", "true", "1"}
 CHOICES = ["y", "n", "yes", "no", "true", "false"]
+SUPPORTED_DOCS = {".pdf"}
+SUPPORTED_IMAGES = {".jpg", ".jpeg", ".png", ".webp", ".tiff", ".tif", ".jp2", ".bmp"}
+
+try:
+    from pillow_heif import register_heif_opener
+
+    register_heif_opener()
+    # add  ".heic",".heif" if pillow_heif is imported
+    SUPPORTED_IMAGES.update({".heic", ".heif"})
+except ImportError:
+    pass
 
 
 def print_color(text: str, color: str = "white") -> None:
@@ -62,8 +72,15 @@ def print_version():
 
 def parse_arguments() -> argparse.Namespace:
     """Parses command line arguments and returns the parser Namespace object."""
+    msg = textwrap.dedent(
+        f"""\
+        Convert PDF/Images to look like scanned documents.
+        Supported image formats: {', '.join(sorted(SUPPORTED_IMAGES))}
+        Supported document formats: {', '.join(sorted(SUPPORTED_DOCS))}"""
+    )
+    usg = "Example:\nscanner -i /path/to/folder -f image -q 90 -a yes -b no -l yes -v yes -n 10 -c 1.2 -sh 1.3 -br 1.1 -r yes -s mtime"
     parser = argparse.ArgumentParser(
-        description="Convert PDF/Images to look like scanned documents."
+        description=msg, epilog=usg, formatter_class=argparse.RawTextHelpFormatter
     )
 
     parser.add_argument(
@@ -124,7 +141,7 @@ def parse_arguments() -> argparse.Namespace:
         "--noise",
         type=int,
         default=0,
-        choices=range(0, 101),
+        choices=range(0, 101, 5),
         help="Add random noise to simulate imperfections (0-100). Default: 0",
     )
     parser.add_argument(
@@ -132,8 +149,8 @@ def parse_arguments() -> argparse.Namespace:
         "--contrast",
         type=float,
         default=1.0,
-        help="A factor of 0.0 gives a solid gray image. \
-A factor of 1.0 gives the original image. \
+        help="A factor of 0.0 gives a solid gray image. \n\
+A factor of 1.0 gives the original image. \n\
 Greater values increase the contrast of the image. Default: 1.0",
     )
     parser.add_argument(
@@ -141,8 +158,8 @@ Greater values increase the contrast of the image. Default: 1.0",
         "--sharpness",
         type=float,
         default=1.0,
-        help="A factor of 0.0 gives a blurred image image. \
-A factor of 1.0 gives the original image. \
+        help="A factor of 0.0 gives a blurred image image. \n\
+A factor of 1.0 gives the original image. \n\
 Greater values increase the sharpness of the image. Default: 1.0",
     )
     parser.add_argument(
@@ -150,8 +167,8 @@ Greater values increase the sharpness of the image. Default: 1.0",
         "--brightness",
         type=float,
         default=1.0,
-        help="A factor of 0.0 gives a black image.\
-A factor of 1.0 gives the original image. \
+        help="A factor of 0.0 gives a black image. \n\
+A factor of 1.0 gives the original image. \n\
 Greater values increase the brightness of the image. Default: 1.0",
     )
     parser.add_argument(
@@ -213,7 +230,7 @@ def get_target_files(
         mode = "pdf"
         target_extensions = {clean_ext(arg_lower)}
 
-    # Case C: Specific Filename (e.g. "doc.pdf")
+    # Case C: User provided a specific filename (e.g. "file.pdf")
     else:
         specific_filename = filter_arg
         # Deduce mode from the specific file's extension for processing later
@@ -256,12 +273,12 @@ def get_target_files(
         print_color(f"Error searching files: {e}", "red")
 
     # Primary Sort: User preference (Name, Time)
-    if sort_key != "none":
+    if sort_key != "none":  # dont sort at all if "none"
         if sort_key == "ctime":
             files.sort(key=lambda f: f.stat().st_ctime)
         elif sort_key == "mtime":
             files.sort(key=lambda f: f.stat().st_mtime)
-        else:  # name
+        else:  # sort by name
             files.sort(key=lambda f: f.name)
 
     # Secondary Sort: Directory Depth
@@ -423,7 +440,8 @@ class DocumentScanner:
             for img_obj in images:
                 if isinstance(img_obj, Image.Image):
                     buf = io.BytesIO()
-                    img_obj.save(buf, format="JPEG")
+                    # Use quality to control image compression in the PDF as well
+                    img_obj.save(buf, format="JPEG", quality=self.quality)
                     buf.seek(0)
                     img_data = buf
                 else:
@@ -433,7 +451,7 @@ class DocumentScanner:
                 pdf_image.load_jpeg(img_data)
 
                 width, height = pdf_image.get_px_size()
-                # Scale down because we render at 2x
+                # Scale down because we render at 2x to improve quality, but PDF should be at original size
                 width, height = width / 2, height / 2
 
                 matrix = pdfium.PdfMatrix().scale(width, height)
@@ -445,9 +463,12 @@ class DocumentScanner:
                 page.close()
                 pdf_image.close()
 
+            # version 17 indicates a compatible PDF 1.7 format
             pdf.save(str(output_path), version=17)
             pdf.close()
-            print(f"{output_path} ({human_size(output_path.stat().st_size)})")
+            
+            file_size = human_size(output_path.stat().st_size)
+            print(f"Output: {output_path} ({file_size=})")
             return len(images)
 
         except Exception as e:
@@ -489,13 +510,48 @@ class DocumentScanner:
 
         processed_images = []
         for img_path in image_paths:
-            if img_path.exists():
-                try:
-                    with Image.open(img_path) as img:
-                        img = img.convert("RGB")
-                        processed_images.append(self._apply_effects(img))
-                except Exception as e:
-                    print_color(f"Skipping {img_path}: {e}", "red")
+            # skip if file doesn't exist or is not a valid image
+            if not img_path.exists():
+                print_color(f"File not found, skipping: {img_path}", "red")
+                continue
+
+            try:
+                with Image.open(img_path) as img:
+                    # load image to catch file corruption/compression errors early
+                    img.load()
+
+                    # Get frames safely. Default to 1 if attribute missing
+                    n_frames = getattr(img, "n_frames", 1)
+
+                    for i in range(n_frames):
+                        img.seek(i)
+
+                        # Create a dedicated copy for this frame to prevents seek() issues
+                        # this also allows per-page rotation
+                        frame = img.copy()
+
+                        # Apply EXIF rotation to this specific frame
+                        try:
+                            # use a try-except because some frames might lack EXIF data
+                            frame = ImageOps.exif_transpose(frame)
+                        except Exception:
+                            pass
+
+                        # Handle RGBA/P modes and transparency by compositing onto white background in PDF conversion
+                        if frame.mode in ("RGBA", "LA") or (
+                            frame.mode == "P" and "transparency" in frame.info
+                        ):
+                            temp_img = frame.convert("RGBA")
+                            bg = Image.new("RGB", temp_img.size, (255, 255, 255))
+                            bg.paste(temp_img, mask=temp_img.split()[3])
+                            frame = bg
+                        else:
+                            frame = frame.convert("RGB")
+
+                        processed_images.append(self._apply_effects(frame))
+
+            except Exception as e:
+                print_color(f"Skipping file {img_path.name}: {e}", "red")
 
         return self._save_images_to_pdf(processed_images, output_path)
 

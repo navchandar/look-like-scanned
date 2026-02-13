@@ -22,7 +22,6 @@ classifiers = [
     "Environment :: Console",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -33,10 +32,11 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.9"
-pillow = "^10.2.0"
+python = "^3.10"
+pillow = "^11.0"
 pypdfium2 = "^5.0.0"
 colorama = "^0.4.6"
+pillow-heif = "^1.2.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.1.1"
@@ -55,6 +55,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 minversion = "6.0"
+addopts = ["-v", "-s", "-r", "A"]
 log_cli = true
 log_cli_level = "INFO"
 log_cli_format = "%(asctime)s [%(levelname)s] %(module)s.%(funcName)s.%(lineno)d: %(message)s"

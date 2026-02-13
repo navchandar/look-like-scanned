@@ -172,7 +172,11 @@ These are the command-line arguments accepted:
 Run tests with detailed output:
 
 ```shell
-python -m pytest -v
+# Run all tests
+poetry run pytest -v
+
+# Run specific tests
+poetry run pytest -k="cli"    
 ```
 
 ## Support This Project
