@@ -190,6 +190,13 @@ Greater values increase the brightness of the image. Default: 1.0",
         choices=["name", "ctime", "mtime", "none"],
         help="Sort the list of files in order by name or creation time or modified time. Default: name",
     )
+    parser.add_argument(
+        "-p",
+        "--password",
+        type=str,
+        default=None,
+        help="Password for encrypted PDF files. If omitted, you will be prompted for locked files",
+    )
 
     return parser.parse_args()
 
@@ -306,6 +313,7 @@ class DocumentScanner:
         self.brightness = args.brightness
         self.recurse = args.recurse.lower() in YES_VALUES
         self.sort_by = args.sort_by.lower()
+        self.default_password = args.password
 
     def _add_noise(self, image: Image.Image) -> Image.Image:
         """Adds random salt-and-pepper noise using pure Python/PIL."""
@@ -482,24 +490,129 @@ class DocumentScanner:
             print_color(f"Failed to save PDF {output_path}: {e}", "red")
             return 0
 
-    def process_pdf(self, file_path: Path) -> int:
-        """Converts a real PDF into a scanned-look PDF (One-to-One)."""
-        output_path = file_path.with_name(f"{file_path.stem}_output.pdf")
-        images = []
-
+    def _is_valid_pdf(self, file_path: Path) -> bool:
+        """Checks if the file has a valid PDF header."""
         try:
-            doc = pdfium.PdfDocument(str(file_path))
+            if not file_path.exists():
+                return False
+            if file_path.stat().st_size < 4:
+                return False
+
+            with open(file_path, "rb") as f:
+                return f.read(4) == b"%PDF"
+        except Exception:
+            return False
+
+    def _get_password_input(self, file_name: str) -> str:
+        """Prompts the user for a password."""
+        print_color(
+            f"Enter password for '{file_name}' (or Leave Empty to skip): ", "white"
+        )
+        try:
+            return input().strip()
+        except EOFError:
+            return ""
+
+    def _open_pdf_document(self, file_path: Path) -> Union[pdfium.PdfDocument, None]:
+        """
+        Attempts to open a PDF document, handling password retries.
+        Returns the open document or None if skipped/failed.
+        """
+        f_name = file_path.name
+        # Ensure the file actually looks like a PDF before trying to open it
+        if not self._is_valid_pdf(file_path):
+            print_color(f"Invalid PDF file skipped: {f_name}", "red")
+            return None
+
+        current_password = self.default_password
+        retries = 0
+        MAX_RETRIES = 3
+
+        while retries < MAX_RETRIES:
+            try:
+                # Only pass the password argument if it is needed.
+                # Passing password=None often breaks unencrypted Forms/XFA files.
+                try:
+                    doc = pdfium.PdfDocument(str(file_path))
+                except:
+                    doc = pdfium.PdfDocument(str(file_path), password=current_password)
+                return doc
+
+            except Exception:
+                # If pdf failed to open, it's likely locked or corrupt.
+                if current_password:
+                    # We tried a specific password and it failed
+                    print_color(f"Failed to open '{f_name}' with provided password.", "yellow")
+                else:
+                    # We tried without a password and it failed (First detection of Lock)
+                    print_color(f"Locked PDF detected: {f_name}", "yellow")
+
+                # Check if we have hit the limit BEFORE asking again
+                if retries >= MAX_RETRIES - 1:
+                    break
+
+                # Get new password from user
+                inp = self._get_password_input(f_name)
+                
+                # If user hits Enter (empty), we skip the file
+                if not inp:
+                    print_color(f"Skipping locked file: {f_name}", "red")
+                    return None
+
+                current_password = inp
+                retries += 1
+
+        print_color(f"Skipping {f_name}: Too many failed attempts.", "red")
+        return None
+
+    def _handle_image_transparency(self, image: Image.Image) -> Image.Image:
+        """
+        Handles RGBA/P modes by compositing onto a white background.
+        Returns a clean RGB image.
+        """
+        if image.mode in ("RGBA", "LA") or (
+            image.mode == "P" and "transparency" in image.info
+        ):
+            img = image.convert("RGBA")
+            bg = Image.new("RGB", img.size, (255, 255, 255))
+            bg.paste(img, mask=img.split()[3])
+            return bg
+        else:
+            return image.convert("RGB")
+
+    def process_pdf(self, file_path: Path) -> int:
+        """
+        Converts a real PDF into a scanned-look PDF (One-to-One).
+        Returns the number of pages processed.
+        """
+        output_path = file_path.with_name(f"{file_path.stem}_output.pdf")
+
+        # Open Document (Handle passwords & validation)
+        doc = self._open_pdf_document(file_path)
+        if not doc:
+            return 0
+
+        images = []
+        try:
+            # Initialize if forms present (Important for XFA/Forms)
             if doc.get_formtype():
                 doc.init_forms()
 
+            # Process each Page
             for page in doc:
                 bitmap = page.render(scale=2)
                 pil_image = bitmap.to_pil().convert("RGB")
+
+                # Apply scanner effects
                 processed_img = self._apply_effects(pil_image)
                 images.append(processed_img)
                 page.close()
             doc.close()
 
+            if not images:
+                print_color(f"Skipping {file_path.name}: No pages found!", "yellow")
+                return 0
+            # Save pdf and return page count
             return self._save_images_to_pdf(images, output_path)
 
         except Exception as e:
@@ -507,7 +620,10 @@ class DocumentScanner:
             return 0
 
     def process_images_to_one_pdf(self, image_paths: List[Path]) -> int:
-        """Converts a list of images into a SINGLE scanned-look PDF (Many-to-One)."""
+        """
+        Converts a list of images into a SINGLE scanned-look PDF (Many-to-One).
+        Returns the total number of pages processed across all images.
+        """
         if not image_paths:
             return 0
 
@@ -529,7 +645,6 @@ class DocumentScanner:
 
                     # Get frames safely. Default to 1 if attribute missing
                     n_frames = getattr(img, "n_frames", 1)
-
                     for i in range(n_frames):
                         img.seek(i)
 
@@ -544,18 +659,10 @@ class DocumentScanner:
                         except:
                             pass
 
-                        # Handle RGBA/P modes and transparency
-                        # by compositing onto white background in PDF conversion
-                        if frame.mode in ("RGBA", "LA") or (
-                            frame.mode == "P" and "transparency" in frame.info
-                        ):
-                            temp_img = frame.convert("RGBA")
-                            bg = Image.new("RGB", temp_img.size, (255, 255, 255))
-                            bg.paste(temp_img, mask=temp_img.split()[3])
-                            frame = bg
-                        else:
-                            frame = frame.convert("RGB")
+                        # Handle Transparency & Convert to RGB
+                        frame = self._handle_image_transparency(frame)
 
+                        # Apply Effects & Store
                         processed_images.append(self._apply_effects(frame))
 
             except Exception as e:
@@ -608,7 +715,9 @@ def main():
     files_list, doc_type = get_target_files(
         input_path, args.file_type_or_name, scanner.recurse, scanner.sort_by
     )
-    print_color(f"\nFiles Found: {len(files_list)}", "blue")
+    print_color(f"Files Found: {len(files_list)}", "blue")
+    for f in files_list:
+        print(f" - {f.name}")
     if not files_list:
         print_color("No matching files found. No output documents generated!", "red")
         return

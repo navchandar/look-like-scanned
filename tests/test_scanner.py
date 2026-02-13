@@ -55,7 +55,7 @@ def cleanup_after_test():
             print(f"\nFailed to delete {file}: {e}")
 
 
-def is_valid_pdf(file_path):
+def _is_valid_pdf(file_path):
     """Check if file is a PDF by reading header."""
     try:
         with open(file_path, "rb") as f:
@@ -83,6 +83,7 @@ class TestDocumentScanner:
         args.sort_by = "name"
         args.noise = 10
         args.blur_variation = "no"
+        args.password = "kanbanery"
         return args
 
     def test_process_pdf(self, test_env, mock_args):
@@ -96,7 +97,7 @@ class TestDocumentScanner:
         assert pages_processed == 1
         output_file = test_env / "test_doc_output.pdf"
         assert output_file.exists()
-        assert is_valid_pdf(output_file)
+        assert _is_valid_pdf(output_file)
 
     def test_process_images_to_one_pdf(self, test_env, mock_args):
         """Test combining images into a PDF."""
@@ -114,7 +115,7 @@ class TestDocumentScanner:
         # Output name should derive from first image
         output_file = test_env / "test_img_output.pdf"
         assert output_file.exists()
-        assert is_valid_pdf(output_file)
+        assert _is_valid_pdf(output_file)
 
     def test_apply_effects(self, mock_args):
         """Test image manipulation logic (Smoke test)."""
@@ -212,7 +213,7 @@ class TestDocumentScanner:
                     img.load()
                     expected_pages = getattr(img, "n_frames", 1)
             except Exception as e:
-                print(f" -> File marked as BAD (Pillow cannot read it): {e}")
+                print(f" -> Unsupported file format (Pillow cannot read it): {e}")
                 is_valid_file = False
 
             # Step 2: Run the scanner on this file
@@ -284,6 +285,122 @@ class TestDocumentScanner:
         ), f"Background turned dark ({r},{g},{b}). Transparency fix failed."
 
 
+class TestEncryptedPDF:
+    """Tests for Password Protected PDF handling."""
+
+    @pytest.fixture
+    def mock_args(self):
+        args = MagicMock()
+        # Default settings
+        args.file_quality = 95
+        args.askew = "no"
+        args.black_and_white = "no"
+        args.blur = "no"
+        args.contrast = 1.0
+        args.sharpness = 1.0
+        args.brightness = 1.0
+        args.recurse = "no"
+        args.sort_by = "name"
+        args.noise = 0
+        args.blur_variation = "no"
+        args.password = None
+        return args
+
+    def get_encrypted_file(self):
+        # Locate the specific encrypted file
+        files = list(TEST_DIR.glob("*Encrypted*.pdf"))
+        if not files:
+            pytest.skip("Encrypted PDF file not found.")
+        return files[0]
+
+    def test_cli_password_success(self, tmp_path, mock_args):
+        """
+        Scenario 1: User provides correct password via CLI flag (-p).
+        The scanner should open it immediately without prompting.
+        """
+        input_file = self.get_encrypted_file()
+
+        # SETUP: Provide correct password in args
+        mock_args.password = "kanbanery"
+
+        scanner = DocumentScanner(mock_args)
+        temp_input = tmp_path / input_file.name
+        shutil.copy(input_file, temp_input)
+
+        # patch 'input' to ensure it is NEVER called. If it asks for input, test fails.
+        with patch(
+            "builtins.input", side_effect=Exception("Should not prompt!")
+        ) as mock_input:
+            pages = scanner.process_pdf(temp_input)
+
+        # ASSERT successful conversion without any prompt
+        assert pages > 0
+        assert (tmp_path / f"{temp_input.stem}_output.pdf").exists()
+
+    def test_interactive_password_success(self, tmp_path, mock_args):
+        """
+        Scenario 2: User provides NO password via CLI, but enters it when prompted.
+        """
+        input_file = self.get_encrypted_file()
+
+        # SETUP: No password in args
+        mock_args.password = None
+
+        scanner = DocumentScanner(mock_args)
+        temp_input = tmp_path / input_file.name
+        shutil.copy(input_file, temp_input)
+
+        # Mock the user typing the password and hitting Enter
+        with patch("builtins.input", return_value="kanbanery") as mock_input:
+            pages = scanner.process_pdf(temp_input)
+
+        # ASSERT successful conversion after correct password entry
+        assert pages > 0
+        assert (tmp_path / f"{temp_input.stem}_output.pdf").exists()
+        # Verify prompt was actually called
+        mock_input.assert_called_once()
+
+    def test_interactive_skip(self, tmp_path, mock_args):
+        """
+        Scenario 3: User doesn't know password and hits Enter to skip.
+        """
+        input_file = self.get_encrypted_file()
+        mock_args.password = None
+
+        scanner = DocumentScanner(mock_args)
+        temp_input = tmp_path / input_file.name
+        shutil.copy(input_file, temp_input)
+
+        # Mock user hitting Enter (empty string)
+        with patch("builtins.input", return_value="") as mock_input:
+            pages = scanner.process_pdf(temp_input)
+
+        # ASSERT no pages converted
+        assert pages == 0
+        assert not (tmp_path / f"{temp_input.stem}_output.pdf").exists()
+
+    def test_wrong_password_retry_fail(self, tmp_path, mock_args):
+        """
+        Scenario 4: User types wrong password 3 times. Should eventually skip.
+        """
+        input_file = self.get_encrypted_file()
+        mock_args.password = None
+
+        scanner = DocumentScanner(mock_args)
+        temp_input = tmp_path / input_file.name
+        shutil.copy(input_file, temp_input)
+
+        # Mock user typing "wrong" 3 times
+        with patch(
+            "builtins.input", side_effect=["wrong", "123", "abcd", "wrong"]
+        ) as mock_input:
+            pages = scanner.process_pdf(temp_input)
+
+        # ASSERT no pages converted
+        assert pages == 0
+        assert not (tmp_path / f"{temp_input.stem}_output.pdf").exists()
+
+
 # --- Unit Tests ---
 def test_human_size():
     """Test method calculation"""
@@ -352,7 +469,7 @@ def test_extension_filtering(test_env):
 # --- CLI Integration Tests ---
 def run_cli(args):
     """Helper to run the script via subprocess."""
-    cmd = ["scanner"] + args
+    cmd = ["scanner"] + args + ["-p", "kanbanery"]
     result = subprocess.run(cmd, capture_output=True, text=True, check=True)
     print(f"\n[CLI STDOUT]\n{result.stdout}")
     print(f"\n[CLI STDERR]\n{result.stderr}")
@@ -363,6 +480,7 @@ CLI_TEST_CASES = [
     ("convert_multi_pdf", ["-i", TEST_DIR, "-f", "pdf"]),
     ("convert_multi_image", ["-i", TEST_DIR, "-f", "image"]),
     ("convert_single_pdf", ["-i", TEST_DIR, "-f", "Test_pdf.pdf"]),
+    ("convert_form_pdf", ["-i", TEST_DIR, "-f", "Test_pdf_FillForm.pdf"]),
     ("convert_single_jpg", ["-i", TEST_DIR, "-f", "Test_image_JPG.jpg"]),
     ("convert_single_png", ["-i", TEST_DIR, "-f", "Test_image_PNG.png"]),
     ("enhanced_pdf", ["-i", TEST_DIR, "-f", "pdf", "-c", "2", "-sh", "10", "-br", "2"]),
