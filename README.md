@@ -13,7 +13,9 @@
 
 - The resulting pages are then combined back into an Output PDF file.
 
-- There are options to combine / convert image files into PDF as well.
+- Granular CLI options to combine / convert image files into PDF as well.
+
+- Supports conversion of multi page TIFF files and password protected PDF files.
 
 - Output PDF files are saved in the same folder with a suffix _"File_Name_output.pdf"_
 
@@ -143,9 +145,12 @@ These are the command-line arguments accepted:
 - `-s, --sort_by` : Allows scripts to sort the files based on name, creation time or modified time. Accepted values are "name", "ctime", "mtime", "none". The default value is "name". If "none" is selected, then the default order of files returned by the OS is used for document conversion.
   - Example: `-s name` or `--sort_by none`
 
+- `-p, --password` : Password for decrypting locked PDF files. By default, if omitted, the script will pause and prompt you for a password whenever it encounters a locked file. Use this flag if all your PDF files share the same password. If files have different passwords, omit this and enter them one-by-one when prompted.
+  - Example: `-p p@ss123` or `--password p@ss123`
+
 ❗❗ **Note:** ❗❗
 
-- The supported file types are: ".jpg", ".png", ".jpeg", ".webp", ".pdf".
+- The supported file types are: ".pdf", .jpg", ".jpeg", ".png", ".webp", ".tiff", ".tif", ".jp2", ".bmp"
 
 - The output PDF file size **will be bigger** than the input file because the pages are stored in image format.
 
@@ -153,7 +158,7 @@ These are the command-line arguments accepted:
 
 - Transparency will be removed from png files when converting to pdf.
 
-- Password protected PDF files are not yet supported.
+- Password protected PDF files are also supported since v1.1.
 
 - [Youtube: How to Insert a Signature on a PDF File](http://www.youtube.com/watch?v=FKlAwFcMutY)
 
@@ -176,7 +181,7 @@ Run tests with detailed output:
 poetry run pytest -v
 
 # Run specific tests
-poetry run pytest -k="cli"    
+poetry run pytest -k="cli"
 ```
 
 ## Support This Project

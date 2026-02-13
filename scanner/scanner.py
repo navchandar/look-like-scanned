@@ -79,7 +79,7 @@ def parse_arguments() -> argparse.Namespace:
         Supported document formats: {', '.join(sorted(SUPPORTED_DOCS))}"""
     )
     usg = "Example: scanner -i /path/to/folder -f image -q 90 -a yes\
--b no -l yes -v yes -n 10 -c 1.2 -sh 1.3 -br 1.1 -r yes -s mtime"
+-b no -l yes -v yes -n 10 -c 1.2 -sh 1.3 -br 1.1 -r yes -s mtime -p p@ss123"
 
     parser = argparse.ArgumentParser(
         description=msg, epilog=usg, formatter_class=argparse.RawTextHelpFormatter
