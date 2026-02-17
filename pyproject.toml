@@ -39,7 +39,7 @@ colorama = "^0.4.6"
 pillow-heif = "^1.2.0"
 
 [tool.poetry.group.dev.dependencies]
-black = "^24.1.1"
+black = "^26.1.0"
 pytest = "^9.0.2"
 
 [tool.poetry.scripts]
