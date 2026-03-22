@@ -17,6 +17,8 @@
 
 - Supports conversion of multi page TIFF files and password protected PDF files.
 
+- Importable as a Python Library. Use the core scanning engine directly in Python projects.
+
 - Output PDF files are saved in the same folder with a suffix _"File_Name_output.pdf"_
 
 ## Installation
@@ -25,6 +27,12 @@ Install from the [Python Package Index (PyPI)](https://pypi.org/project/look-lik
 
 ```shell
 pip install look-like-scanned
+```
+
+To handle HEIC/HEIF file types, install with optional dependencies:
+
+```shell
+pip install look-like-scanned[heif]
 ```
 
 Or to install latest version from GitHub
@@ -44,7 +52,7 @@ pip install .
 scanner -h
 ```
 
-## Usage
+## CLI Usage
 
 This package uses [PIL](https://pypi.org/project/Pillow/) and [pypdfium2](https://pypi.org/project/pypdfium2/) to convert and manipulate image and pdf objects.
 
@@ -117,57 +125,89 @@ scanner -i .\secure_docs -f "pdf"
 
 ```
 
+## Library Usage
+
+Import DocumentScanner into your own Python scripts for programmatic document processing.
+
+```Python
+from pathlib import Path
+from scanner import DocumentScanner
+
+# Initialize the scanner with custom settings
+# Note: Use Python booleans (True/False) instead of CLI strings ("yes"/"no")
+scanner = DocumentScanner(
+    file_quality=90,
+    askew=True,
+    black_and_white=False,
+    noise=15,
+    brightness=1.2
+)
+
+# Option 1: Convert a single PDF
+scanner.process_pdf(Path("path/to/document.pdf"))
+
+# Option 2: Combine multiple images into one "scanned" PDF
+image_list = [Path("page1.jpg"), Path("page2.png")]
+scanner.process_images_to_one_pdf(image_list)
+
+# Option 3: Find all PDFs in the folder and subfolders
+scanner = DocumentScanner(recurse=True)
+scanner.process_folder(Path("./my_docs"), file_type="pdf")
+```
+
 ## Arguments
 
 These are the command-line arguments accepted:
 
 - `-i, --input_folder` : Specifies the input folder to read files from and convert. The default value is the current directory.
-  - Example: `-i /path/to/files` or `-i C:\files\documents`
+    - Example: `-i /path/to/files` or `-i C:\files\documents`
 
 - `-f, --file_type_or_name` : Specifies the file types to process or the file name to convert. The default value is "pdf" to convert all pdf files in the given input folder.
-  - Example: `-f pdf` or `-f image.jpg` or `-f image`
+    - Example: `-f pdf` or `-f image.jpg` or `-f image`
 
 - `-q, --file_quality` : Specifies the quality of the converted output files. The value must be between 50 and 100. The default value is 95.
-  - Example: `-q 90`
+    - Example: `-q 90`
 
 - `-a, --askew` : Controls whether to make the output documents slightly askew or slightly tilted. Accepted values are "yes" or "no". The default value is "yes".
-  - Example: `-a yes` or `--askew no`
+    - Example: `-a yes` or `--askew no`
 
 - `-b, --black_and_white` : Controls whether to save output documents in black and white format (to make it look like a photocopy) . Accepted values are "yes" or "no". The default value is "no".
-  - Example: `-b yes` or `--black_and_white no`
+    - Example: `-b yes` or `--black_and_white no`
 
 - `-l, --blur` : Controls whether to make the output a little bit blurry. Accepted values are "yes" or "no". The default value is "no".
-  - Example: `-l yes` or `--blur no`
+    - Example: `-l yes` or `--blur no`
 
 - `-v, --variation` : Controls whether to apply a variable blur effect (depth of field simulation) to the image. This simulates a scanner lid that wasn't closed perfectly flat, causing one part of the document to be slightly out of focus. Accepted values are "yes" or "no". The default value is "no".
-  - Example: `-v yes` or `--variation no`
+    - Example: `-v yes` or `--variation no`
 
 - `-n, --noise` : Controls the amount of salt-and-pepper noise added to the image to simulate dust or scanner sensor imperfections. The value must be an integer between 0 and 100. A value of 0 means no noise, while 50 is significantly noisy. The default value is 0.
-  - Example: `-n 10` or `--noise 50`
+    - Example: `-n 10` or `--noise 50`
 
 - `-c, --contrast` : Controls contrast factor of the image. A factor of 0.0 gives a solid gray image. A factor of 1.0 gives the original image. Greater values increase the contrast of the image. The default value is 1.
-  - Example: `-c 2`
+    - Example: `-c 2`
 
 - `-sh, --sharpness` : Controls sharpness factor of the image. A factor of 0.0 gives a blurred image. A factor of 1.0 gives the original image. Greater values increase the sharpness of the image. The default value is 1.
-  - Example: `-sh 2`
+    - Example: `-sh 2`
 
 - `-br, --brightness` : Controls brightness factor of the image. A factor of 0.0 gives a black image. A factor of 1.0 gives the original image. Greater values increase the brightness of the image. The default value is 1.
-  - Example: `-br 2`
+    - Example: `-br 2`
 
 - `-r, --recurse` : Allows scripts to find all matching files including subdirectories. Accepted values are "yes" or "no". The default value is "yes".
-  - Example: `-r yes` or `--recurse no`
+    - Example: `-r yes` or `--recurse no`
 
 - `-s, --sort_by` : Allows scripts to sort the files based on name, creation time or modified time. Accepted values are "name", "ctime", "mtime", "none". The default value is "name". If "none" is selected, then the default order of files returned by the OS is used for document conversion.
-  - Example: `-s name` or `--sort_by none`
+    - Example: `-s name` or `--sort_by none`
 
 - `-p, --password` : Password for decrypting locked PDF files. By default, if omitted, the script will pause and prompt you for a password whenever it encounters a locked file. Use this flag if all your PDF files share the same password. If files have different passwords, omit this and enter them one-by-one when prompted.
-  - Example: `-p p@ss123` or `--password p@ss123`
+    - Example: `-p p@ss123` or `--passw
 
 ❗❗ **Note:** ❗❗
 
 - The supported file types are: ".pdf", .jpg", ".jpeg", ".png", ".webp", ".tiff", ".tif", ".jp2", ".bmp"
 
 - The output PDF file size **will be bigger** than the input file because the pages are stored in image format.
+
+- When using the DocumentScanner class directly as a library, arguments like askew, blur, and black_and_white expect actual Python booleans (True / False) rather than the strings "yes" / "no" used in the CLI.
 
 - Bookmarks / Links / Metadata will be removed when saving the output file.
 
@@ -192,6 +232,9 @@ These are the command-line arguments accepted:
 Run tests with detailed output:
 
 ```shell
+# Install package with latest changes
+pip install -e .
+
 # Run all tests
 poetry run pytest -v
 

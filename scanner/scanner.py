@@ -301,19 +301,35 @@ def get_target_files(
 class DocumentScanner:
     """Handles the conversion of digital documents/images into 'scanned' PDFs"""
 
-    def __init__(self, args: argparse.Namespace):
-        self.quality = args.file_quality
-        self.askew = args.askew.lower() in YES_VALUES
-        self.black_and_white = args.black_and_white.lower() in YES_VALUES
-        self.blur = args.blur.lower() in YES_VALUES
-        self.blur_variation = args.variation.lower() in YES_VALUES
-        self.noise_factor = args.noise
-        self.contrast = args.contrast
-        self.sharpness = args.sharpness
-        self.brightness = args.brightness
-        self.recurse = args.recurse.lower() in YES_VALUES
-        self.sort_by = args.sort_by.lower()
-        self.default_password = args.password
+    def __init__(
+        self,
+        file_quality: int = 95,
+        askew: bool = True,
+        black_and_white: bool = False,
+        blur: bool = False,
+        variation: bool = False,
+        noise: int = 0,
+        contrast: float = 1.0,
+        sharpness: float = 1.0,
+        brightness: float = 1.0,
+        recurse: bool = False,
+        sort_by: str = "name",
+        password: str = None,
+        **kwargs,
+    ):
+        """Initialize with direct parameters to allow importing as a library."""
+        self.quality = file_quality
+        self.askew = askew
+        self.black_and_white = black_and_white
+        self.blur = blur
+        self.blur_variation = variation
+        self.noise_factor = noise
+        self.contrast = contrast
+        self.sharpness = sharpness
+        self.brightness = brightness
+        self.recurse = recurse
+        self.sort_by = sort_by
+        self.default_password = password
 
     def _add_noise(self, image: Image.Image) -> Image.Image:
         """Adds random salt-and-pepper noise using pure Python/PIL."""
@@ -579,8 +595,7 @@ class DocumentScanner:
             bg = Image.new("RGB", img.size, (255, 255, 255))
             bg.paste(img, mask=img.split()[3])
             return bg
-        else:
-            return image.convert("RGB")
+        return image.convert("RGB")
 
     def process_pdf(self, file_path: Path) -> int:
         """
@@ -672,6 +687,29 @@ class DocumentScanner:
 
         return self._save_images_to_pdf(processed_images, output_path)
 
+    def process_folder(self, folder_path: Path, file_type: str = "pdf") -> int:
+        """
+        Discovers and processes all matching files in a folder.
+        Returns the total number of pages processed.
+        """
+        files_list, mode = get_target_files(
+            folder_path, file_type, self.recurse, self.sort_by
+        )
+
+        if not files_list:
+            print_color(f"No {file_type} files found in {folder_path}", "yellow")
+            return 0
+
+        print_color(f"Batch processing {len(files_list)} {mode}(s)", "cyan")
+
+        total_pages = 0
+        if mode == "image":
+            total_pages = self.process_images_to_one_pdf(files_list)
+        else:
+            for pdf_file in files_list:
+                total_pages += self.process_pdf(pdf_file)
+        return total_pages
+
     @staticmethod
     def calculate_energy_savings(total_pages: int) -> None:
         """
@@ -710,8 +748,34 @@ def main():
     input_folder = args.input_folder if args.input_folder else os.getcwd()
     input_path = Path(input_folder).resolve()
 
-    # Initialize the DocumentScanner with the provided arguments
-    scanner = DocumentScanner(args)
+    # Convert CLI arguments 'yes'/'no' arguments to actual booleans
+    cli_kwargs = vars(args).copy()
+    for key in ["askew", "black_and_white", "blur", "variation", "recurse"]:
+        if key in cli_kwargs:
+            cli_kwargs[key] = str(cli_kwargs[key]).lower() in YES_VALUES
+
+    # Map the specific name 'file_quality' from argparse to 'file_quality' in __init__
+    scanner = DocumentScanner(**cli_kwargs)
+
+    # Extract ONLY the keys that DocumentScanner.__init__ accepts
+    # This prevents the "unexpected keyword argument" errors
+    scanner_params = {
+        "file_quality": cli_kwargs.get("file_quality"),
+        "askew": cli_kwargs.get("askew"),
+        "black_and_white": cli_kwargs.get("black_and_white"),
+        "blur": cli_kwargs.get("blur"),
+        "variation": cli_kwargs.get("variation"),
+        "noise": cli_kwargs.get("noise"),
+        "contrast": cli_kwargs.get("contrast"),
+        "sharpness": cli_kwargs.get("sharpness"),
+        "brightness": cli_kwargs.get("brightness"),
+        "recurse": cli_kwargs.get("recurse"),
+        "sort_by": cli_kwargs.get("sort_by"),
+        "password": cli_kwargs.get("password"),
+    }
+
+    # Initialize the DocumentScanner with the cleaned parameters
+    scanner = DocumentScanner(**scanner_params)
 
     # Fetch files list based on input arguments
     files_list, doc_type = get_target_files(
@@ -728,7 +792,7 @@ def main():
     total_pages = 0
     if doc_type == "image":
         # Combine all images into ONE output PDF
-        total_pages += scanner.process_images_to_one_pdf(files_list)
+        total_pages = scanner.process_images_to_one_pdf(files_list)
     else:
         # Convert each PDF individually
         for pdf_file in files_list:

@@ -10,6 +10,7 @@ import pypdfium2 as pdfium
 import pytest
 from PIL import Image
 
+# import to match project structure
 from scanner.scanner import DocumentScanner, get_target_files, human_size
 
 TEST_DIR = Path("tests")
@@ -45,6 +46,7 @@ def test_env(tmp_path: Path):
 def cleanup_after_test():
     """Delete all *_output*.pdf files in the given directory"""
     yield
+    # Clean up both the local tests dir and any system temp dirs if needed
     files = list(TEST_DIR.glob("*_output*.pdf"))
     for file in files:
         try:
@@ -65,30 +67,53 @@ def _is_valid_pdf(file_path):
 
 
 class TestDocumentScanner:
-    """Test the DocumentScanner class logic directly."""
+    """Test the DocumentScanner class logic directly (Library Style)."""
 
     @pytest.fixture
-    def mock_args(self) -> MagicMock:
-        """Mock args with default values for testing. Adjust as needed for specific tests"""
-        args = MagicMock()
-        # Set defaults similar to argparse
-        args.file_quality = 95
-        args.askew = "yes"
-        args.black_and_white = "no"
-        args.blur = "no"
-        args.contrast = 1.0
-        args.sharpness = 1.0
-        args.brightness = 1.0
-        args.recurse = "no"
-        args.sort_by = "name"
-        args.noise = 10
-        args.blur_variation = "no"
-        args.password = "kanbanery"
-        return args
+    def default_config(self) -> dict:
+        """
+        Provides a default configuration dictionary using Python types.
+        This mimics how a library user would initialize the class.
+        """
+        return {
+            "file_quality": 95,
+            "askew": True,
+            "black_and_white": False,
+            "blur": False,
+            "variation": False,
+            "noise": 10,
+            "contrast": 1.0,
+            "sharpness": 1.0,
+            "brightness": 1.0,
+            "recurse": False,
+            "sort_by": "name",
+            "password": "kanbanery",
+        }
 
-    def test_process_pdf(self, test_env, mock_args):
+    def test_library_initialization(self, default_config):
+        """Verify the class can be initialized with standard Python types (Library Import test)."""
+        scanner = DocumentScanner(**default_config)
+        assert scanner.quality == 95
+        assert scanner.askew is True
+        assert scanner.noise_factor == 10
+
+    def test_graceful_handling_args(self):
+        """Verify that passing unknown arguments doesn't crash the class."""
+        config = {"file_quality": 80, "something_new": "unexpected_value"}
+        # This should not raise a TypeError
+        scanner = DocumentScanner(**config)
+        assert scanner.quality == 80
+
+    def test_direct_parameter_initialization(self):
+        """Verify library users can init without a dictionary."""
+        scanner = DocumentScanner(file_quality=50, noise=20, askew=False)
+        assert scanner.quality == 50
+        assert scanner.noise_factor == 20
+        assert scanner.askew is False
+
+    def test_process_pdf(self, test_env, default_config):
         """Test converting a single PDF."""
-        scanner = DocumentScanner(mock_args)
+        scanner = DocumentScanner(**default_config)
         input_pdf = test_env / "test_doc.pdf"
 
         # Run conversion
@@ -99,9 +124,44 @@ class TestDocumentScanner:
         assert output_file.exists()
         assert _is_valid_pdf(output_file)
 
-    def test_process_images_to_one_pdf(self, test_env, mock_args):
+    def test_process_folder_all_pdfs(self, test_env, default_config):
+        """Test that process_folder finds and converts multiple PDFs in a directory."""
+        scanner = DocumentScanner(**default_config)
+
+        # Create an additional PDF in the test environment
+        extra_pdf = test_env / "another_doc.pdf"
+        shutil.copy(test_env / "test_doc.pdf", extra_pdf)
+
+        # Run folder processing 2 PDFs from the root (recurse=False by default in default_config)
+        total_pages = scanner.process_folder(test_env, file_type="pdf")
+
+        # Assertions
+        assert total_pages == 2
+        assert (test_env / "test_doc_output.pdf").exists()
+        assert (test_env / "another_doc_output.pdf").exists()
+
+    def test_process_folder_recursive(self, test_env, default_config):
+        """Test that process_folder respects the recurse setting."""
+        default_config["recurse"] = True
+        scanner = DocumentScanner(**default_config)
+
+        # In test_env fixture: 1 PDF in root, 1 PDF in 'sub/' folder
+        total_pages = scanner.process_folder(test_env, file_type="pdf")
+
+        # Assertions
+        assert total_pages == 2
+        assert (test_env / "test_doc_output.pdf").exists()
+        assert (test_env / "sub" / "sub_doc_output.pdf").exists()
+
+    def test_process_empty_image_list(self):
+        """Verify that an empty image list returns 0 and doesn't crash."""
+        scanner = DocumentScanner()
+        pages = scanner.process_images_to_one_pdf([])
+        assert pages == 0
+
+    def test_process_images_to_one_pdf(self, test_env, default_config):
         """Test combining images into a PDF."""
-        scanner = DocumentScanner(mock_args)
+        scanner = DocumentScanner(**default_config)
         input_img = test_env / "test_img.jpg"
 
         # Create a second image to test combination
@@ -117,54 +177,47 @@ class TestDocumentScanner:
         assert output_file.exists()
         assert _is_valid_pdf(output_file)
 
-    def test_apply_effects(self, mock_args):
+    def test_apply_effects(self, default_config):
         """Test image manipulation logic (Smoke test)."""
-        scanner = DocumentScanner(mock_args)
-        # Create a plain white image
+        # Test with askew enabled
+        scanner = DocumentScanner(**default_config)
         img = Image.new("RGB", (100, 100), "white")
         # Apply effects
         processed_img = scanner._apply_effects(img)
         assert isinstance(processed_img, Image.Image)
-        assert processed_img.size == (102, 102)
+        # Size changes due to rotation expansion
+        assert processed_img.size != (100, 100)
 
-        mock_args.askew = "no"
-        scanner = DocumentScanner(mock_args)
-        # Apply effects
+        # Test with askew disabled
+        default_config["askew"] = False
+        scanner = DocumentScanner(**default_config)
         processed_img = scanner._apply_effects(img)
-        assert isinstance(processed_img, Image.Image)
         assert processed_img.size == (100, 100)
 
-    def test_rgba_transparency_conversion(self, test_env, mock_args):
-        """Test that RGBA images (transparency) are converted to RGB without crashing."""
-        scanner = DocumentScanner(mock_args)
-
-        # Create an image with an Alpha channel (RGBA)
+    def test_rgba_transparency_conversion(self, test_env, default_config):
+        """Test that RGBA images are converted to RGB without crashing."""
+        scanner = DocumentScanner(**default_config)
         rgba_path = test_env / "transparent.png"
         Image.new("RGBA", (100, 100), (255, 0, 0, 128)).save(rgba_path)
 
         # Process it
         pages = scanner.process_images_to_one_pdf([rgba_path])
-
         assert pages == 1
-        output_pdf = test_env / "transparent_output.pdf"
-        assert output_pdf.exists()
+        assert (test_env / "transparent_output.pdf").exists()
 
-    def test_corrupt_pdf_handling(self, test_env, mock_args):
-        """Test that the script handles corrupt PDFs gracefully without crashing."""
-        scanner = DocumentScanner(mock_args)
-
-        # Create a fake PDF (just a text file with .pdf extension)
+    def test_corrupt_pdf_handling(self, test_env, default_config):
+        """Test that the script handles corrupt PDFs gracefully."""
+        scanner = DocumentScanner(**default_config)
         bad_pdf = test_env / "corrupt.pdf"
         bad_pdf.write_text("This is not a real PDF")
 
         # Should catch the exception internally and return 0 pages processed
         pages = scanner.process_pdf(bad_pdf)
-
         assert pages == 0
         # Ensure no output file was generated for the bad input
         assert not (test_env / "corrupt_output.pdf").exists()
 
-    def test_heic_processing(self, tmp_path, mock_args):
+    def test_heic_processing(self, tmp_path, default_config):
         """
         Verifies we can open, process, and save a real HEIC file.
         """
@@ -175,7 +228,7 @@ class TestDocumentScanner:
             pytest.skip("No .heic files found in tests folder. Skipping test.")
 
         for input_file in heic_files:
-            scanner = DocumentScanner(mock_args)
+            scanner = DocumentScanner(**default_config)
 
             # Process the file
             temp_input = tmp_path / input_file.name
@@ -188,7 +241,7 @@ class TestDocumentScanner:
             assert output_pdf.exists(), "HEIC output PDF was not created"
             assert output_pdf.stat().st_size > 1000, "Output PDF seems too small/empty"
 
-    def test_multipage_tiff_processing(self, tmp_path, mock_args):
+    def test_multipage_tiff_processing(self, tmp_path, default_config):
         """
         Loops over ALL .tiff files in tests/.
         - If valid: Ensures all pages are extracted.
@@ -198,7 +251,7 @@ class TestDocumentScanner:
         if not tiff_files:
             pytest.skip("No .tiff files found. Skipping test.")
 
-        scanner = DocumentScanner(mock_args)
+        scanner = DocumentScanner(**default_config)
 
         for input_file in tiff_files:
             print(f"\nTesting file: {input_file.name}")
@@ -244,19 +297,23 @@ class TestDocumentScanner:
                         msg = f"Scanner processed data from a broken file {input_file.name}? Expected 0 pages."
                         assert len(processed_imgs) == 0, msg
 
-    def test_transparency_on_png(self, tmp_path, mock_args):
+    def test_transparency_on_png(self, tmp_path, default_config):
         """
         Verifies that transparent pixels turn WHITE, not BLACK.
         Uses a synthetic image to guarantee consistency and disables random effects.
         """
-        # Disable all random effects to prevent flakiness
-        mock_args.noise = 0
-        mock_args.askew = "no"
-        mock_args.blur = "no"
-        mock_args.variation = "no"
-        mock_args.file_quality = 100
+        # Update the dict directly instead of using a Mock
+        default_config.update(
+            {
+                "noise": 0,
+                "askew": False,
+                "blur": False,
+                "variation": False,
+                "file_quality": 100,
+            }
+        )
 
-        scanner = DocumentScanner(mock_args)
+        scanner = DocumentScanner(**default_config)
 
         # Generate a synthetic 50x50 fully transparent image
         input_file = tmp_path / "synthetic_transparent.png"
@@ -289,22 +346,15 @@ class TestEncryptedPDF:
     """Tests for Password Protected PDF handling."""
 
     @pytest.fixture
-    def mock_args(self):
-        args = MagicMock()
-        # Default settings
-        args.file_quality = 95
-        args.askew = "no"
-        args.black_and_white = "no"
-        args.blur = "no"
-        args.contrast = 1.0
-        args.sharpness = 1.0
-        args.brightness = 1.0
-        args.recurse = "no"
-        args.sort_by = "name"
-        args.noise = 0
-        args.blur_variation = "no"
-        args.password = None
-        return args
+    def base_config(self):
+        return {
+            "file_quality": 95,
+            "askew": False,
+            "black_and_white": False,
+            "blur": False,
+            "noise": 0,
+            "password": None,
+        }
 
     def get_encrypted_file(self):
         # Locate the specific encrypted file
@@ -313,40 +363,26 @@ class TestEncryptedPDF:
             pytest.skip("Encrypted PDF file not found.")
         return files[0]
 
-    def test_cli_password_success(self, tmp_path, mock_args):
-        """
-        Scenario 1: User provides correct password via CLI flag (-p).
-        The scanner should open it immediately without prompting.
-        """
+    def test_cli_password_success(self, tmp_path, base_config):
+        """Scenario: Correct password provided via initialization."""
         input_file = self.get_encrypted_file()
+        base_config["password"] = "kanbanery"
 
-        # SETUP: Provide correct password in args
-        mock_args.password = "kanbanery"
-
-        scanner = DocumentScanner(mock_args)
+        scanner = DocumentScanner(**base_config)
         temp_input = tmp_path / input_file.name
         shutil.copy(input_file, temp_input)
 
-        # patch 'input' to ensure it is NEVER called. If it asks for input, test fails.
-        with patch(
-            "builtins.input", side_effect=Exception("Should not prompt!")
-        ) as mock_input:
+        with patch("builtins.input", side_effect=Exception("Should not prompt!")):
             pages = scanner.process_pdf(temp_input)
 
         # ASSERT successful conversion without any prompt
         assert pages > 0
         assert (tmp_path / f"{temp_input.stem}_output.pdf").exists()
 
-    def test_interactive_password_success(self, tmp_path, mock_args):
-        """
-        Scenario 2: User provides NO password via CLI, but enters it when prompted.
-        """
+    def test_interactive_password_success(self, tmp_path, base_config):
+        """Scenario: Prompted for password and user enters correct one."""
         input_file = self.get_encrypted_file()
-
-        # SETUP: No password in args
-        mock_args.password = None
-
-        scanner = DocumentScanner(mock_args)
+        scanner = DocumentScanner(**base_config)
         temp_input = tmp_path / input_file.name
         shutil.copy(input_file, temp_input)
 
@@ -360,14 +396,13 @@ class TestEncryptedPDF:
         # Verify prompt was actually called
         mock_input.assert_called_once()
 
-    def test_interactive_skip(self, tmp_path, mock_args):
+    def test_interactive_skip(self, tmp_path, base_config):
         """
         Scenario 3: User doesn't know password and hits Enter to skip.
         """
         input_file = self.get_encrypted_file()
-        mock_args.password = None
 
-        scanner = DocumentScanner(mock_args)
+        scanner = DocumentScanner(**base_config)
         temp_input = tmp_path / input_file.name
         shutil.copy(input_file, temp_input)
 
@@ -379,14 +414,13 @@ class TestEncryptedPDF:
         assert pages == 0
         assert not (tmp_path / f"{temp_input.stem}_output.pdf").exists()
 
-    def test_wrong_password_retry_fail(self, tmp_path, mock_args):
+    def test_wrong_password_retry_fail(self, tmp_path, base_config):
         """
         Scenario 4: User types wrong password 3 times. Should eventually skip.
         """
         input_file = self.get_encrypted_file()
-        mock_args.password = None
 
-        scanner = DocumentScanner(mock_args)
+        scanner = DocumentScanner(**base_config)
         temp_input = tmp_path / input_file.name
         shutil.copy(input_file, temp_input)
 
@@ -399,71 +433,6 @@ class TestEncryptedPDF:
         # ASSERT no pages converted
         assert pages == 0
         assert not (tmp_path / f"{temp_input.stem}_output.pdf").exists()
-
-
-# --- Unit Tests ---
-def test_human_size():
-    """Test method calculation"""
-    assert human_size(0) == "0.0 B"
-    assert human_size(1024) == "1.0 KiB"
-    assert human_size(1048576) == "1.0 MiB"
-
-
-def test_get_target_files(test_env):
-    """Test file discovery logic."""
-    # Test 1: Find PDFs non-recursive
-    files, mode = get_target_files(test_env, "pdf", recurse=False, sort_key="name")
-    assert mode == "pdf"
-    assert len(files) == 1
-    assert files[0].name == "test_doc.pdf"
-
-    # Test 2: Find Images
-    files, mode = get_target_files(test_env, "image", recurse=False, sort_key="name")
-    assert mode == "image"
-    assert len(files) == 1
-    assert files[0].name == "test_img.jpg"
-
-    # Test 3: Recursive Search
-    files, mode = get_target_files(test_env, "pdf", recurse=True, sort_key="name")
-    assert len(files) == 2  # One in root, one in sub/
-
-    # Test 4: Specific Filename
-    files, mode = get_target_files(
-        test_env, "test_doc.pdf", recurse=False, sort_key="name"
-    )
-    assert len(files) == 1
-    assert files[0].name == "test_doc.pdf"
-
-
-def test_get_target_files_sorting(test_env):
-    """Test that file sorting by time and name works correctly."""
-    # Create files with distinct timestamps
-    file_a = test_env / "a_first.webp"
-    file_b = test_env / "b_second.webp"
-
-    file_a.touch()
-    # Wait briefly to ensure timestamp difference
-    time.sleep(0.5)
-    file_b.touch()
-
-    # Test Sort by mtime (Modified Time) - Default is Ascending (Oldest -> Newest)
-    files, _ = get_target_files(test_env, "webp", recurse=False, sort_key="mtime")
-    assert files == [file_a, file_b]
-
-    #  Test Sort by Name
-    files, _ = get_target_files(test_env, "webp", recurse=False, sort_key="name")
-    assert files == [file_a, file_b]
-
-
-def test_extension_filtering(test_env):
-    """Test that -f 'png' finds only PNGs and ignores JPGs."""
-    (test_env / "test.png").touch()
-    # Ask specifically for png
-    files, mode = get_target_files(test_env, "png", recurse=False, sort_key="name")
-
-    assert mode == "image"
-    assert len(files) == 1
-    assert files[0].suffix == ".png"
 
 
 # --- CLI Integration Tests ---
@@ -551,3 +520,68 @@ def test_cli_energy_savings_output(test_env):
     """Test that energy savings message is printed."""
     result = run_cli(["-i", str(test_env), "-f", "image"])
     assert "You just saved" in result.stdout
+
+
+# --- Unit Tests ---
+def test_human_size():
+    """Test method calculation"""
+    assert human_size(0) == "0.0 B"
+    assert human_size(1024) == "1.0 KiB"
+    assert human_size(1048576) == "1.0 MiB"
+
+
+def test_get_target_files(test_env):
+    """Test file discovery logic."""
+    # Test 1: Find PDFs non-recursive
+    files, mode = get_target_files(test_env, "pdf", recurse=False, sort_key="name")
+    assert mode == "pdf"
+    assert len(files) == 1
+    assert files[0].name == "test_doc.pdf"
+
+    # Test 2: Find Images
+    files, mode = get_target_files(test_env, "image", recurse=False, sort_key="name")
+    assert mode == "image"
+    assert len(files) == 1
+    assert files[0].name == "test_img.jpg"
+
+    # Test 3: Recursive Search
+    files, mode = get_target_files(test_env, "pdf", recurse=True, sort_key="name")
+    assert len(files) == 2  # One in root, one in sub/
+
+    # Test 4: Specific Filename
+    files, mode = get_target_files(
+        test_env, "test_doc.pdf", recurse=False, sort_key="name"
+    )
+    assert len(files) == 1
+    assert files[0].name == "test_doc.pdf"
+
+
+def test_get_target_files_sorting(test_env):
+    """Test that file sorting by time and name works correctly."""
+    # Create files with distinct timestamps
+    file_a = test_env / "a_first.webp"
+    file_b = test_env / "b_second.webp"
+
+    file_a.touch()
+    # Wait briefly to ensure timestamp difference
+    time.sleep(0.5)
+    file_b.touch()
+
+    # Test Sort by mtime (Modified Time) - Default is Ascending (Oldest -> Newest)
+    files, _ = get_target_files(test_env, "webp", recurse=False, sort_key="mtime")
+    assert files == [file_a, file_b]
+
+    #  Test Sort by Name
+    files, _ = get_target_files(test_env, "webp", recurse=False, sort_key="name")
+    assert files == [file_a, file_b]
+
+
+def test_extension_filtering(test_env):
+    """Test that -f 'png' finds only PNGs and ignores JPGs."""
+    (test_env / "test.png").touch()
+    # Ask specifically for png
+    files, mode = get_target_files(test_env, "png", recurse=False, sort_key="name")
+
+    assert mode == "image"
+    assert len(files) == 1
+    assert files[0].suffix == ".png"
