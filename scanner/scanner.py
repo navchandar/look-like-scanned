@@ -599,8 +599,20 @@ class DocumentScanner:
 
     def process_pdf(self, file_path: Path) -> int:
         """
-        Converts a real PDF into a scanned-look PDF (One-to-One).
-        Returns the number of pages processed.
+        Converts given digital PDF into a 'scanned' looking document.
+
+        Each page is rendered as a high-resolution bitmap, processed with
+        visual effects (noise, rotation, blur), and re-assembled into a
+        new PDF file.
+
+        Args:
+            file_path (Path): Path to the source PDF file.
+
+        Returns:
+            int: The total number of pages successfully processed. Returns 0 on failure.
+
+        Note:
+            The output file is saved as '{filename}_output.pdf' in the same directory.
         """
         output_path = file_path.with_name(f"{file_path.stem}_output.pdf")
 
@@ -638,8 +650,19 @@ class DocumentScanner:
 
     def process_images_to_one_pdf(self, image_paths: List[Path]) -> int:
         """
-        Converts a list of images into a SINGLE scanned-look PDF (Many-to-One).
-        Returns the total number of pages processed across all images.
+        Combines multiple image files into a single 'scanned' PDF document.
+
+        Supports multi-frame images (like TIFF), handles EXIF orientation
+        automatically, and converts transparency onto white backgrounds.
+
+        Args:
+            image_paths (List[Path]): A list of paths to image files to be merged.
+
+        Returns:
+            int: Total number of pages added to the resulting PDF. Returns 0 on failure.
+
+        Note:
+            Output PDF filename is derived from the first image in the provided list.
         """
         if not image_paths:
             return 0
@@ -689,8 +712,19 @@ class DocumentScanner:
 
     def process_folder(self, folder_path: Path, file_type: str = "pdf") -> int:
         """
-        Discovers and processes all matching files in a folder.
-        Returns the total number of pages processed.
+        Discovers and processes files within a directory based on file_type and settings.
+
+        This method acts as a high-level batch processor. It respects the
+        DocumentScanner class's 'recurse' and 'sort_by' attributes for discovery.
+
+        Args:
+            folder_path (Path): The directory to scan for files.
+            file_type (str): Either 'pdf', 'image', or a specific extension (e.g., 'png')
+            or a single filename (e.g., 'file.pdf').
+            Defaults to 'pdf'.
+
+        Returns:
+            int: The total count of pages processed across all discovered files.
         """
         files_list, mode = get_target_files(
             folder_path, file_type, self.recurse, self.sort_by
@@ -754,7 +788,7 @@ def main():
         if key in cli_kwargs:
             cli_kwargs[key] = str(cli_kwargs[key]).lower() in YES_VALUES
 
-    # Map the specific name 'file_quality' from argparse to 'file_quality' in __init__
+    # Map the specific name 'arguments' from argparse to same 'arguments' in __init__
     scanner = DocumentScanner(**cli_kwargs)
 
     # Extract ONLY the keys that DocumentScanner.__init__ accepts
