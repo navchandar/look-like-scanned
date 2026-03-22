@@ -41,7 +41,7 @@ Or to install latest version from GitHub
 git clone https://github.com/navchandar/look-like-scanned.git
 cd look-like-scanned
 pip install poetry
-poetry install
+poetry install --all-extras
 pip install .
 ```
 

@@ -34,7 +34,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install poetry
-          poetry install
+          poetry install --all-extras
           poetry run pytest --version
 
       - name: Testing with PyTest
