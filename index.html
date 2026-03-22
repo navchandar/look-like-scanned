@@ -80,6 +80,10 @@
               file, etc.
             </li>
             <li>
+              <strong>Developer Friendly</strong>: Import the core engine as a
+              Python library into your own projects for automated workflows.
+            </li>
+            <li>
               <strong>Local Processing</strong>: All operations are performed
               locally on your computer. No need to upload your files to
               untrustworthy websites.
@@ -125,6 +129,19 @@
           </div>
 
           <p>
+            To handle HEIC/HEIF file types, install with optional dependencies:
+          </p>
+          <div class="code-container">
+            <pre><code id="heif_install">pip install look-like-scanned[heif]</code></pre>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('heif_install')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
+
+          <p>
             Or to build the latest version from
             <a
               href="https://github.com/navchandar/look-like-scanned"
@@ -151,7 +168,7 @@ pip install .</code></pre>
           <div class="code-container">
             <pre><code id="check_install"><span class="comment"># print help message and usage options available and verify the installation</span>
 scanner -h
-<span style="color:aquamarine"># Scanner version: 1.0.0</span></code>
+<span style="color:aquamarine"># Scanner version: 1.2.0</span></code>
 </pre>
             <span
               class="copy-icon"
@@ -242,9 +259,27 @@ scanner -h
               you for a password whenever it encounters a locked file.
             </li>
           </ul>
+
+          <div
+            style="
+              background-color: rgba(255, 165, 0, 0.1);
+              border-left: 5px solid orange;
+              padding: 10px;
+              margin-bottom: 20px;
+            "
+          >
+            <strong>Note for Library Users:</strong> When using the
+            <code>DocumentScanner</code> class, parameters like
+            <code>askew</code>, <code>blur</code>, and
+            <code>recurse</code> expect <strong>Boolean</strong> values (<code
+              >True</code
+            >
+            / <code>False</code>) instead of the CLI strings (<code>"yes"</code>
+            / <code>"no"</code>).
+          </div>
         </section>
         <section id="usage">
-          <h2>Usage Examples</h2>
+          <h2>CLI Usage Examples</h2>
           <p>
             This package uses
             <a href="https://pypi.org/project/Pillow/" target="_blank">PIL</a>
@@ -534,6 +569,37 @@ scanner -i .\secure_docs -f "pdf"</code></pre>
             >
           </div>
         </section>
+        <section id="library">
+          <h2>Library Usage</h2>
+          <p>Integrate the scanning engine directly into your Python code.</p>
+
+          <div class="code-container">
+            <pre><code id="library_code"><span class="comment"># Import the scanner class</span>
+from pathlib import Path
+from scanner import DocumentScanner
+
+<span class="comment"># Initialize with Python booleans (True/False)</span>
+scanner = DocumentScanner(
+    file_quality=90,
+    askew=True,
+    noise=15,
+    brightness=1.2
+)
+
+<span class="comment"># Batch process a whole folder</span>
+scanner.process_folder(Path("./my_docs"), file_type="pdf")
+
+<span class="comment"># Or process a single file</span>
+scanner.process_pdf(Path("contract.pdf"))</code></pre>
+            <span
+              class="copy-icon"
+              onclick="copyToClipboard('library_code')"
+              title="Copy Command"
+              >📋</span
+            >
+          </div>
+        </section>
+
         <section id="note">
           <h3>❗❗ <strong>Note:</strong> ❗❗</h3>
           <ul>
@@ -544,6 +610,9 @@ scanner -i .\secure_docs -f "pdf"</code></pre>
             <li>
               The output PDF file size <strong>will be bigger</strong> than the
               input file because the pages are stored as images.
+            </li>
+            <li>
+              When using as a library, the package name is <code>scanner</code>.
             </li>
             <li>
               Bookmarks / Links / Metadata will be removed when saving the
