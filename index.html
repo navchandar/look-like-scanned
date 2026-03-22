@@ -154,7 +154,7 @@
 git clone https://github.com/navchandar/look-like-scanned.git
 cd look-like-scanned
 pip install poetry
-poetry install
+poetry install --all-extras
 pip install .</code></pre>
             <span
               class="copy-icon"
@@ -259,24 +259,6 @@ scanner -h
               you for a password whenever it encounters a locked file.
             </li>
           </ul>
-
-          <div
-            style="
-              background-color: rgba(255, 165, 0, 0.1);
-              border-left: 5px solid orange;
-              padding: 10px;
-              margin-bottom: 20px;
-            "
-          >
-            <strong>Note for Library Users:</strong> When using the
-            <code>DocumentScanner</code> class, parameters like
-            <code>askew</code>, <code>blur</code>, and
-            <code>recurse</code> expect <strong>Boolean</strong> values (<code
-              >True</code
-            >
-            / <code>False</code>) instead of the CLI strings (<code>"yes"</code>
-            / <code>"no"</code>).
-          </div>
         </section>
         <section id="usage">
           <h2>CLI Usage Examples</h2>
@@ -597,6 +579,23 @@ scanner.process_pdf(Path("contract.pdf"))</code></pre>
               title="Copy Command"
               >📋</span
             >
+          </div>
+          <div
+            style="
+              background-color: rgba(255, 165, 0, 0.2);
+              border-left: 5px solid orange;
+              padding: 10px;
+              margin-bottom: 20px;
+            "
+          >
+            <strong>Note for Library Users:</strong> When using the
+            <code>DocumentScanner</code> class, parameters like
+            <code>askew</code>, <code>blur</code>, and
+            <code>recurse</code> expect <strong>Boolean</strong> values (<code
+              >True</code
+            >
+            / <code>False</code>) instead of the CLI strings (<code>"yes"</code>
+            / <code>"no"</code>).
           </div>
         </section>
 
