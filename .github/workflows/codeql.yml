@@ -33,7 +33,7 @@ jobs:
           python-version: "3.x"
 
       - name: Cache Poetry dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           # This is Poetry's default global cache path on Linux runners
           path: ~/.cache/pypoetry/virtualenvs
