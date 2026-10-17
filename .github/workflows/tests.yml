@@ -24,7 +24,7 @@ jobs:
         run: python -c "import sys; print(sys.version)"
 
       - name: Cache Poetry dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.cache/pypoetry/virtualenvs
           key: poetry-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
